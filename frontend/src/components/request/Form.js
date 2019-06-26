@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import axios from "axios";
+import Response from "./Response";
 
 export class Form extends Component {
   constructor() {
@@ -13,6 +14,7 @@ export class Form extends Component {
 
     this.urlChange = this.urlChange.bind(this);
     this.urlClick = this.urlClick.bind(this);
+    this.clearResponse = this.clearResponse.bind(this);
   }
 
   urlChange({ target }) {
@@ -22,31 +24,20 @@ export class Form extends Component {
   }
 
   urlClick() {
-    this.setState({ hasResponse: false });
-    this.setState({ isError: false });
+    this.setState({ hasResponse: false, isError: false });
 
     axios
       .get(this.state.urlAddress)
       .then(response => {
-        this.setState({ urlResponse: response });
-        this.setState({ hasResponse: true });
-        this.setState({ isError: false });
-        console.log(this.state);
+        this.setState({ urlResponse: response, hasResponse: true });
       })
       .catch(error => {
-        this.setState({ urlResponse: error });
-        this.setState({ hasResponse: true });
-        this.setState({ isError: true });
-
-        console.log(this.state);
+        this.setState({ urlResponse: error, hasResponse: true, isError: true });
       });
   }
 
   clearResponse() {
-    this.setState({ hasResponse: false });
-    this.setState({ urlResponse: "" });
-    this.setState({ isError: false });
-    console.log(this.state);
+    this.setState({ hasResponse: false, urlResponse: "", isError: false });
   }
 
   render() {
@@ -82,12 +73,11 @@ export class Form extends Component {
           >
             Check site!
           </button>
-
-          {this.state.hasResponse ? (
-            <h3>Your response</h3>
-          ) : (
-            <h1>Narazie pusto</h1>
-          )}
+          <Response
+            urlResponse={this.state.urlResponse}
+            hasResponse={this.state.hasResponse}
+            isError={this.state.isError}
+          />
         </div>
       </div>
     );
