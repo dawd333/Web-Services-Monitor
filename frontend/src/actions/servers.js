@@ -1,6 +1,6 @@
 import axios from "axios";
 import { GET_SERVERS, DELETE_SERVER, ADD_SERVER, GET_ERRORS } from "./types";
-import { createMessage } from "./messages";
+import { createMessage, returnErrors } from "./messages";
 
 // GET SERVERS
 export const getServers = () => dispatch => {
@@ -12,7 +12,9 @@ export const getServers = () => dispatch => {
         payload: response.data
       });
     })
-    .catch(err => console.log(err));
+    .catch(error => {
+      dispatch(returnErrors(error.response.data, error.response.status));
+    });
 };
 
 // DELETE SERVER
@@ -41,13 +43,6 @@ export const addServer = server => dispatch => {
       });
     })
     .catch(error => {
-      const errors = {
-        message: error.response.data,
-        status: error.response.status
-      };
-      dispatch({
-        type: GET_ERRORS,
-        payload: errors
-      });
+      dispatch(returnErrors(error.response.data, error.response.status));
     });
 };

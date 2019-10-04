@@ -1,12 +1,18 @@
 from rest_framework import viewsets, permissions
-from .models import Server
 from .serializers import ServerSerializer
 
 
 # Server ViewSet
 class ServerViewSet(viewsets.ModelViewSet):
-    queryset = Server.objects.all()
     permission_classes = [
-        permissions.AllowAny
+        permissions.IsAuthenticated
     ]
+
     serializer_class = ServerSerializer
+
+    def get_queryset(self):
+        return self.request.user.servers.all()
+
+    def perform_create(self, serializer):
+        serializer.save(owner=self.request.user)
+
