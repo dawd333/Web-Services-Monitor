@@ -1,11 +1,12 @@
 import axios from "axios";
 import { GET_SERVERS, DELETE_SERVER, ADD_SERVER, GET_ERRORS } from "./types";
 import { createMessage, returnErrors } from "./messages";
+import { tokenConfig } from "../axios-config";
 
 // GET SERVERS
-export const getServers = () => dispatch => {
+export const getServers = () => (dispatch, getState) => {
   axios
-    .get("/api/servers")
+    .get("/api/servers/", tokenConfig(getState))
     .then(response => {
       dispatch({
         type: GET_SERVERS,
@@ -18,9 +19,9 @@ export const getServers = () => dispatch => {
 };
 
 // DELETE SERVER
-export const deleteServer = id => dispatch => {
+export const deleteServer = id => (dispatch, getState) => {
   axios
-    .delete(`/api/servers/${id}/`)
+    .delete(`/api/servers/${id}/`, tokenConfig(getState))
     .then(() => {
       dispatch(createMessage({ deleteServer: "Server Deleted" }));
       dispatch({
@@ -32,9 +33,9 @@ export const deleteServer = id => dispatch => {
 };
 
 // ADD SERVER
-export const addServer = server => dispatch => {
+export const addServer = server => (dispatch, getState) => {
   axios
-    .post("/api/servers/", server)
+    .post("/api/servers/", server, tokenConfig(getState))
     .then(response => {
       dispatch(createMessage({ addServer: "Server Added" }));
       dispatch({

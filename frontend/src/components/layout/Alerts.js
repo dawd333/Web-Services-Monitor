@@ -19,11 +19,18 @@ export class Alerts extends Component {
       if (error.message.ip) {
         alert.error(`IP: ${error.message.ip.join()}`);
       }
+      if (error.message.non_field_errors) {
+        alert.error(error.message.non_field_errors.join());
+      }
+      if (error.message.username) {
+        alert.error(error.message.username.join());
+      }
     }
 
     if (message !== previousProps.message) {
       if (message.addServer) alert.success(message.addServer);
       if (message.deleteServer) alert.success(message.deleteServer);
+      if (message.passwordNotMatch) alert.error(message.passwordNotMatch);
     }
   }
 
