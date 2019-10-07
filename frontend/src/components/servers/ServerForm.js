@@ -6,9 +6,8 @@ import { Card, Form, FormControl, Button, Col } from "react-bootstrap";
 
 export class ServerForm extends Component {
   state = {
-    title: "Add Server",
-    name: "Test",
-    ip: "192.1.1.1",
+    name: "",
+    ip: "",
     isActive: true,
     recurringTimeHours: 0,
     recurringTimeMinutes: 1,
@@ -18,13 +17,6 @@ export class ServerForm extends Component {
   static propTypes = {
     addServer: PropTypes.func.isRequired
   };
-
-  componentDidMount() {
-    console.log(this.props.server);
-    if (this.props.server !== undefined) {
-      this.state = this.props.server;
-    }
-  }
 
   onChange = event => {
     if (event.target.type === "checkbox") {
@@ -46,12 +38,12 @@ export class ServerForm extends Component {
     } = this.state;
 
     const recurringTime = `${recurringTimeHours}:${recurringTimeMinutes}:${recurringTimeSeconds}`;
-
     const server = { name, ip, isActive, recurringTime };
+
     this.props.addServer(server);
     this.setState({
-      name: "Test",
-      ip: "192.1.1.1",
+      name: "",
+      ip: "",
       isActive: true,
       recurringTimeHours: 0,
       recurringTimeMinutes: 1,
@@ -61,7 +53,6 @@ export class ServerForm extends Component {
 
   render() {
     const {
-      title,
       name,
       ip,
       isActive,
@@ -69,10 +60,11 @@ export class ServerForm extends Component {
       recurringTimeMinutes,
       recurringTimeSeconds
     } = this.state;
+
     return (
       <Card className="my-4">
         <Card.Body>
-          <h2>{title}</h2>
+          <h2>Add Server</h2>
           <Form onSubmit={this.onSubmit}>
             <Form.Group>
               <Form.Label>Name</Form.Label>
@@ -93,14 +85,14 @@ export class ServerForm extends Component {
               ></FormControl>
             </Form.Group>
             <Form.Group>
-              <Form.Label>isActive</Form.Label>
-              <FormControl
+              <Form.Check
                 type="checkbox"
                 name="isActive"
                 onChange={this.onChange}
+                label="isActive"
                 value={isActive}
                 checked={isActive}
-              ></FormControl>
+              />
             </Form.Group>
             <Form.Label>Recurring Time</Form.Label>
             <Form.Row className="mb-4">

@@ -46,7 +46,7 @@ export class Header extends Component {
     return (
       <Navbar variant="light" expand="md" bg="light">
         <Navbar.Collapse>
-          <Navbar.Brand href="#">Inżynierka</Navbar.Brand>
+          <Navbar.Brand href="#">Web Services Monitor</Navbar.Brand>
         </Navbar.Collapse>
         {isAuthenticated ? authLinks : guestLinks}
       </Navbar>

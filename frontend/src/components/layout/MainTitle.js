@@ -4,7 +4,7 @@ export class MainTitle extends Component {
   render() {
     return (
       <div className="center-block text-center m-3">
-        <h2>Basic platform for monitoring web services</h2>
+        <h2>Web Services Monitor</h2>
       </div>
     );
   }

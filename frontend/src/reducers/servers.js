@@ -2,7 +2,8 @@ import {
   GET_SERVERS,
   DELETE_SERVER,
   ADD_SERVER,
-  CLEAR_SERVERS
+  CLEAR_SERVERS,
+  UPDATE_SERVER
 } from "../actions/types.js";
 
 const initialState = {
@@ -32,6 +33,14 @@ export default function(state = initialState, action) {
       return {
         ...state,
         servers: []
+      };
+    }
+    case UPDATE_SERVER: {
+      return {
+        ...state,
+        servers: state.servers.map(server =>
+          server.id === action.payload.id ? (server = action.payload) : server
+        )
       };
     }
     default:

@@ -32,6 +32,7 @@ export class Alerts extends Component {
 
     if (message !== previousProps.message) {
       if (message.addServer) alert.success(message.addServer);
+      if (message.updateServer) alert.success(message.updateServer);
       if (message.deleteServer) alert.success(message.deleteServer);
       if (message.passwordNotMatch) alert.error(message.passwordNotMatch);
     }
