@@ -19,6 +19,9 @@ export class Alerts extends Component {
       if (error.message.ip) {
         alert.error(`IP: ${error.message.ip.join()}`);
       }
+      if (error.message.recurringTime) {
+        alert.error(`Recurring Time: ${error.message.recurringTime.join()}`);
+      }
       if (error.message.non_field_errors) {
         alert.error(error.message.non_field_errors.join());
       }

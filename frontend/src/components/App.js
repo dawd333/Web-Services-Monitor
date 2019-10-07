@@ -22,6 +22,8 @@ import PrivateRoute from "./common/PrivateRoute";
 
 import { loadUser } from "../actions/auth";
 
+import { Container } from "react-bootstrap";
+
 // Alert Options
 const alertOptions = {
   timeout: 3000,
@@ -42,13 +44,13 @@ class App extends Component {
               <Header />
               <Alerts />
               <MainTitle />
-              <div className="container">
+              <Container>
                 <Switch>
                   <PrivateRoute exact path="/" component={Dashboard} />
                   <Route exact path="/register" component={Register} />
                   <Route exact path="/login" component={Login} />
                 </Switch>
-              </div>
+              </Container>
             </Fragment>
           </Router>
         </AlertProvider>

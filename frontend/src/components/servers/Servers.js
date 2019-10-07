@@ -2,6 +2,7 @@ import React, { Component, Fragment } from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { getServers, deleteServer } from "../../actions/servers";
+import { Button, Table } from "react-bootstrap";
 
 export class Servers extends Component {
   static propTypes = {
@@ -18,13 +19,14 @@ export class Servers extends Component {
     return (
       <Fragment>
         <h2>Servers</h2>
-        <table className="table table-striped">
+        <Table striped hover>
           <thead>
             <tr>
               <th>ID</th>
               <th>Name</th>
               <th>IP</th>
               <th>isActive</th>
+              <th>Recurring Time</th>
               <th />
             </tr>
           </thead>
@@ -35,18 +37,23 @@ export class Servers extends Component {
                 <td>{server.name}</td>
                 <td>{server.ip}</td>
                 <td>{server.isActive.toString()}</td>
+                <td>{server.recurringTime}</td>
                 <td>
-                  <button
-                    className="btn btn-danger btn-sm"
+                  <Button variant="warning" size="sm" className="mr-3">
+                    Change values
+                  </Button>
+                  <Button
+                    variant="danger"
+                    size="sm"
                     onClick={this.props.deleteServer.bind(this, server.id)}
                   >
                     Delete
-                  </button>
+                  </Button>
                 </td>
               </tr>
             ))}
           </tbody>
-        </table>
+        </Table>
       </Fragment>
     );
   }

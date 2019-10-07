@@ -1,12 +1,12 @@
 import React, { Fragment } from "react";
-import Form from "./Form";
+import ServerForm from "./ServerForm";
 import Servers from "./Servers";
 
 export default function Dashboard() {
   return (
     <div>
       <Fragment>
-        <Form />
+        <ServerForm />
         <Servers />
       </Fragment>
     </div>

@@ -4,6 +4,7 @@ import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { register } from "../../actions/auth";
 import { createMessage } from "../../actions/messages";
+import { Card, Button, Form, FormControl, Col } from "react-bootstrap";
 
 export class Register extends Component {
   state = {
@@ -47,61 +48,59 @@ export class Register extends Component {
 
     const { username, email, password, password2 } = this.state;
     return (
-      <div className="col-md-6 m-auto">
-        <div className="card card-body mt-5">
-          <h2 className="text-center">Register</h2>
-          <form onSubmit={this.onSubmit}>
-            <div className="form-group">
-              <label>Username</label>
-              <input
-                type="text"
-                className="form-control"
-                name="username"
-                onChange={this.onChange}
-                value={username}
-              />
-            </div>
-            <div className="form-group">
-              <label>Email</label>
-              <input
-                type="email"
-                className="form-control"
-                name="email"
-                onChange={this.onChange}
-                value={email}
-              />
-            </div>
-            <div className="form-group">
-              <label>Password</label>
-              <input
-                type="password"
-                className="form-control"
-                name="password"
-                onChange={this.onChange}
-                value={password}
-              />
-            </div>
-            <div className="form-group">
-              <label>Confirm Password</label>
-              <input
-                type="password"
-                className="form-control"
-                name="password2"
-                onChange={this.onChange}
-                value={password2}
-              />
-            </div>
-            <div className="form-group">
-              <button type="submit" className="btn btn-primary">
-                Register
-              </button>
-            </div>
+      <Col md={6} className="m-auto">
+        <Card className="mt-5">
+          <Card.Body>
+            <h2 className="text-center">Register</h2>
+            <Form onSubmit={this.onSubmit}>
+              <Form.Group>
+                <Form.Label>Username</Form.Label>
+                <FormControl
+                  type="text"
+                  name="username"
+                  onChange={this.onChange}
+                  value={username}
+                ></FormControl>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Email</Form.Label>
+                <FormControl
+                  type="email"
+                  name="email"
+                  onChange={this.onChange}
+                  value={email}
+                ></FormControl>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Password</Form.Label>
+                <FormControl
+                  type="password"
+                  name="password"
+                  onChange={this.onChange}
+                  value={password}
+                ></FormControl>
+              </Form.Group>
+              <Form.Group>
+                <Form.Label>Confirm Password</Form.Label>
+                <FormControl
+                  type="password"
+                  name="password2"
+                  onChange={this.onChange}
+                  value={password2}
+                ></FormControl>
+              </Form.Group>
+              <Form.Group>
+                <Button variant="primary" type="submit">
+                  Register
+                </Button>
+              </Form.Group>
+            </Form>
             <p>
               Already have an account? <Link to="/login">Login</Link>
             </p>
-          </form>
-        </div>
-      </div>
+          </Card.Body>
+        </Card>
+      </Col>
     );
   }
 }

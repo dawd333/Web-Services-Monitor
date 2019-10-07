@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { logout } from "../../actions/auth";
+import { Navbar, Nav, Button } from "react-bootstrap";
 
 export class Header extends Component {
   static propTypes = {
@@ -14,56 +15,41 @@ export class Header extends Component {
     const { isAuthenticated, user } = this.props.auth;
 
     const authLinks = (
-      <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
-        <span className="navbar-text mr-3">
+      <Nav className="mr-auto mt-2 mt-lg-0">
+        <Navbar.Text className="mr-3">
           <strong>{user ? `Welcome ${user.username}` : ""}</strong>
-        </span>
-        <li className="nav-item">
-          <button
+        </Navbar.Text>
+        <Nav.Item>
+          <Button
+            variant="info"
+            size="sm"
             onClick={this.props.logout}
-            className="nav-link btn btn-info btn-sm text-light"
+            className="text-light nav-link"
           >
             Logout
-          </button>
-        </li>
-      </ul>
+          </Button>
+        </Nav.Item>
+      </Nav>
     );
 
     const guestLinks = (
-      <ul className="navbar-nav mr-auto mt-2 mt-lg-0">
-        <li className="nav-item">
-          <Link to="/register" className="nav-link">
-            Register
-          </Link>
-        </li>
-        <li className="nav-item">
-          <Link to="/login" className="nav-link">
-            Login
-          </Link>
-        </li>
-      </ul>
+      <Nav className="mr-auto mt-2 mt-lg-0">
+        <Link to="/register" className="nav-link">
+          Register
+        </Link>
+        <Link to="/login" className="nav-link">
+          Login
+        </Link>
+      </Nav>
     );
 
     return (
-      <nav className="navbar navbar-expand-lg navbar-light bg-light">
-        <button
-          className="navbar-toggler"
-          type="button"
-          data-toggle="collapse"
-          data-target="#navbarTogglerDemo01"
-          aria-controls="navbarTogglerDemo01"
-          aria-expanded="false"
-          aria-label="Toggle navigation"
-        >
-          <span className="navbar-toggler-icon"></span>
-        </button>
-        <div className="collapse navbar-collapse" id="navbarTogglerDemo01">
-          <a className="navbar-brand" href="#">
-            Inżynierka
-          </a>
-        </div>
+      <Navbar variant="light" expand="md" bg="light">
+        <Navbar.Collapse>
+          <Navbar.Brand href="#">Inżynierka</Navbar.Brand>
+        </Navbar.Collapse>
         {isAuthenticated ? authLinks : guestLinks}
-      </nav>
+      </Navbar>
     );
   }
 }
