@@ -95,7 +95,7 @@ export class ServerForm extends Component {
               />
             </Form.Group>
             <Form.Label>Recurring Time</Form.Label>
-            <Form.Row className="mb-4">
+            <Form.Row>
               <Form.Group as={Col}>
                 <Form.Label>Hours</Form.Label>
                 <FormControl

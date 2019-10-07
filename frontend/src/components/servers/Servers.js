@@ -148,7 +148,7 @@ export class Servers extends Component {
                   />
                 </Form.Group>
                 <Form.Label>Recurring Time</Form.Label>
-                <Form.Row className="mb-4">
+                <Form.Row>
                   <Form.Group as={Col}>
                     <Form.Label>Hours</Form.Label>
                     <FormControl
@@ -217,10 +217,13 @@ export class Servers extends Component {
                 <td>{server.isActive.toString()}</td>
                 <td>{server.recurringTime}</td>
                 <td>
+                  <Button variant="secondary" size="sm">
+                    View Server
+                  </Button>
                   <Button
                     variant="warning"
                     size="sm"
-                    className="mr-3"
+                    className="mx-3"
                     onClick={this.handleOpenModal.bind(this, server)}
                   >
                     Change values
