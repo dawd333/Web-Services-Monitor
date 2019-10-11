@@ -13,7 +13,6 @@ import { Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 
 import Header from "./layout/Header";
-import Dashboard from "./servers/ServerDashboard";
 import MainTitle from "./layout/MainTitle";
 import Alerts from "./layout/Alerts";
 import Login from "./accounts/Login";
@@ -23,6 +22,7 @@ import PrivateRoute from "./common/PrivateRoute";
 import { loadUser } from "../actions/auth";
 
 import { Container } from "react-bootstrap";
+import {Dashboard} from "./dashboard/Dashboard";
 
 // Alert Options
 const alertOptions = {
@@ -43,8 +43,8 @@ class App extends Component {
             <Fragment>
               <Header />
               <Alerts />
-              <MainTitle />
-              <Container>
+              {/*<MainTitle />*/}
+              <Container className={"px-0"} fluid={true}> {/* Make it 100% width*/}
                 <Switch>
                   <PrivateRoute exact path="/" component={Dashboard} />
                   <Route exact path="/register" component={Register} />
