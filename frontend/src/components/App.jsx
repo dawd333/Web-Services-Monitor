@@ -13,7 +13,7 @@ import { Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 
 import Header from "./layout/Header";
-import Dashboard from "./servers/Dashboard";
+import Dashboard from "./servers/ServerDashboard";
 import MainTitle from "./layout/MainTitle";
 import Alerts from "./layout/Alerts";
 import Login from "./accounts/Login";
