@@ -1,21 +1,28 @@
-import React, {Component, Fragment} from "react";
-import {withAlert} from "react-alert";
+import React from "react";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
-import {Alerts} from "../layout/Alerts";
 import styles from "./Dashboard.less"
+import {Service} from "../../actions/types";
+import SideNav from "./sidenav/SideNav";
 
-export class Dashboard extends Component {
+// TODO remove this when we will have actual data
+const testArray = [
+  {id: "1", name: "Web workout manager", value: 1},
+  {id: "2", name: "My beautiful service", value: 2},
+  {id: "3", name: "hltv.org", value: 3}
+];
+
+export class Dashboard extends React.Component {
   static propTypes = {
-
+    services: PropTypes.arrayOf(PropTypes.shape(Service)),
   };
-
-
 
   render() {
     return (
       <div className={styles.dashboard}>
-        {"hello world"}
+        <SideNav
+          services={testArray}
+        />
       </div>
     )
   }
@@ -25,4 +32,4 @@ const mapStateToProps = state => ({
 
 });
 
-export default connect(mapStateToProps)(withAlert()(Alerts));
+export default connect(mapStateToProps)(Dashboard);

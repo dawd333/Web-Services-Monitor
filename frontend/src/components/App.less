@@ -1,1 +1,32 @@
-@import '~bootstrap-less/';
+@import (reference) "~bootstrap-less/bootstrap/index.less";
+
+@header-height: 54px;
+@header-side-padding: 24px;
+
+// Example color palette copied from random site
+@purple-lighten-5: #f3e5f5;
+@purple-lighten-4: #e1bee7;
+@purple-lighten-3: #ce93d8;
+@purple-lighten-2: #ba68c8;
+@purple-lighten-1: #ab47bc;
+@purple: #9c27b0;
+@purple-darken-1: #8e24aa;
+@purple-darken-2: #7b1fa2;
+@purple-darken-3: #6a1b9a;
+@purple-darken-4: #4a148c;
+@purple-accent-1: #ea80fc;
+@purple-accent-2: #e040fb;
+@purple-accent-3: #d500f9;
+@purple-accent-4: #aa00ff;
+
+.header {
+  height: @header-height;
+  background: #fff;
+}
+
+.container {
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+  // Fill rest of the screen below header. It might need some adjustments in the future
+  height: calc(~"100vh - "@header-height);
+}

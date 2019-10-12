@@ -8,7 +8,8 @@ import { Navbar, Nav, Button } from "react-bootstrap";
 export class Header extends Component {
   static propTypes = {
     auth: PropTypes.object.isRequired,
-    logout: PropTypes.func.isRequired
+    logout: PropTypes.func.isRequired,
+    className: PropTypes.string
   };
 
   render() {
@@ -44,7 +45,7 @@ export class Header extends Component {
     );
 
     return (
-      <Navbar variant="light" expand="md" bg="light">
+      <Navbar className={this.props?.className}>
         <Navbar.Collapse>
           <Navbar.Brand href="#">Web Services Monitor</Navbar.Brand>
         </Navbar.Collapse>
