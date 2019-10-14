@@ -4,13 +4,37 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
+        test: /\.(js|jsx)$/,
         exclude: /node_modules/,
         use: {
           loader: "babel-loader"
-        }
-      }
-    ]
+        },
+      },
+      {
+        test: /\.less$/,
+        use: [
+          {
+            loader: 'style-loader',
+          },
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+            }
+          },
+          {
+            loader: 'less-loader',
+            options: {
+              strictMath: true,
+              noIeCompat: true,
+            },
+          },
+        ],
+      },
+    ],
+  },
+  resolve: {
+    extensions: ['*', '.js', '.jsx', '.less']
   },
   plugins: [
     new BrowserSyncPlugin(
@@ -29,7 +53,7 @@ module.exports = {
       {
         // make BrowserSync reload the page every time file changes
         reload: true
-      }
-    )
-  ]
+      },
+    ),
+  ],
 };
