@@ -125,7 +125,7 @@ export class ServerForm extends Component {
               </Form.Group>
             </Form.Row>
             <Form.Group>
-              <Button type="submit" varinat="primary">
+              <Button type="submit" variant="primary">
                 Submit
               </Button>
             </Form.Group>

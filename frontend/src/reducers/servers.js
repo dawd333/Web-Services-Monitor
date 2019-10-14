@@ -4,7 +4,7 @@ import {
   ADD_SERVER,
   CLEAR_SERVERS,
   UPDATE_SERVER
-} from "../actions/types.js";
+} from "../actions/types";
 
 const initialState = {
   servers: []

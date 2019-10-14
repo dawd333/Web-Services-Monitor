@@ -9,7 +9,8 @@ import {
   LOGOUT_SUCCESS,
   REGISTER_FAIL,
   REGISTER_SUCCESS,
-  CLEAR_SERVERS
+  CLEAR_SERVERS,
+  CLEAR_SERVICES
 } from "./types";
 import { tokenConfig } from "../axios-config";
 
@@ -68,6 +69,7 @@ export const logout = () => (dispatch, getState) => {
     .post("/api/auth/logout/", null, tokenConfig(getState))
     .then(() => {
       dispatch({ type: CLEAR_SERVERS });
+      dispatch({ type: CLEAR_SERVICES });
       dispatch({
         type: LOGOUT_SUCCESS
       });

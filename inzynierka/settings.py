@@ -41,7 +41,8 @@ INSTALLED_APPS = [
     'knox',
     'servers',
     'frontend',
-    'accounts'
+    'accounts',
+    'services'
 ]
 
 REST_FRAMEWORK = {
