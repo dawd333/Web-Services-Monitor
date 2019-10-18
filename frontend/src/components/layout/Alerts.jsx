@@ -28,6 +28,9 @@ export class Alerts extends Component {
       if (error.message.username) {
         alert.error(error.message.username.join());
       }
+      if (error.status === 500) {
+        alert.error("Internal Server Error");
+      }
     }
 
     if (message !== previousProps.message) {
@@ -35,6 +38,9 @@ export class Alerts extends Component {
       if (message.updateServer) alert.success(message.updateServer);
       if (message.deleteServer) alert.success(message.deleteServer);
       if (message.passwordNotMatch) alert.error(message.passwordNotMatch);
+      if (message.addService) alert.success(message.addService);
+      if (message.updateService) alert.success(message.updateService);
+      if (message.deleteService) alert.success(message.deleteService);
     }
   }
 

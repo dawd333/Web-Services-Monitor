@@ -8,33 +8,33 @@ module.exports = {
         exclude: /node_modules/,
         use: {
           loader: "babel-loader"
-        },
+        }
       },
       {
         test: /\.less$/,
         use: [
           {
-            loader: 'style-loader',
+            loader: "style-loader"
           },
           {
-            loader: 'css-loader',
+            loader: "css-loader",
             options: {
-              modules: true,
+              modules: true
             }
           },
           {
-            loader: 'less-loader',
+            loader: "less-loader",
             options: {
               strictMath: true,
-              noIeCompat: true,
-            },
-          },
-        ],
-      },
-    ],
+              noIeCompat: true
+            }
+          }
+        ]
+      }
+    ]
   },
   resolve: {
-    extensions: ['*', '.js', '.jsx', '.less']
+    extensions: ["*", ".js", ".jsx", ".less"]
   },
   plugins: [
     new BrowserSyncPlugin(
@@ -53,7 +53,7 @@ module.exports = {
       {
         // make BrowserSync reload the page every time file changes
         reload: true
-      },
-    ),
-  ],
+      }
+    )
+  ]
 };

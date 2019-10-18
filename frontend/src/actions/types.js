@@ -18,9 +18,15 @@ export const LOGOUT_SUCCESS = "LOGOUT_SUCCESS";
 export const REGISTER_SUCCESS = "REGISTER_SUCCESS";
 export const REGISTER_FAIL = "REGISTER_FAIL";
 
+export const GET_SERVICES = "GET_SERVICES";
+export const ADD_SERVICE = "ADD_SERVICE";
+export const UPDATE_SERVICE = "UPDATE_SERVICE";
+export const DELETE_SERVICE = "DELETE_SERVICE";
+export const CLEAR_SERVICES = "CLEAR_SERVICES";
+
 // TODO I'm trying to emulate types from TypeScript. Let's check in a few days if this is a good approach.
 export const Service = {
-  id: PropTypes.string.isRequired,
+  id: PropTypes.number.isRequired,
   name: PropTypes.string.isRequired,
-  value: PropTypes.number.isRequired,
-}
+  value: PropTypes.number.isRequired
+};
