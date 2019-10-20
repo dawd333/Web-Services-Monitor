@@ -1,16 +1,11 @@
-import React from "react";
-import { connect } from "react-redux";
+import React, {useState} from "react";
+import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import {
   getServices,
-  addService,
   deleteService,
-  updateService
 } from "../../../actions/services";
 import {
-  Accordion,
-  AccordionCollapse,
-  AccordionToggle,
   Card,
   ListGroup,
   Button,
@@ -19,25 +14,17 @@ import {
   Modal
 } from "react-bootstrap";
 import styles from "./SideNav.less";
-import { Service } from "../../../actions/types";
+import {Service, view} from "../DashboardModel";
+import {changeView, selectService} from "../../../actions/dashboard";
 
 export class SideNav extends React.Component {
-  state = {
-    name: "",
-    value: 0,
-    service: {
-      id: 0,
-      name: "",
-      value: 0
-    },
-    modalShow: false
-  };
 
   static propTypes = {
     services: PropTypes.arrayOf(PropTypes.shape(Service)),
+    selectedServiceId: PropTypes.number,
+    changeView: PropTypes.func.isRequired,
+    selectService: PropTypes.func.isRequired,
     getServices: PropTypes.func.isRequired,
-    addService: PropTypes.func.isRequired,
-    updateService: PropTypes.func.isRequired,
     deleteService: PropTypes.func.isRequired
   };
 
@@ -45,209 +32,87 @@ export class SideNav extends React.Component {
     this.props.getServices();
   }
 
-  onChange = event => {
-    if (event.target.type === "checkbox") {
-      this.setState({ [event.target.name]: event.target.checked });
-    } else {
-      this.setState({ [event.target.name]: event.target.value });
-    }
-  };
-
-  onSubmit = event => {
-    event.preventDefault();
-
-    const service = this.state;
-    this.props.addService(service);
-
-    this.setState({
-      name: "",
-      value: 0
-    });
-  };
-
-  clearServiceState = () => {
-    const clearService = {
-      id: 0,
-      name: "",
-      value: 0
-    };
-    this.setState({ service: clearService });
-  };
-
-  handleOpenModal = service => {
-    const serviceToUpdate = {
-      id: service.id,
-      name: service.name,
-      value: service.value
-    };
-    this.setState({ modalShow: true, service: serviceToUpdate });
-  };
-
-  handleSaveModal = event => {
-    event.preventDefault();
-    const service = this.state.service;
-    this.props.updateService(service);
-    this.setState({ modalShow: false });
-    this.clearServiceState();
-  };
-
-  handleCloseModal = () => {
-    this.setState({ modalShow: false });
-    this.clearServiceState();
-  };
-
-  onChangeModal = event => {
-    const updatedService = { ...this.state.service };
-    if (event.target.type === "checkbox") {
-      updatedService[event.target.name] = event.target.checked;
-    } else {
-      updatedService[event.target.name] = event.target.value;
-    }
-    this.setState({ service: updatedService });
-  };
-
-  UpdateServiceModal = () => {
-    const modalShow = this.state.modalShow;
-    const { name, value } = this.state.service;
-
-    return (
-      <Modal size="lg" show={modalShow} onHide={this.handleCloseModal} centered>
-        <Modal.Header closeButton>
-          <Modal.Title>Update Service</Modal.Title>
-        </Modal.Header>
-        <Modal.Body>
-          <Card className="my-4">
-            <Card.Body>
-              <Form id="update-form" onSubmit={this.handleSaveModal}>
-                <Form.Group>
-                  <Form.Label>Name</Form.Label>
-                  <FormControl
-                    type="text"
-                    name="name"
-                    onChange={this.onChangeModal}
-                    value={name}
-                  />
-                </Form.Group>
-                <Form.Group>
-                  <Form.Label>Value</Form.Label>
-                  <FormControl
-                    type="number"
-                    name="value"
-                    onChange={this.onChangeModal}
-                    value={value}
-                  />
-                </Form.Group>
-              </Form>
-            </Card.Body>
-          </Card>
-        </Modal.Body>
-        <Modal.Footer>
-          <Button variant="secondary" onClick={this.handleCloseModal}>
-            Close
-          </Button>
-          <Button form="update-form" type="submit" variant="primary">
-            Save Changes
-          </Button>
-        </Modal.Footer>
-      </Modal>
-    );
-  };
-
   render() {
-    const { name, value } = this.state;
-    const services = this.props.services;
-
     return (
-      <nav className={styles.sideNav}>
-        <Accordion
-          defaultActiveKey={services.length !== 0 ? services[0].id : undefined}
-        >
-          {services.map(service => {
-            return (
-              <Card key={service.id}>
-                <AccordionToggle
-                  as={Card.Header}
-                  eventKey={service.id}
-                  className={styles.toggle}
-                >
-                  {service.name}
-                </AccordionToggle>
-                <AccordionCollapse eventKey={service.id}>
-                  <Card.Body>
-                    <ListGroup>
-                      <Button
-                        variant="secondary"
-                        className={styles.accordionButton}
-                        onClick={this.handleOpenModal.bind(this, service)}
-                      >
-                        Update Service
-                      </Button>
-                      <Button
-                        variant="danger"
-                        className={styles.accordionButton}
-                        onClick={this.props.deleteService.bind(
-                          this,
-                          service.id
-                        )}
-                      >
-                        Delete Service
-                      </Button>
-                    </ListGroup>
-                  </Card.Body>
-                </AccordionCollapse>
-              </Card>
-            );
-          })}
-          <Card>
-            <AccordionToggle
-              as={Card.Header}
-              eventKey="addService"
-              className={(styles.toggle, styles.addServiceHeader)}
-            >
-              Add Service
-            </AccordionToggle>
-            <AccordionCollapse eventKey="addService">
-              <Card.Body>
-                <Form onSubmit={this.onSubmit}>
-                  <Form.Group>
-                    <Form.Label>Name</Form.Label>
-                    <FormControl
-                      type="text"
-                      name="name"
-                      onChange={this.onChange}
-                      value={name}
-                    />
-                  </Form.Group>
-                  <Form.Group>
-                    <Form.Label>Value</Form.Label>
-                    <FormControl
-                      type="number"
-                      name="value"
-                      onChange={this.onChange}
-                      value={value}
-                    />
-                  </Form.Group>
-                  <Form.Group>
-                    <Button type="submit" variant="primary">
-                      Submit
-                    </Button>
-                  </Form.Group>
-                </Form>
-              </Card.Body>
-            </AccordionCollapse>
-          </Card>
-        </Accordion>
-        <this.UpdateServiceModal />
-      </nav>
+      <div className={styles.sideNav}>
+        {this.props.services.map(this.renderService)}
+        <Card className={styles.addService} key={"add_service"}>
+          <a onClick={this.onAddService.bind(this)}>
+            <Card.Header>
+              {"Add service"}
+            </Card.Header>
+          </a>
+        </Card>
+      </div>
     );
   }
+
+  renderService = service => {
+    return (
+      <Card
+        className={styles.service}
+        key={service.id}
+      >
+        <a onClick={this.onSelectService.bind(this, service.id)}>
+          <Card.Header>
+            {service.name}
+          </Card.Header>
+        </a>
+        {service.id === this.props.selectedServiceId && this.renderServiceMenu(service)}
+      </Card>
+    )
+  };
+
+  renderServiceMenu = service => {
+    return (
+      <Card.Body>
+        <ListGroup>
+          <Button
+            variant="success"
+            className={styles.accordionButton}
+            onClick={this.props.changeView.bind(this, view.OVERVIEW)}
+          >
+            {"Overview"}
+          </Button>
+          <Button
+            variant="secondary"
+            className={styles.accordionButton}
+            onClick={this.props.changeView.bind(this, view.EDIT_SERVICE)}
+          >
+            {"Update Service"}
+          </Button>
+          <Button
+            variant="danger"
+            className={styles.accordionButton}
+            onClick={this.props.deleteService.bind(
+              this,
+              service.id
+            )}
+          >
+            {"Delete Service"}
+          </Button>
+        </ListGroup>
+      </Card.Body>
+    )
+  };
+
+  onAddService = async () => {
+    await this.props.selectService(undefined);
+    await this.props.changeView(view.ADD_SERVICE);
+  };
+
+  onSelectService = serviceId => {
+    this.props.changeView(view.OVERVIEW);
+    this.props.selectService(serviceId);
+  };
+
 }
 
 const mapStateToProps = state => ({
-  services: state.services.services
+  selectedServiceId: state.dashboard.selectedServiceId,
 });
 
 export default connect(
   mapStateToProps,
-  { getServices, addService, deleteService, updateService }
+  {selectService, changeView, getServices, deleteService}
 )(SideNav);
