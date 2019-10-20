@@ -6,5 +6,6 @@ urlpatterns = [
     path('', include('frontend.urls')),
     path('', include('servers.urls')),
     path('', include('accounts.urls')),
-    path('', include('services.urls'))
+    path('', include('services.urls')),
+    path('', include('ping.urls'))
 ]
