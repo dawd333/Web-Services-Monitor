@@ -24,8 +24,9 @@ export const getServices = () => (dispatch, getState) => {
 };
 
 // ADD SERVICE
-export const addService = service => (dispatch, getState) => {
-  axios
+export const addService = service => async (dispatch, getState) => {
+  let serviceId;
+  await axios
     .post("/api/services/", service, tokenConfig(getState))
     .then(response => {
       dispatch(createMessage({ addService: "Service Added" }));
@@ -33,10 +34,12 @@ export const addService = service => (dispatch, getState) => {
         type: ADD_SERVICE,
         payload: response.data
       });
+      serviceId = response.data.id;
     })
     .catch(error => {
       dispatch(returnErrors(error.response.data, error.response.status));
     });
+  return serviceId;
 };
 
 // UPDATE SERVICE

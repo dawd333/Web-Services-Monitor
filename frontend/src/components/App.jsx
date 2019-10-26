@@ -22,7 +22,7 @@ import PrivateRoute from "./common/PrivateRoute";
 import {loadUser} from "../actions/auth";
 
 import {Container} from "react-bootstrap";
-import {Dashboard} from "./dashboard/Dashboard";
+import {DashboardContainer} from "./dashboard/DashboardContainer";
 import styles from "./App.less";
 
 // Alert Options
@@ -47,7 +47,7 @@ class App extends Component {
                 {/*<MainTitle />*/}
                 <Container fluid={true} className={styles.container}> {/* Make it 100% width*/}
                   <Switch>
-                    <PrivateRoute exact path="/" component={Dashboard}/>
+                    <PrivateRoute exact path="/" component={DashboardContainer}/>
                     <Route exact path="/register" component={Register}/>
                     <Route exact path="/login" component={Login}/>
                   </Switch>

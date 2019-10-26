@@ -1,4 +1,3 @@
-import PropTypes from "prop-types";
 
 export const GET_SERVERS = "GET_SERVERS";
 export const DELETE_SERVER = "DELETE_SERVER";
@@ -24,9 +23,6 @@ export const UPDATE_SERVICE = "UPDATE_SERVICE";
 export const DELETE_SERVICE = "DELETE_SERVICE";
 export const CLEAR_SERVICES = "CLEAR_SERVICES";
 
-// TODO I'm trying to emulate types from TypeScript. Let's check in a few days if this is a good approach.
-export const Service = {
-  id: PropTypes.number.isRequired,
-  name: PropTypes.string.isRequired,
-  value: PropTypes.number.isRequired
-};
+// dashboard
+export const  CHANGE_VIEW = "CHANGE_VIEW";
+export const  SELECT_SERVICE = "SELECT_SERVICE";
