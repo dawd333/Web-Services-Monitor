@@ -7,36 +7,33 @@ import {
 } from "../actions/types";
 
 const initialState = {
-  services: []
+  services: {}
 };
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   switch (action.type) {
     case GET_SERVICES:
       return {
         ...state,
-        services: action.payload
+        services: action.payload.reduce((map, service) => {
+          map[service.id] = service;
+          return map;
+        }, {})
       };
     case ADD_SERVICE:
       return {
         ...state,
-        services: [...state.services, action.payload]
+        // Do nothing? We want to call GET_SERVICES again rather than updating only one item in list
       };
     case UPDATE_SERVICE:
       return {
         ...state,
-        services: state.services.map(service =>
-          service.id === action.payload.id
-            ? (service = action.payload)
-            : service
-        )
+        // Do nothing? We want to call GET_SERVICES again rather than updating only one item in list
       };
     case DELETE_SERVICE:
       return {
         ...state,
-        services: state.services.filter(
-          service => service.id !== action.payload
-        )
+        // Do nothing? We want to call GET_SERVICES again rather than updating only one item in list
       };
     case CLEAR_SERVICES:
       return {

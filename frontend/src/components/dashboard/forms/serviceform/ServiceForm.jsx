@@ -9,7 +9,6 @@ export class ServiceForm extends React.Component {
   static propTypes = {
     label: PropTypes.string.isRequired,
     name: PropTypes.string,
-    value: PropTypes.number,
     onSubmit: PropTypes.func.isRequired,
   };
 
@@ -17,7 +16,6 @@ export class ServiceForm extends React.Component {
     super(props);
     this.state = {
       name: props.name ? props.name : "",
-      value: props.value ? props.value : 0,
     }
   }
 
@@ -28,7 +26,6 @@ export class ServiceForm extends React.Component {
         ...this.state,
         id: nextProps.id,
         name: nextProps.name,
-        value: nextProps.value,
       });
     }
     return true;
@@ -46,17 +43,6 @@ export class ServiceForm extends React.Component {
             name="name"
             onChange={this.onChange}
             value={this.state.name}
-          />
-        </Form.Group>
-        <Form.Group>
-          <Form.Label column={"value"}>
-            {"Value"}
-          </Form.Label>
-          <FormControl
-            type="number"
-            name="value"
-            onChange={this.onChange}
-            value={this.state.value}
           />
         </Form.Group>
         <Form.Group>
@@ -80,7 +66,6 @@ export class ServiceForm extends React.Component {
 
     const service = {
       name: this.state.name,
-      value: this.state.value,
     };
     this.props.onSubmit(service);
   };

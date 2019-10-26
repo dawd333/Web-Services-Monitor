@@ -23,6 +23,11 @@ export const UPDATE_SERVICE = "UPDATE_SERVICE";
 export const DELETE_SERVICE = "DELETE_SERVICE";
 export const CLEAR_SERVICES = "CLEAR_SERVICES";
 
+export const GET_PINGS = "GET_PINGS";
+export const ADD_PING = "ADD_PING";
+export const UPDATE_PING = "UPDATE_PING";
+export const DELETE_PING = "DELETE_PING";
+
 // dashboard
 export const  CHANGE_VIEW = "CHANGE_VIEW";
 export const  SELECT_SERVICE = "SELECT_SERVICE";
