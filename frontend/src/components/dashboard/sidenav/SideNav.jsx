@@ -95,9 +95,9 @@ export class SideNav extends React.Component {
     )
   };
 
-  onAddService = async () => {
-    await this.props.selectService(undefined);
-    await this.props.changeView(view.ADD_SERVICE);
+  onAddService = () => {
+    this.props.selectService(undefined);
+    this.props.changeView(view.ADD_SERVICE);
   };
 
   onSelectService = serviceId => {

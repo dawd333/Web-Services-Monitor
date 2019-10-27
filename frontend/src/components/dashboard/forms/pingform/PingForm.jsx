@@ -22,25 +22,9 @@ export class PingForm extends React.Component {
       ip: props.ip ? props.ip : "",
       interval: props.interval ? props.interval : 1000,
       isActive: props.isActive ? props.isActive : false,
-      numberOfRequests: props.numberOfRequests ? props.numberOfRequests : 0,
-      timeout: props.timeout ? props.timeout : 0,
+      numberOfRequests: props.numberOfRequests ? props.numberOfRequests : 4,
+      timeout: props.timeout ? props.timeout : 15,
     }
-  }
-
-  // TODO remove this and use keys instead
-  // This might be unsafe but its needed if you switch directly from editing service to adding new one
-  shouldComponentUpdate(nextProps, nextState, nextContext) {
-    if (this.props.ip !== nextProps.ip) {
-      this.setState({
-        ...this.state,
-        ip: nextProps.ip,
-        interval: nextProps.interval,
-        isActive: nextProps.isActive,
-        numberOfRequests: nextProps.numberOfRequests,
-        timeout: nextProps.timeout,
-      });
-    }
-    return true;
   }
 
   render() {

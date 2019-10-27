@@ -1,5 +1,13 @@
 import {view} from "../components/dashboard/DashboardModel";
-import {ADD_PING, CHANGE_VIEW, DELETE_PING, GET_PINGS, SELECT_SERVICE, UPDATE_PING} from "../actions/types";
+import {
+  ADD_PING,
+  CHANGE_VIEW,
+  DELETE_PING,
+  GET_PINGS,
+  SELECT_PING,
+  SELECT_SERVICE,
+  UPDATE_PING
+} from "../actions/types";
 
 
 const initialState = {
@@ -19,7 +27,12 @@ export default function (state = initialState, action) {
         ...state,
         selectedServiceId: action.payload,
       };
-      case GET_PINGS:
+    case SELECT_PING:
+      return {
+        ...state,
+        selectedPing: action.payload,
+      };
+    case GET_PINGS:
       return {
         ...state,
         pings: action.payload,

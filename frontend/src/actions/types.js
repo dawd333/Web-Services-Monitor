@@ -31,3 +31,4 @@ export const DELETE_PING = "DELETE_PING";
 // dashboard
 export const  CHANGE_VIEW = "CHANGE_VIEW";
 export const  SELECT_SERVICE = "SELECT_SERVICE";
+export const  SELECT_PING = "SELECT_PING";

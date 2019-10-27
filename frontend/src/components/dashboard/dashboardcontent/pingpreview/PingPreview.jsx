@@ -4,6 +4,8 @@ import {connect} from "react-redux";
 import styles from "./PingPreview.less"
 import {Badge, Button, ButtonToolbar, Nav} from "react-bootstrap";
 import {convertFromUTC} from "../../../../commons/utils";
+import {view} from "../../DashboardModel";
+import {changeView, selectPing, selectService} from "../../../../actions/dashboard";
 
 class PingPreview extends React.Component {
   static propTypes = {
@@ -80,7 +82,8 @@ class PingPreview extends React.Component {
   };
 
   onConfigurationClick = () => {
-
+    this.props.selectPing(this.props.model);
+    this.props.changeView(view.EDIT_PING);
   };
 }
 
@@ -89,5 +92,5 @@ const mapStateToProps = state => ({});
 
 export default connect(
   mapStateToProps,
-  {},
+  {selectService, changeView, selectPing},
 )(PingPreview);

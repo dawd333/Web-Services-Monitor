@@ -10,7 +10,6 @@ import {tokenConfig} from "../axios-config";
 
 // GET SERVICES
 export const getServices = () => (dispatch, getState) => {
-  console.log(tokenConfig(getState));
   fetchServices(dispatch, getState);
 };
 

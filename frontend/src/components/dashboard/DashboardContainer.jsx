@@ -7,7 +7,7 @@ import {view} from "./DashboardModel";
 import {Service} from "./DashboardModel";
 import {ServiceForm} from "./forms/serviceform/ServiceForm";
 import {addService, deleteService, getServices, updateService} from "../../actions/services";
-import {addPing, changeView, selectService, updatePing} from "../../actions/dashboard";
+import {addPing, changeView, selectPing, selectService, updatePing} from "../../actions/dashboard";
 import {PingForm} from "./forms/pingform/PingForm";
 import DashboardContent from "./dashboardcontent/DashboardContent";
 
@@ -16,12 +16,7 @@ class DashboardContainer extends React.Component {
     services: PropTypes.objectOf(PropTypes.shape(Service)),
     currentView: PropTypes.oneOf(Object.values(view)),
     selectedServiceId: PropTypes.number,
-    selectService: PropTypes.func.isRequired,
-    getServices: PropTypes.func.isRequired,
-    addService: PropTypes.func.isRequired,
-    updateService: PropTypes.func.isRequired,
-    addPing: PropTypes.func.isRequired,
-    updatePing: PropTypes.func.isRequired,
+    selectedPing: PropTypes.object, // TODO Create shape for ping object
   };
 
   componentDidMount() {
@@ -73,14 +68,28 @@ class DashboardContainer extends React.Component {
           />
         );
       case view.ADD_PING:
-        return (<PingForm
-          label={"Add ping configuration"}
-          ip={""}
-          interval={1000}
-          isActive={false}
-          numberOfRequests={4}
-          onSubmit={this.onAddPing}
-        />);
+        return (
+          <PingForm
+            key={"add_ping"}
+            label={"Add ping configuration"}
+            onSubmit={this.onAddPing}
+          />);
+      case view.EDIT_PING:
+        return (
+          <>
+            {this.props.selectedPing &&
+            <PingForm
+              key={this.props.selectedPing.id}
+              label={"Update ping configuration"}
+              ip={this.props.selectedPing.ip}
+              interval={this.props.selectedPing.interval}
+              isActive={this.props.selectedPing.is_active}
+              numberOfRequests={this.props.selectedPing.number_of_requests}
+              timeout={this.props.selectedPing.timeout}
+              onSubmit={this.onUpdatePing}
+            />
+            }
+          </>);
       default:
         return (<div>{"DEFAULT VIEW"}</div>)
     }
@@ -88,7 +97,6 @@ class DashboardContainer extends React.Component {
 
   onAddService = async (service) => {
     const newServiceId = await this.props.addService(service);
-    console.log(newServiceId);
     if (newServiceId) {
       this.props.selectService(newServiceId);
       this.props.changeView(view.OVERVIEW);
@@ -108,7 +116,8 @@ class DashboardContainer extends React.Component {
   };
 
   onUpdatePing = async (ping) => {
-    await this.props.updatePing(this.props.selectedServiceId, ping);
+    await this.props.updatePing(this.props.selectedServiceId, this.props.selectedPing.id, ping);
+    this.props.selectPing(undefined);
     this.props.changeView(view.OVERVIEW);
   };
 
@@ -123,12 +132,14 @@ const mapStateToProps = state => ({
   services: state.services.services,
   currentView: state.dashboard.currentView,
   selectedServiceId: state.dashboard.selectedServiceId,
+  selectedPing: state.dashboard.selectedPing,
 });
 
 const connected = connect(
   mapStateToProps,
   {
     selectService,
+    selectPing,
     changeView,
     getServices,
     addService,
