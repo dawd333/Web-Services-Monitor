@@ -57,8 +57,8 @@ export class PingForm extends React.Component {
           <FormControl
             type="checkbox"
             name="isActive"
-            onChange={this.onChange}
-            value={this.state.isActive}
+            onChange={this.onChangeBoolean}
+            checked={this.state.isActive}
           />
           <Form.Label column={"number_of_requests"}>
             {"Number of requests:"}
@@ -92,6 +92,13 @@ export class PingForm extends React.Component {
     this.setState({
       ...this.state,
       [event.target.name]: event.target.value,
+    })
+  };
+
+  onChangeBoolean = event => {
+    this.setState({
+      ...this.state,
+      [event.target.name]: !this.state[event.target.name],
     })
   };
 

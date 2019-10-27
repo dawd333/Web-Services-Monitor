@@ -48,7 +48,7 @@ class PingPreview extends React.Component {
         <span>{this.props.model.ip}</span><br/>
 
         <span className={styles.pingPreview__label}>{"Status:"}</span><br/>
-        {this.props.model.isActive ?
+        {this.props.model.is_active ?
           <Badge pill={true} variant="success">{"enabled"}</Badge> :
           <Badge pill={true} variant="danger">{"disabled"}</Badge>
         }<br/>
