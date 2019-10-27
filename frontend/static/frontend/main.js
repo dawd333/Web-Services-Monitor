@@ -166,7 +166,7 @@ eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) *
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
-eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"convertFromUTC\", function() { return convertFromUTC; });\n/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ \"./node_modules/moment/moment.js\");\n/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);\n\nvar UTC_PATTERN = \"YYYY-MM-DDThh:mm:ss.sTZD\";\nvar APP_PATTERN = \"DD-MM-YYYY hh:mm:ss\";\nvar convertFromUTC = function convertFromUTC(utc) {\n  return moment__WEBPACK_IMPORTED_MODULE_0___default.a.utc(utc).format(APP_PATTERN);\n};\n\n//# sourceURL=webpack:///./frontend/src/commons/utils.js?");
+eval("__webpack_require__.r(__webpack_exports__);\n/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, \"convertFromUTC\", function() { return convertFromUTC; });\n/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! moment */ \"./node_modules/moment/moment.js\");\n/* harmony import */ var moment__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(moment__WEBPACK_IMPORTED_MODULE_0__);\n\nvar UTC_PATTERN = \"YYYY-MM-DDTHH:mm:ss.SSSSSS[Z]\";\nvar APP_PATTERN = \"DD-MM-YYYY HH:mm:ss\";\nvar convertFromUTC = function convertFromUTC(utc) {\n  return moment__WEBPACK_IMPORTED_MODULE_0___default.a.utc(utc, UTC_PATTERN).format(APP_PATTERN);\n};\n\n//# sourceURL=webpack:///./frontend/src/commons/utils.js?");
 
 /***/ }),
 

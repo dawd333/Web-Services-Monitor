@@ -1,9 +1,8 @@
-import moment from "moment"
+import moment from "moment";
 
-const UTC_PATTERN = "YYYY-MM-DDThh:mm:ss.sTZD";
-const APP_PATTERN = "DD-MM-YYYY hh:mm:ss";
+const UTC_PATTERN = "YYYY-MM-DDTHH:mm:ss.SSSSSS[Z]";
+const APP_PATTERN = "DD-MM-YYYY HH:mm:ss";
 
-export const convertFromUTC = (utc) => {
-  return moment.utc(utc).format(APP_PATTERN)
+export const convertFromUTC = utc => {
+  return moment.utc(utc, UTC_PATTERN).format(APP_PATTERN);
 };
-
