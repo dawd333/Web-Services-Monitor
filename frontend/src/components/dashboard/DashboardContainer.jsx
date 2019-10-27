@@ -7,9 +7,8 @@ import {view} from "./DashboardModel";
 import {Service} from "./DashboardModel";
 import {ServiceForm} from "./forms/serviceform/ServiceForm";
 import {addService, deleteService, getServices, updateService} from "../../actions/services";
-import {changeView, selectService} from "../../actions/dashboard";
+import {addPing, changeView, selectService, updatePing} from "../../actions/dashboard";
 import {PingForm} from "./forms/pingform/PingForm";
-import {addPing, updatePing} from "../../actions/ping";
 import DashboardContent from "./dashboardcontent/DashboardContent";
 
 class DashboardContainer extends React.Component {
@@ -47,10 +46,19 @@ class DashboardContainer extends React.Component {
   displayContent = (props) => {
     switch (props.currentView) {
       case view.OVERVIEW:
-        return (<DashboardContent/>);
+        if (this.props.selectedServiceId) { // This is not clean code :/ Change it when we decide what to display by default
+          return (
+            <DashboardContent
+              key={this.props.selectedServiceId}
+              serviceId={this.props.selectedServiceId}
+            />
+          );
+        }
+        break;
       case view.ADD_SERVICE:
         return (
           <ServiceForm
+            key={"add_service"}
             label={"Add service"}
             onSubmit={this.onAddService}
           />
@@ -58,6 +66,7 @@ class DashboardContainer extends React.Component {
       case view.EDIT_SERVICE:
         return (
           <ServiceForm
+            key={"edit_" + this.retrieveSelectedService().name}
             label={"Update service"}
             name={this.retrieveSelectedService().name}
             onSubmit={this.onUpdateService}

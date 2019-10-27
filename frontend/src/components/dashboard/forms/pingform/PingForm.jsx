@@ -27,6 +27,7 @@ export class PingForm extends React.Component {
     }
   }
 
+  // TODO remove this and use keys instead
   // This might be unsafe but its needed if you switch directly from editing service to adding new one
   shouldComponentUpdate(nextProps, nextState, nextContext) {
     if (this.props.ip !== nextProps.ip) {

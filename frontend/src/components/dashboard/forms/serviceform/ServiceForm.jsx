@@ -18,18 +18,18 @@ export class ServiceForm extends React.Component {
       name: props.name ? props.name : "",
     }
   }
-
+  // TODO This is not needed anymore as we can use keys instead. Remove it later.
   // This might be unsafe but its needed if you switch directly from editing service to adding new one
-  shouldComponentUpdate(nextProps, nextState, nextContext) {
-    if (this.props.id !== nextProps.id || this.props.name !== nextProps.name) {
-      this.setState({
-        ...this.state,
-        id: nextProps.id,
-        name: nextProps.name,
-      });
-    }
-    return true;
-  }
+  // shouldComponentUpdate(nextProps, nextState, nextContext) {
+  //   if (this.props.id !== nextProps.id || this.props.name !== nextProps.name) {
+  //     this.setState({
+  //       ...this.state,
+  //       id: nextProps.id,
+  //       name: nextProps.name,
+  //     });
+  //   }
+  //   return true;
+  // }
 
   render() {
     return (

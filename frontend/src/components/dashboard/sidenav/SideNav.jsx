@@ -8,14 +8,10 @@ import {
   Card,
   ListGroup,
   Button,
-  FormControl,
-  Form,
-  Modal
 } from "react-bootstrap";
 import styles from "./SideNav.less";
 import {Service, view} from "../DashboardModel";
 import {changeView, selectService} from "../../../actions/dashboard";
-import {dispatchAndGetServices} from "../../../commons/utils";
 
 export class SideNav extends React.Component {
 
