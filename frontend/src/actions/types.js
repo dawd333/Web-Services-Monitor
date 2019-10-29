@@ -1,10 +1,3 @@
-
-export const GET_SERVERS = "GET_SERVERS";
-export const DELETE_SERVER = "DELETE_SERVER";
-export const ADD_SERVER = "ADD_SERVER";
-export const CLEAR_SERVERS = "CLEAR_SERVERS";
-export const UPDATE_SERVER = "UPDATE_SERVER";
-
 export const GET_ERRORS = "GET_ERRORS";
 export const CREATE_MESSAGE = "CREATE_MESSAGE";
 
@@ -23,6 +16,18 @@ export const UPDATE_SERVICE = "UPDATE_SERVICE";
 export const DELETE_SERVICE = "DELETE_SERVICE";
 export const CLEAR_SERVICES = "CLEAR_SERVICES";
 
+export const GET_PINGS = "GET_PINGS";
+export const ADD_PING = "ADD_PING";
+export const UPDATE_PING = "UPDATE_PING";
+export const DELETE_PING = "DELETE_PING";
+
+export const GET_SNMPS = "GET_SNMPS";
+export const ADD_SNMP = "ADD_SNMP";
+export const UPDATE_SNMP = "UPDATE_SNMP";
+export const DELETE_SNMP = "DELETE_SNMP";
+
 // dashboard
-export const  CHANGE_VIEW = "CHANGE_VIEW";
-export const  SELECT_SERVICE = "SELECT_SERVICE";
+export const CHANGE_VIEW = "CHANGE_VIEW";
+export const SELECT_SERVICE = "SELECT_SERVICE";
+export const SELECT_PING = "SELECT_PING";
+export const SELECT_SNMP = "SELECT_SNMP";

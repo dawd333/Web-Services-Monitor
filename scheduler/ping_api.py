@@ -43,4 +43,5 @@ def add_or_update(ping_configuration):
 
 def remove(ping_configuration_id):
     job_id = "ping_" + str(ping_configuration_id)
-    scheduler.remove_job(job_id=job_id)
+    if scheduler.job_exists(job_id=job_id):
+        scheduler.remove_job(job_id=job_id)

@@ -1,6 +1,6 @@
-import React, {Component, Fragment} from "react";
+import React, { Component, Fragment } from "react";
 import ReactDOM from "react-dom";
-import {Provider} from "react-redux";
+import { Provider } from "react-redux";
 import store from "../store";
 import {
   HashRouter as Router,
@@ -9,7 +9,7 @@ import {
   Redirect
 } from "react-router-dom";
 
-import {Provider as AlertProvider} from "react-alert";
+import { Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 
 import Header from "./layout/Header";
@@ -19,16 +19,17 @@ import Login from "./accounts/Login";
 import Register from "./accounts/Register";
 import PrivateRoute from "./common/PrivateRoute";
 
-import {loadUser} from "../actions/auth";
+import { loadUser } from "../actions/auth";
 
-import {Container} from "react-bootstrap";
-import {DashboardContainer} from "./dashboard/DashboardContainer";
+import { Container } from "react-bootstrap";
+import { DashboardContainer } from "./dashboard/DashboardContainer";
 import styles from "./App.less";
 
 // Alert Options
 const alertOptions = {
   timeout: 3000,
-  position: "top center"
+  position: "top center",
+  transition: "fade"
 };
 
 class App extends Component {
@@ -42,16 +43,18 @@ class App extends Component {
         <AlertProvider template={AlertTemplate} {...alertOptions}>
           <Router>
             <Fragment>
-                <Header className={styles.header}/>
-                <Alerts/>
-                {/*<MainTitle />*/}
-                <Container fluid={true} className={styles.container}> {/* Make it 100% width*/}
-                  <Switch>
-                    <PrivateRoute exact path="/" component={DashboardContainer}/>
-                    <Route exact path="/register" component={Register}/>
-                    <Route exact path="/login" component={Login}/>
-                  </Switch>
-                </Container>
+              <Header className={styles.header} />
+              <Alerts />
+              {/*<MainTitle />*/}
+              <Container fluid={true} className={styles.container}>
+                {" "}
+                {/* Make it 100% width*/}
+                <Switch>
+                  <PrivateRoute exact path="/" component={DashboardContainer} />
+                  <Route exact path="/register" component={Register} />
+                  <Route exact path="/login" component={Login} />
+                </Switch>
+              </Container>
             </Fragment>
           </Router>
         </AlertProvider>
@@ -60,4 +63,4 @@ class App extends Component {
   }
 }
 
-ReactDOM.render(<App/>, document.getElementById("app"));
+ReactDOM.render(<App />, document.getElementById("app"));

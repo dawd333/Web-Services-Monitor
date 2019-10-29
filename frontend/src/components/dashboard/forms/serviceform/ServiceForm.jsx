@@ -9,7 +9,6 @@ export class ServiceForm extends React.Component {
   static propTypes = {
     label: PropTypes.string.isRequired,
     name: PropTypes.string,
-    value: PropTypes.number,
     onSubmit: PropTypes.func.isRequired,
   };
 
@@ -17,21 +16,7 @@ export class ServiceForm extends React.Component {
     super(props);
     this.state = {
       name: props.name ? props.name : "",
-      value: props.value ? props.value : 0,
     }
-  }
-
-  // This might be unsafe but its needed if you switch directly from editing service to adding new one
-  shouldComponentUpdate(nextProps, nextState, nextContext) {
-    if (this.props.id !== nextProps.id || this.props.name !== nextProps.name) {
-      this.setState({
-        ...this.state,
-        id: nextProps.id,
-        name: nextProps.name,
-        value: nextProps.value,
-      });
-    }
-    return true;
   }
 
   render() {
@@ -46,17 +31,6 @@ export class ServiceForm extends React.Component {
             name="name"
             onChange={this.onChange}
             value={this.state.name}
-          />
-        </Form.Group>
-        <Form.Group>
-          <Form.Label column={"value"}>
-            {"Value"}
-          </Form.Label>
-          <FormControl
-            type="number"
-            name="value"
-            onChange={this.onChange}
-            value={this.state.value}
           />
         </Form.Group>
         <Form.Group>
@@ -80,7 +54,6 @@ export class ServiceForm extends React.Component {
 
     const service = {
       name: this.state.name,
-      value: this.state.value,
     };
     this.props.onSubmit(service);
   };
