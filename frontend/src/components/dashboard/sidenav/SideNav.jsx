@@ -2,16 +2,12 @@ import React, {useState} from "react";
 import {connect} from "react-redux";
 import PropTypes from "prop-types";
 import {
-  getServices,
   deleteService,
 } from "../../../actions/services";
 import {
   Card,
   ListGroup,
   Button,
-  FormControl,
-  Form,
-  Modal
 } from "react-bootstrap";
 import styles from "./SideNav.less";
 import {Service, view} from "../DashboardModel";
@@ -20,22 +16,18 @@ import {changeView, selectService} from "../../../actions/dashboard";
 export class SideNav extends React.Component {
 
   static propTypes = {
-    services: PropTypes.arrayOf(PropTypes.shape(Service)),
+    services: PropTypes.objectOf(PropTypes.shape(Service)),
     selectedServiceId: PropTypes.number,
     changeView: PropTypes.func.isRequired,
     selectService: PropTypes.func.isRequired,
-    getServices: PropTypes.func.isRequired,
     deleteService: PropTypes.func.isRequired
   };
 
-  componentDidMount() {
-    this.props.getServices();
-  }
 
   render() {
     return (
       <div className={styles.sideNav}>
-        {this.props.services.map(this.renderService)}
+        {Object.values(this.props.services).map(this.renderService)}
         <Card className={styles.addService} key={"add_service"}>
           <a onClick={this.onAddService.bind(this)}>
             <Card.Header>
@@ -75,11 +67,18 @@ export class SideNav extends React.Component {
             {"Overview"}
           </Button>
           <Button
-            variant="secondary"
+            variant="primary"
             className={styles.accordionButton}
             onClick={this.props.changeView.bind(this, view.EDIT_SERVICE)}
           >
             {"Update Service"}
+          </Button>
+          <Button
+            variant="primary"
+            className={styles.accordionButton}
+            onClick={this.props.changeView.bind(this, view.ADD_PING)}
+          >
+            {"Add ping"}
           </Button>
           <Button
             variant="danger"
@@ -96,9 +95,9 @@ export class SideNav extends React.Component {
     )
   };
 
-  onAddService = async () => {
-    await this.props.selectService(undefined);
-    await this.props.changeView(view.ADD_SERVICE);
+  onAddService = () => {
+    this.props.selectService(undefined);
+    this.props.changeView(view.ADD_SERVICE);
   };
 
   onSelectService = serviceId => {
@@ -114,5 +113,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  {selectService, changeView, getServices, deleteService}
+  {selectService, changeView, deleteService}
 )(SideNav);

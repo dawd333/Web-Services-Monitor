@@ -128,3 +128,6 @@ dmypy.json
 # Code editors
 .idea/
 .vscode/
+
+# Scheduler
+jobs.sqlite

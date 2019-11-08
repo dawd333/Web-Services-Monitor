@@ -5,19 +5,23 @@ import styles from "./DashboardContainer.less";
 import SideNav from "./sidenav/SideNav";
 import {view} from "./DashboardModel";
 import {Service} from "./DashboardModel";
-import {ServiceForm} from "./serviceform/ServiceForm";
+import {ServiceForm} from "./forms/serviceform/ServiceForm";
 import {addService, deleteService, getServices, updateService} from "../../actions/services";
-import {changeView, selectService} from "../../actions/dashboard";
+import {addPing, changeView, selectPing, selectService, updatePing} from "../../actions/dashboard";
+import {PingForm} from "./forms/pingform/PingForm";
+import DashboardContent from "./dashboardcontent/DashboardContent";
 
 class DashboardContainer extends React.Component {
   static propTypes = {
-    services: PropTypes.arrayOf(PropTypes.shape(Service)),
+    services: PropTypes.objectOf(PropTypes.shape(Service)),
     currentView: PropTypes.oneOf(Object.values(view)),
     selectedServiceId: PropTypes.number,
-    selectService: PropTypes.func.isRequired,
-    addService: PropTypes.func.isRequired,
-    updateService: PropTypes.func.isRequired,
+    selectedPing: PropTypes.object, // TODO Create shape for ping object
   };
+
+  componentDidMount() {
+    this.props.getServices();
+  }
 
   render() {
     return (
@@ -37,10 +41,19 @@ class DashboardContainer extends React.Component {
   displayContent = (props) => {
     switch (props.currentView) {
       case view.OVERVIEW:
-        return (<div>{"OVERVIEW"}</div>);
+        if (this.props.selectedServiceId) { // This is not clean code :/ Change it when we decide what to display by default
+          return (
+            <DashboardContent
+              key={this.props.selectedServiceId}
+              serviceId={this.props.selectedServiceId}
+            />
+          );
+        }
+        break;
       case view.ADD_SERVICE:
         return (
           <ServiceForm
+            key={"add_service"}
             label={"Add service"}
             onSubmit={this.onAddService}
           />
@@ -48,14 +61,35 @@ class DashboardContainer extends React.Component {
       case view.EDIT_SERVICE:
         return (
           <ServiceForm
+            key={"edit_" + this.retrieveSelectedService().name}
             label={"Update service"}
             name={this.retrieveSelectedService().name}
-            value={this.retrieveSelectedService().value}
             onSubmit={this.onUpdateService}
           />
         );
-      case view.PING_OVERVIEW:
-        return (<div>{"PING_OVERVIEW"}</div>);
+      case view.ADD_PING:
+        return (
+          <PingForm
+            key={"add_ping"}
+            label={"Add ping configuration"}
+            onSubmit={this.onAddPing}
+          />);
+      case view.EDIT_PING:
+        return (
+          <>
+            {this.props.selectedPing &&
+            <PingForm
+              key={this.props.selectedPing.id}
+              label={"Update ping configuration"}
+              ip={this.props.selectedPing.ip}
+              interval={this.props.selectedPing.interval}
+              isActive={this.props.selectedPing.is_active}
+              numberOfRequests={this.props.selectedPing.number_of_requests}
+              timeout={this.props.selectedPing.timeout}
+              onSubmit={this.onUpdatePing}
+            />
+            }
+          </>);
       default:
         return (<div>{"DEFAULT VIEW"}</div>)
     }
@@ -70,17 +104,26 @@ class DashboardContainer extends React.Component {
   };
 
   onUpdateService = async (service) => {
-    const serviceWithId = {
-      ...service,
-      id: this.props.selectedServiceId,
-    };
-    await this.props.updateService(serviceWithId);
+    await this.props.updateService(this.props.selectedServiceId, service);
+    this.props.changeView(view.OVERVIEW);
+  };
+
+  onAddPing = async (ping) => {
+    const newPingId = await this.props.addPing(this.props.selectedServiceId, ping);
+    if (newPingId) {
+      this.props.changeView(view.OVERVIEW);
+    }
+  };
+
+  onUpdatePing = async (ping) => {
+    await this.props.updatePing(this.props.selectedServiceId, this.props.selectedPing.id, ping);
+    this.props.selectPing(undefined);
     this.props.changeView(view.OVERVIEW);
   };
 
   retrieveSelectedService = () => {
-    const service = this.props.services.find(service => service.id === this.props.selectedServiceId);
-    return service ? service : {name: "", value: 0};
+    const service = Object.values(this.props.services).find(service => service.id === this.props.selectedServiceId);
+    return service ? service : {name: ""};
   }
 }
 
@@ -89,10 +132,21 @@ const mapStateToProps = state => ({
   services: state.services.services,
   currentView: state.dashboard.currentView,
   selectedServiceId: state.dashboard.selectedServiceId,
+  selectedPing: state.dashboard.selectedPing,
 });
 
 const connected = connect(
   mapStateToProps,
-  {selectService, changeView, getServices, addService, deleteService, updateService},
+  {
+    selectService,
+    selectPing,
+    changeView,
+    getServices,
+    addService,
+    deleteService,
+    updateService,
+    addPing,
+    updatePing,
+  },
 )(DashboardContainer);
 export {connected as DashboardContainer}
