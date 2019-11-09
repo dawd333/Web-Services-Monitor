@@ -24,6 +24,7 @@ import {
 } from "../../actions/dashboard";
 import { PingForm } from "./forms/pingform/PingForm";
 import { SnmpForm } from "./forms/snmpform/SnmpForm";
+import SnmpOverview from "./snmpoverview/SnmpOverview";
 import DashboardContent from "./dashboardcontent/DashboardContent";
 
 class DashboardContainer extends React.Component {
@@ -133,6 +134,13 @@ class DashboardContainer extends React.Component {
               />
             )}
           </>
+        );
+      case view.SNMP_OVERVIEW:
+        return (
+          <SnmpOverview
+            key={this.props.selectedSnmp.id}
+            snmpModel={this.props.selectedSnmp}
+          />
         );
       default:
         return <div>{"DEFAULT VIEW"}</div>;

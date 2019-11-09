@@ -25,6 +25,7 @@ export const GET_SNMPS = "GET_SNMPS";
 export const ADD_SNMP = "ADD_SNMP";
 export const UPDATE_SNMP = "UPDATE_SNMP";
 export const DELETE_SNMP = "DELETE_SNMP";
+export const GET_SNMP_RESULTS = "GET_SNMP_RESULTS";
 
 // dashboard
 export const CHANGE_VIEW = "CHANGE_VIEW";

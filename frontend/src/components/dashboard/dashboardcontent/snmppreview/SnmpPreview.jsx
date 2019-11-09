@@ -26,10 +26,18 @@ class SnmpPreview extends React.Component {
           {this.renderRightColumn()}
         </div>
         <ButtonToolbar>
-          <Button variant={"primary"} onClick={this.onDetailsClick}>
+          <Button
+            className={styles.snmpPreview__button}
+            variant={"primary"}
+            onClick={this.onDetailsClick}
+          >
             {"Details"}
           </Button>
-          <Button variant={"primary"} onClick={this.onConfigurationClick}>
+          <Button
+            className={styles.snmpPreview__button}
+            variant={"primary"}
+            onClick={this.onConfigurationClick}
+          >
             {"Configuration"}
           </Button>
         </ButtonToolbar>
@@ -95,7 +103,10 @@ class SnmpPreview extends React.Component {
     );
   };
 
-  onDetailsClick = () => {};
+  onDetailsClick = () => {
+    this.props.selectSnmp(this.props.model);
+    this.props.changeView(view.SNMP_OVERVIEW);
+  };
 
   onConfigurationClick = () => {
     this.props.selectSnmp(this.props.model);

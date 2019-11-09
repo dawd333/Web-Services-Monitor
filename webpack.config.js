@@ -30,6 +30,17 @@ module.exports = {
             }
           }
         ]
+      },
+      {
+        test: /\.css$/, // This is required for external .css.
+        use: [
+          {
+            loader: "style-loader"
+          },
+          {
+            loader: "css-loader"
+          }
+        ]
       }
     ]
   },
