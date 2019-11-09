@@ -30,6 +30,17 @@ module.exports = {
             }
           }
         ]
+      },
+      {
+        test: /style\.css$/, // This is required only for react-vis stylesheet
+        use: [
+          {
+            loader: "style-loader"
+          },
+          {
+            loader: "css-loader",
+          },
+        ]
       }
     ]
   },

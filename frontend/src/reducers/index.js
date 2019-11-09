@@ -5,6 +5,7 @@ import messages from "./messages";
 import auth from "./auth";
 import services from "./services";
 import dashboard from "./dashboard";
+import ping from "./ping";
 
 export default combineReducers({
   dashboard,
@@ -12,5 +13,6 @@ export default combineReducers({
   errors,
   messages,
   auth,
-  services
+  services,
+  ping
 });

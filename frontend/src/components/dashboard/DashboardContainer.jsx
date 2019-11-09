@@ -10,6 +10,7 @@ import {addService, deleteService, getServices, updateService} from "../../actio
 import {addPing, changeView, selectPing, selectService, updatePing} from "../../actions/dashboard";
 import {PingForm} from "./forms/pingform/PingForm";
 import DashboardContent from "./dashboardcontent/DashboardContent";
+import PingOverview from "./pingoverview/PingOverview";
 
 class DashboardContainer extends React.Component {
   static propTypes = {
@@ -90,6 +91,12 @@ class DashboardContainer extends React.Component {
             />
             }
           </>);
+      case view.PING_OVERVIEW:
+        return (
+          <PingOverview
+            key={this.props.selectedPing.id}
+            pingModel={this.props.selectedPing}
+          />);
       default:
         return (<div>{"DEFAULT VIEW"}</div>)
     }

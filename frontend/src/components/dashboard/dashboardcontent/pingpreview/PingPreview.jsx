@@ -78,7 +78,8 @@ class PingPreview extends React.Component {
   };
 
   onDetailsClick = () => {
-
+    this.props.selectPing(this.props.model);
+    this.props.changeView(view.PING_OVERVIEW);
   };
 
   onConfigurationClick = () => {
