@@ -25,12 +25,14 @@ class PingPreview extends React.Component {
         </div>
         <ButtonToolbar>
           <Button
+            className={styles.pingPreview__button}
             variant={"primary"}
             onClick={this.onDetailsClick}
           >
             {"Details"}
           </Button>
           <Button
+            className={styles.pingPreview__button}
             variant={"primary"}
             onClick={this.onConfigurationClick}
           >

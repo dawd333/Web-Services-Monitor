@@ -1,24 +1,26 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
-import {Container, Row} from "react-bootstrap";
+import {Container, FormGroup, Row} from "react-bootstrap";
 import {getPingResults} from "../../../actions/ping";
 import {
   convertFromUTCtoDate,
   convertFromUTCtoDateWithSecondsDifference,
   getCurrentDateUTC,
-  getDateFromTodayUTC
+  getDateFromTodayUTC, getDateUtc
 } from "../../../commons/utils";
 import {
   HorizontalGridLines,
-  VerticalGridLines, VerticalRectSeriesCanvas,
+  VerticalRectSeries,
   XAxis,
   XYPlot,
-  YAxis
+  YAxis,
 } from "react-vis";
 import '../../../../../node_modules/react-vis/dist/style.css'; // import react-vis stylesheet
 import styles from "./PingOverview.less";
-import VerticalRectSeries from "react-vis/es/plot/series/vertical-rect-series";
+import CalendarRangePicker from "../../common/CalendarRangePicker/CalendarRangePicker";
+import moment from "moment";
+
 
 class PingOverview extends React.Component {
   static propTypes = {
@@ -26,33 +28,47 @@ class PingOverview extends React.Component {
     results: PropTypes.array,
   };
 
-
   componentDidMount() {
     this.props.getPingResults(this.props.pingModel.id, getDateFromTodayUTC(-7), getCurrentDateUTC());
+  }
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      fromDate: moment().subtract(7, 'days').toDate(),
+      toDate: new Date(),
+    }
   }
 
   render() {
     return (
       <Container className={styles.pingOverview}>
-        <h4 className={styles.pingOverview__header}>
-          {"Ping results from last X days"}
-        </h4>
+        <span className={styles.pingOverview__header}>
+          {"Ping results for "}
+        </span>
+        <CalendarRangePicker
+          fromDate={this.state.fromDate}
+          toDate={this.state.toDate}
+          onChange={this.onChangeCalendar}
+        />
         <XYPlot
           width={800}
           height={300}
           stackBy="y"
           xType="time"
           xDomain={[
-            convertFromUTCtoDate(getDateFromTodayUTC(-7)),
-            convertFromUTCtoDate(getCurrentDateUTC()),
+            this.state.fromDate,
+            this.state.toDate,
           ]}
-          labelAnchorY={"Average response time [ms]"}
+
         >
           <HorizontalGridLines/>
           <XAxis tickLabelAngle={-35}/>
           <YAxis/>
           <VerticalRectSeries color={"#1aaf54"} data={this.translateResultsPassed(this.props.results)}/>
-          <VerticalRectSeries color={"#fc0d1b"} data={this.translateResultsFailed(this.props.results)}/>
+          <VerticalRectSeries color={"#1aaf54"} data={this.translateResultsPassed(this.props.results)}/>
+          {/* This is trick to bypass not rendering chart when data is empty */}
+          <VerticalRectSeries data={[{x: new Date(), y:0}]}/>
         </XYPlot>
 
       </Container>
@@ -62,8 +78,8 @@ class PingOverview extends React.Component {
   translateResultsPassed = (results) => {
     return results ? results.map(result => {
       return {
-        x0: convertFromUTCtoDateWithSecondsDifference(result.created_at, -this.props.pingModel.interval * 0.5),
-        x: convertFromUTCtoDateWithSecondsDifference(result.created_at, this.props.pingModel.interval * 0.5),
+        x0: convertFromUTCtoDateWithSecondsDifference(result.created_at, -this.props.pingModel.interval * 0.4),
+        x: convertFromUTCtoDateWithSecondsDifference(result.created_at, this.props.pingModel.interval * 0.4),
         y: result.rtt_avg_ms * (result.number_of_requests - result?.error_messages?.length),
       }
     }) : [];
@@ -72,13 +88,21 @@ class PingOverview extends React.Component {
   translateResultsFailed = (results) => {
     return results ? results.map(result => {
       return {
-        x0: convertFromUTCtoDateWithSecondsDifference(result.created_at, -this.props.pingModel.interval * 0.5),
-        x: convertFromUTCtoDateWithSecondsDifference(result.created_at, this.props.pingModel.interval * 0.5),
-        y: result.rtt_avg_ms * result?.error_messages?.length + 20, // TODO remove + 20 (its only for testing w/out failed results)
+        x0: convertFromUTCtoDateWithSecondsDifference(result.created_at, -this.props.pingModel.interval * 0.4),
+        x: convertFromUTCtoDateWithSecondsDifference(result.created_at, this.props.pingModel.interval * 0.4),
+        y: result.rtt_avg_ms * result?.error_messages?.length,
       }
     }) : [];
   };
 
+  onChangeCalendar = (fromDate, toDate) => {
+    this.setState({
+      ...this.state,
+      fromDate,
+      toDate,
+    });
+    this.props.getPingResults(this.props.pingModel.id, getDateUtc(fromDate), getDateUtc(toDate));
+  }
 }
 
 const mapStateToProps = state => ({

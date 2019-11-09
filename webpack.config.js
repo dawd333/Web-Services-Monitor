@@ -32,7 +32,7 @@ module.exports = {
         ]
       },
       {
-        test: /style\.css$/, // This is required only for react-vis stylesheet
+        test: /\.css$/, // This is required for external .css.
         use: [
           {
             loader: "style-loader"

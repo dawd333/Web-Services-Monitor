@@ -15,6 +15,10 @@ export const getCurrentDateUTC = () => {
   return moment().format(UTC_PATTERN);
 };
 
+export const getDateUtc = (date) => {
+  return moment(date).format(UTC_PATTERN);
+};
+
 export const getDateFromTodayUTC = diff => {
   return moment().add(diff, 'days').format(UTC_PATTERN);
 };

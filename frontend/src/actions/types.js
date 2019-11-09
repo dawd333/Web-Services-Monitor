@@ -27,7 +27,7 @@ export const GET_PINGS = "GET_PINGS";
 export const ADD_PING = "ADD_PING";
 export const UPDATE_PING = "UPDATE_PING";
 export const DELETE_PING = "DELETE_PING";
-export const GET_PING_RESULTS = "DELETE_PING";
+export const GET_PING_RESULTS = "GET_PINGS_RESULTS";
 
 // dashboard
 export const  CHANGE_VIEW = "CHANGE_VIEW";
