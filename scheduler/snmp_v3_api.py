@@ -103,7 +103,8 @@ def snmp_job(snmp_configuration):
             error_indication, error_status, error_index, var_binds = get_command.send(linux_full_requests_copy.pop(0))
 
             if error_indication:
-                print(error_indication)
+                if error_indication not in error_messages:
+                    error_messages.append(error_indication)
             elif error_status:
                 error_messages.append('%s at %s' % (error_status.prettyPrint(),
                                                     error_index and var_binds[int(error_index) - 1][0] or '?'))

@@ -1,10 +1,13 @@
 from rest_framework import serializers
 from .models import SnmpConfiguration, SnmpResults
+from services.serializers import ErrorPercentageSerializer
 from scheduler import snmp_v3_api
 
 
 # SnmpConfiguration Serializer
 class SnmpConfigurationSerializer(serializers.ModelSerializer):
+    error_percentage = ErrorPercentageSerializer(read_only=True)
+
     class Meta:
         model = SnmpConfiguration
         fields = '__all__'

@@ -1,13 +1,22 @@
 import React from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
-import { Container, Row, Col, Table } from "react-bootstrap";
+import {
+  Container,
+  Row,
+  Col,
+  Table,
+  Accordion,
+  Card,
+  Button
+} from "react-bootstrap";
 import { getSnmpResults } from "../../../actions/snmp";
 import {
   convertFromUTCtoDateWithSecondsDifference,
   getCurrentDateUTC,
   getDateFromTodayUTC,
-  getDateUtc
+  getDateUtc,
+  convertFromUTC
 } from "../../../commons/utils";
 import {
   RadialChart,
@@ -27,7 +36,7 @@ import moment from "moment";
 import { isArray } from "util";
 
 class SnmpOverview extends React.Component {
-  //todo hinting in line series ???
+  //todo hinting in line series and vertical rect series???
   static propTypes = {
     snmpModel: PropTypes.object.isRequired,
     results: PropTypes.array
@@ -56,7 +65,6 @@ class SnmpOverview extends React.Component {
     const lastResult = this.getLastResult(this.props.results);
 
     const cpuLoadColors = ["#fe4a49", "#1aaf54", "#fed766"];
-
     const memoryColors = [
       "#00909e",
       "#c70d3a",
@@ -65,13 +73,14 @@ class SnmpOverview extends React.Component {
       "#f88020",
       "#472b62"
     ];
-
     const interfacesColors = ["#00909e", "#f88020", "#472b62", "#c70d3a"];
 
     const cpuLoadResultIndexes = [4, 5, 6];
     const memoryResultIndexes = [11, 13, 14, 15, 16, 17];
     const interfacesResultIndexes = [22, 23, 24, 25];
     const interfacesIsInput = [true, true, false, false];
+
+    const errors = this.getErrors(this.props.results);
 
     return (
       <Container className={styles.snmpOverview}>
@@ -83,9 +92,42 @@ class SnmpOverview extends React.Component {
           toDate={this.state.toDate}
           onChange={this.onChangeCalendar}
         />
+        {errors.length > 0 && (
+          <Accordion className={styles.snmpOverview__row}>
+            <Card>
+              <Card.Header>
+                <Accordion.Toggle as={Button} variant="danger" eventKey="0">
+                  {"Error messages"}
+                </Accordion.Toggle>
+              </Card.Header>
+              <Accordion.Collapse eventKey="0">
+                <Card.Body>
+                  <Table bordered>
+                    <thead>
+                      <tr>
+                        <th>Date</th>
+                        <th>Error Messages</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {errors.map((error, index) => {
+                        return (
+                          <tr key={index}>
+                            <td>{error.date}</td>
+                            <td>{error.errorMessages}</td>
+                          </tr>
+                        );
+                      })}
+                    </tbody>
+                  </Table>
+                </Card.Body>
+              </Accordion.Collapse>
+            </Card>
+          </Accordion>
+        )}
         <Row className={styles.snmpOverview__row}>
           <h4 className={styles.snmpOverview__chartTitle}>
-            {"System information from last sample"}
+            {"System information from last successful sample"}
           </h4>
         </Row>
         <Row className={styles.snmpOverview__row}>
@@ -142,7 +184,7 @@ class SnmpOverview extends React.Component {
           </Col>
           <Col>
             <h4 className={styles.snmpOverview__chartTitle}>
-              {"Disks usage from last sample"}
+              {"Disks usage from last successful sample"}
             </h4>
           </Col>
         </Row>
@@ -202,138 +244,167 @@ class SnmpOverview extends React.Component {
           <h4 className={styles.snmpOverview__chartTitle}>{"CPU load"}</h4>
         </Row>
         <Row className={styles.snmpOverview__row}>
-          <XYPlot
-            width={780}
-            height={300}
-            xType="time"
-            xDomain={[this.state.fromDate, this.state.toDate]}
-          >
-            <HorizontalGridLines />
-            <XAxis tickLabelAngle={-35} />
-            <YAxis />
-            {cpuLoadResultIndexes.map((resultIndex, index) => {
-              return (
-                <LineSeries
-                  key={index}
-                  color={cpuLoadColors[index]}
-                  curve={"curveMonotoneX"}
-                  data={this.translateResultsForLineSeries(
-                    this.props.results,
-                    resultIndex
-                  )}
-                />
-              );
-            })}
-          </XYPlot>
-          <DiscreteColorLegend
-            height={200}
-            width={300}
-            items={this.cpuLoadChartLegendData()}
-          />
+          <Col xs={10}>
+            <XYPlot
+              width={880}
+              height={300}
+              xType="time"
+              xDomain={[this.state.fromDate, this.state.toDate]}
+            >
+              <HorizontalGridLines />
+              <XAxis tickLabelAngle={-35} />
+              <YAxis />
+              {cpuLoadResultIndexes.map((resultIndex, index) => {
+                return (
+                  <LineSeries
+                    key={index}
+                    color={cpuLoadColors[index]}
+                    curve={"curveMonotoneX"}
+                    data={this.translateResultsForLineSeries(
+                      this.props.results,
+                      resultIndex
+                    )}
+                  />
+                );
+              })}
+              <LineSeries data={[{ x: new Date(), y: 0 }]} />
+            </XYPlot>
+          </Col>
+          <Col xs={2}>
+            <DiscreteColorLegend
+              height={200}
+              width={300}
+              items={this.cpuLoadChartLegendData()}
+            />
+          </Col>
         </Row>
         <Row className={styles.snmpOverview__row}>
           <h4 className={styles.snmpOverview__chartTitle}>{"Memory usage"}</h4>
         </Row>
         <Row className={styles.snmpOverview__row}>
-          <XYPlot
-            width={780}
-            height={300}
-            xType="time"
-            xDomain={[this.state.fromDate, this.state.toDate]}
-          >
-            <HorizontalGridLines />
-            <XAxis tickLabelAngle={-35} />
-            <YAxis title={"GB"} />
-            {memoryResultIndexes.map((resultIndex, index) => {
-              return (
-                <LineSeries
-                  key={index}
-                  color={memoryColors[index]}
-                  curve={"curveMonotoneX"}
-                  data={this.convertkBtoGB(
-                    this.translateResultsForLineSeries(
-                      this.props.results,
-                      resultIndex
-                    )
-                  )}
-                />
-              );
-            })}
-          </XYPlot>
-          <DiscreteColorLegend
-            height={300}
-            width={300}
-            items={this.memoryChartLegendData()}
-          />
+          <Col xs={10}>
+            <XYPlot
+              width={880}
+              height={300}
+              xType="time"
+              xDomain={[this.state.fromDate, this.state.toDate]}
+            >
+              <HorizontalGridLines />
+              <XAxis tickLabelAngle={-35} />
+              <YAxis title={"GB"} />
+              {memoryResultIndexes.map((resultIndex, index) => {
+                return (
+                  <LineSeries
+                    key={index}
+                    color={memoryColors[index]}
+                    curve={"curveMonotoneX"}
+                    data={this.convertkBtoGB(
+                      this.translateResultsForLineSeries(
+                        this.props.results,
+                        resultIndex
+                      )
+                    )}
+                  />
+                );
+              })}
+              <LineSeries data={[{ x: new Date(), y: 0 }]} />
+            </XYPlot>
+          </Col>
+          <Col xs={2}>
+            <DiscreteColorLegend
+              height={300}
+              width={300}
+              items={this.memoryChartLegendData()}
+            />
+          </Col>
         </Row>
         <Row className={styles.snmpOverview__row}>
           <h4 className={styles.snmpOverview__chartTitle}>{"Interfaces"}</h4>
         </Row>
         <Row className={styles.snmpOverview__row}>
-          <XYPlot
-            width={770}
-            height={400}
-            xType="time"
-            xDomain={[this.state.fromDate, this.state.toDate]}
-          >
-            <HorizontalGridLines />
-            <XAxis tickLabelAngle={-35} />
-            <YAxis title={"octets / 1000000"} />
-            {/* {interfacesResultIndexes.map((resultIndex, index) => {
-              return (
-                <VerticalRectSeries
-                  key={index}
-                  color={interfacesColors[index]}
-                  data={this.translateResultsForInterfaces(
-                    this.props.results,
-                    interfacesIsInput[index],
-                    resultIndex
-                  )}
-                />
-              );
-            })} */}
-            <VerticalRectSeries
-              color={"#00909e"}
-              data={this.translateResultsForInterfaces(
-                this.props.results,
-                true,
-                22
-              )}
+          <Col xs={10}>
+            <XYPlot
+              width={880}
+              height={400}
+              xType="time"
+              xDomain={[this.state.fromDate, this.state.toDate]}
+            >
+              <HorizontalGridLines />
+              <XAxis tickLabelAngle={-35} />
+              <YAxis title={"octets / 1000000"} />
+              {interfacesResultIndexes.map((resultIndex, index) => {
+                return (
+                  <VerticalRectSeries
+                    key={index}
+                    color={interfacesColors[index]}
+                    data={this.translateResultsForInterfaces(
+                      this.props.results,
+                      interfacesIsInput[index],
+                      resultIndex
+                    )}
+                  />
+                );
+              })}
+              <VerticalRectSeries data={[{ x: new Date(), y: 0 }]} />
+              {/* <VerticalRectSeries //todo this are just to show error bars for tests
+                color={"#00909e"}
+                data={this.translateResultsForInterfaces(
+                  this.props.results,
+                  true,
+                  22
+                )}
+              />
+              <VerticalRectSeries
+                color={"#f88020"}
+                data={this.translateResultsForInterfacesErrorTest(
+                  this.props.results,
+                  true,
+                  23
+                )}
+              />
+              <VerticalRectSeries
+                color={"#472b62"}
+                data={this.translateResultsForInterfaces(
+                  this.props.results,
+                  false,
+                  24
+                )}
+              />
+              <VerticalRectSeries
+                color={"#c70d3a"}
+                data={this.translateResultsForInterfacesErrorTest(
+                  this.props.results,
+                  false,
+                  25
+                )}
+              /> */}
+            </XYPlot>
+          </Col>
+          <Col xs={2}>
+            <DiscreteColorLegend
+              height={300}
+              width={300}
+              items={this.interfacesChartLegendData()}
             />
-            <VerticalRectSeries
-              color={"#f88020"}
-              data={this.translateResultsForInterfacesErrorTest(
-                this.props.results,
-                true,
-                23
-              )}
-            />
-            <VerticalRectSeries
-              color={"#472b62"}
-              data={this.translateResultsForInterfaces(
-                this.props.results,
-                false,
-                24
-              )}
-            />
-            <VerticalRectSeries
-              color={"#c70d3a"}
-              data={this.translateResultsForInterfacesErrorTest(
-                this.props.results,
-                false,
-                25
-              )}
-            />
-          </XYPlot>
-          <DiscreteColorLegend
-            height={300}
-            width={300}
-            items={this.interfacesChartLegendData()}
-          />
+          </Col>
         </Row>
       </Container>
     );
   }
+
+  getErrors = results => {
+    const errors = results
+      ? results.map(result => {
+          if (result.error_messages.length !== 0) {
+            return {
+              date: convertFromUTC(result.created_at),
+              errorMessages: result.error_messages
+            };
+          } else return null;
+        })
+      : [];
+    return errors.filter(error => error);
+  };
 
   getLastResult = results => {
     if (results) {
@@ -352,6 +423,8 @@ class SnmpOverview extends React.Component {
     let idleCPU = { usageInPercent: 0, color: "#1A3177" };
 
     if (results) {
+      if (results.length === 0)
+        return [{ usageInPercent: 1, stroke: "#", color: "#ffffff" }];
       let errors = 0;
       results.forEach(result => {
         if (result.error_messages.length === 0) {
@@ -366,8 +439,10 @@ class SnmpOverview extends React.Component {
       userCPU.usageInPercent /= resultsLength;
       systemCPU.usageInPercent /= resultsLength;
       idleCPU.usageInPercent /= resultsLength;
+      return [userCPU, systemCPU, idleCPU];
+    } else {
+      return [{ usageInPercent: 1, stroke: "#", color: "#ffffff" }];
     }
-    return [userCPU, systemCPU, idleCPU];
   };
 
   cpuChartLegendData = () => {
@@ -390,7 +465,7 @@ class SnmpOverview extends React.Component {
       };
 
       return [availableDiskSpace, usedDiskSpace];
-    } else return [];
+    } else return [{ usage: 1, stroke: "#", color: "#ffffff" }];
   };
 
   diskChartLegendData = () => {
@@ -403,10 +478,16 @@ class SnmpOverview extends React.Component {
   translateResultsForLineSeries = (results, index) => {
     return results
       ? results.map(result => {
-          return {
-            x: convertFromUTCtoDateWithSecondsDifference(result.created_at),
-            y: result.results[index]
-          };
+          if (result.error_messages.length === 0) {
+            return {
+              x: convertFromUTCtoDateWithSecondsDifference(result.created_at),
+              y: result.results[index]
+            };
+          } else
+            return {
+              x: convertFromUTCtoDateWithSecondsDifference(result.created_at),
+              y: 0
+            };
         })
       : [];
   };
@@ -433,16 +514,25 @@ class SnmpOverview extends React.Component {
   translateResultsForInterfaces = (results, isInput, resultIndex) => {
     if (results) {
       return results.map(result => {
-        return {
-          x0: convertFromUTCtoDateWithSecondsDifference(
-            result.created_at,
-            -1800
-          ),
-          x: convertFromUTCtoDateWithSecondsDifference(result.created_at, 1800),
-          y: isInput
-            ? result.results[resultIndex] / 1000000
-            : -result.results[resultIndex] / 1000000
-        };
+        if (result.error_messages.length === 0) {
+          return {
+            x0: convertFromUTCtoDateWithSecondsDifference(
+              result.created_at,
+              -this.props.snmpModel.interval * 0.4
+            ),
+            x: convertFromUTCtoDateWithSecondsDifference(
+              result.created_at,
+              this.props.snmpModel.interval * 0.4
+            ),
+            y: isInput
+              ? result.results[resultIndex] / 1000000
+              : -result.results[resultIndex] / 1000000
+          };
+        } else
+          return {
+            x: convertFromUTCtoDateWithSecondsDifference(result.created_at),
+            y: 0
+          };
       });
     } else return [];
   };
@@ -453,9 +543,12 @@ class SnmpOverview extends React.Component {
         return {
           x0: convertFromUTCtoDateWithSecondsDifference(
             result.created_at,
-            -1800
+            -this.props.snmpModel.interval * 0.4
           ),
-          x: convertFromUTCtoDateWithSecondsDifference(result.created_at, 1800),
+          x: convertFromUTCtoDateWithSecondsDifference(
+            result.created_at,
+            this.props.snmpModel.interval * 0.4
+          ),
           y: isInput ? 1000 : -1500
         };
       });
