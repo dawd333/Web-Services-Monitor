@@ -1,10 +1,10 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
-import {Container, FormGroup, Row} from "react-bootstrap";
+import {Badge, Button, ButtonToolbar, Container, FormGroup, Row} from "react-bootstrap";
 import {getPingResults} from "../../../actions/ping";
 import {
-  convertFromUTCtoDate,
+  convertFromUTC,
   convertFromUTCtoDateWithSecondsDifference,
   getCurrentDateUTC,
   getDateFromTodayUTC, getDateUtc
@@ -20,6 +20,10 @@ import '../../../../../node_modules/react-vis/dist/style.css'; // import react-v
 import styles from "./PingOverview.less";
 import CalendarRangePicker from "../../common/CalendarRangePicker/CalendarRangePicker";
 import moment from "moment";
+import Table from "react-bootstrap/Table";
+import {view} from "../DashboardModel";
+import {changeView, deletePing} from "../../../actions/dashboard";
+import {DeleteModal} from "../../common/DeleteModal/DeleteModal";
 
 
 class PingOverview extends React.Component {
@@ -37,6 +41,7 @@ class PingOverview extends React.Component {
     this.state = {
       fromDate: moment().subtract(7, 'days').toDate(),
       toDate: new Date(),
+      showDeleteModal: false,
     }
   }
 
@@ -52,25 +57,89 @@ class PingOverview extends React.Component {
           onChange={this.onChangeCalendar}
         />
         <XYPlot
+          className={styles.pingOverview__plot}
           width={800}
-          height={300}
+          height={350}
           stackBy="y"
           xType="time"
           xDomain={[
             this.state.fromDate,
             this.state.toDate,
           ]}
-
         >
           <HorizontalGridLines/>
           <XAxis tickLabelAngle={-35}/>
           <YAxis/>
           <VerticalRectSeries color={"#1aaf54"} data={this.translateResultsPassed(this.props.results)}/>
-          <VerticalRectSeries color={"#1aaf54"} data={this.translateResultsPassed(this.props.results)}/>
+          <VerticalRectSeries color={"#af1c21"} data={this.translateResultsFailed(this.props.results)}/>
           {/* This is trick to bypass not rendering chart when data is empty */}
-          <VerticalRectSeries data={[{x: new Date(), y:0}]}/>
+          <VerticalRectSeries data={[{x: new Date(), y: 0}]}/>
         </XYPlot>
-
+        <br/>
+        <Table bordered>
+          <tbody>
+          <tr>
+            <td className={styles.pingOverview__labelColumn}>{"Ip"}</td>
+            <td>{this.props.pingModel.ip}</td>
+          </tr>
+          <tr>
+            <td>{"Status"}</td>
+            <td>
+              {
+                this.props.pingModel.is_active ?
+                  <Badge pill={true} variant="success">{"enabled"}</Badge> :
+                  <Badge pill={true} variant="danger">{"disabled"}</Badge>
+              }
+            </td>
+          </tr>
+          <tr>
+            <td>{"Interval"}</td>
+            <td>{this.props.pingModel.interval}{" seconds"}</td>
+          </tr>
+          <tr>
+            <td>{"Timeout"}</td>
+            <td>{this.props.pingModel.timeout}{" seconds"}</td>
+          </tr>
+          <tr>
+            <td>{"Number of requests"}</td>
+            <td>
+              {this.props.pingModel.number_of_requests}
+            </td>
+          </tr>
+          <tr>
+            <td>{"Created at"}</td>
+            <td>
+              {convertFromUTC(this.props.pingModel.created_at)}
+            </td>
+          </tr>
+          <tr>
+            <td>{"Last modified at"}</td>
+            <td>
+              {convertFromUTC(this.props.pingModel.updated_at)}
+            </td>
+          </tr>
+          </tbody>
+        </Table>
+        <ButtonToolbar className={styles.pingOverview__nav}>
+          <Button
+            variant={"primary"}
+            onClick={this.onConfigurationClick}
+          >
+            {"Configuration"}
+          </Button>
+          <Button
+            variant={"danger"}
+            onClick={this.onDeleteClick}
+          >
+            {"Delete"}
+          </Button>
+        </ButtonToolbar>
+        <DeleteModal
+          label={"Delete this ping configuration"}
+          show={this.state.showDeleteModal}
+          onClose={() => this.setState({...this.state, showDeleteModal: false})}
+          onDelete={this.deletePingConfiguration}
+        />
       </Container>
     );
   }
@@ -102,7 +171,23 @@ class PingOverview extends React.Component {
       toDate,
     });
     this.props.getPingResults(this.props.pingModel.id, getDateUtc(fromDate), getDateUtc(toDate));
-  }
+  };
+
+  onConfigurationClick = () => {
+    this.props.changeView(view.EDIT_PING);
+  };
+
+  onDeleteClick = () => {
+    this.setState({
+      ...this.state,
+      showDeleteModal: true,
+    })
+  };
+
+  deletePingConfiguration = async () => {
+    await this.props.deletePing(this.props.pingModel.service, this.props.pingModel.id);
+    this.props.changeView(view.OVERVIEW);
+  };
 }
 
 const mapStateToProps = state => ({
@@ -111,5 +196,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  {getPingResults},
+  {getPingResults, changeView, deletePing},
 )(PingOverview);

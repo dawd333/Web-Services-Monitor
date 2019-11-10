@@ -8,9 +8,9 @@ import {Service} from "./DashboardModel";
 import {ServiceForm} from "./forms/serviceform/ServiceForm";
 import {addService, deleteService, getServices, updateService} from "../../actions/services";
 import {addPing, changeView, selectPing, selectService, updatePing} from "../../actions/dashboard";
-import {PingForm} from "./forms/pingform/PingForm";
 import DashboardContent from "./dashboardcontent/DashboardContent";
 import PingOverview from "./pingoverview/PingOverview";
+import PingForm from "./forms/pingform/PingForm";
 
 class DashboardContainer extends React.Component {
   static propTypes = {
@@ -81,6 +81,7 @@ class DashboardContainer extends React.Component {
             {this.props.selectedPing &&
             <PingForm
               key={this.props.selectedPing.id}
+              id={this.props.selectedPing.id}
               label={"Update ping configuration"}
               ip={this.props.selectedPing.ip}
               interval={this.props.selectedPing.interval}
