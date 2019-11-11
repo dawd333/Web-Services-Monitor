@@ -18,7 +18,7 @@ import {
   getDateFromTodayUTC,
   getDateUtc,
   convertFromUTC
-} from "../../../commons/utils";
+} from "../../../commons/dateUtils";
 import {
   RadialChart,
   Hint,

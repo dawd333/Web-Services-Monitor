@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import styles from "./SnmpPreview.less";
 import { Badge, Button, ButtonToolbar } from "react-bootstrap";
-import { convertFromUTC } from "../../../../commons/utils";
+import { convertFromUTC } from "../../../../commons/dateUtils";
 import { view } from "../../DashboardModel";
 import { HorizontalGridLines, XAxis, XYPlot, YAxis } from "react-vis";
 import VerticalBarSeries from "react-vis/es/plot/series/vertical-bar-series";
