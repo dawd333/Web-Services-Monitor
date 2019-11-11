@@ -10,7 +10,7 @@ import styles from "../../snmpoverview/SnmpOverview.less";
 import { ButtonToolbar } from "react-bootstrap";
 import { DeleteModal } from "../../../common/DeleteModal/DeleteModal";
 
-export class SnmpForm extends React.Component {
+class SnmpForm extends React.Component {
   static propTypes = {
     label: PropTypes.string.isRequired,
     id: PropTypes.number,

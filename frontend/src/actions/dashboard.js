@@ -174,7 +174,7 @@ export const deleteSnmp = (serviceId, snmpId) => async (dispatch, getState) => {
       dispatch(createMessage({ deleteSnmp: "Snmp configuration deleted" }));
       dispatch({
         type: DELETE_SNMP,
-        payload: pingId
+        payload: snmpId
       });
     })
     .catch(error =>
