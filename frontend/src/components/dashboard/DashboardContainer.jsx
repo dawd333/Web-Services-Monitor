@@ -22,11 +22,11 @@ import {
   addSnmp,
   updateSnmp
 } from "../../actions/dashboard";
-import { PingForm } from "./forms/pingform/PingForm";
-import { SnmpForm } from "./forms/snmpform/SnmpForm";
 import PingOverview from "./pingoverview/PingOverview";
 import SnmpOverview from "./snmpoverview/SnmpOverview";
 import DashboardContent from "./dashboardcontent/DashboardContent";
+import PingForm from "./forms/pingform/PingForm";
+import SnmpForm from "./forms/snmpform/SnmpForm";
 
 class DashboardContainer extends React.Component {
   static propTypes = {

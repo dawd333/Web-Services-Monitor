@@ -14,12 +14,12 @@ class ServiceSerializer(serializers.ModelSerializer):
 
 # Service Serializer with configurations
 class ServiceSerializerConfigurations(serializers.ModelSerializer):
-    ping_configuration = PingConfigurationSerializer(read_only=True, many=True)
-    snmp_configuration = SnmpConfigurationSerializer(read_only=True, many=True)
+    ping_configurations = PingConfigurationSerializer(read_only=True, many=True)
+    snmp_configurations = SnmpConfigurationSerializer(read_only=True, many=True)
 
     class Meta:
         model = Service
-        fields = ['id', 'name', 'created_at', 'ping_configuration', 'snmp_configuration']
-        read_only_fields = ['id', 'name', 'created_at', 'ping_configuration', 'snmp_configuration']
+        fields = ['id', 'name', 'created_at', 'ping_configurations', 'snmp_configurations']
+        read_only_fields = ['id', 'name', 'created_at', 'ping_configurations', 'snmp_configurations']
         depth = 1
 

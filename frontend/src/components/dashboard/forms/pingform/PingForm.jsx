@@ -10,7 +10,7 @@ import styles from "../../pingoverview/PingOverview.less";
 import { ButtonToolbar } from "react-bootstrap";
 import { DeleteModal } from "../../../common/DeleteModal/DeleteModal";
 
-export class PingForm extends React.Component {
+class PingForm extends React.Component {
   static propTypes = {
     id: PropTypes.number,
     label: PropTypes.string.isRequired,
