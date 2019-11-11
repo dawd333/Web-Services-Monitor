@@ -2,12 +2,12 @@ import { view } from "../components/dashboard/DashboardModel";
 import {
   CHANGE_VIEW,
   SELECT_SERVICE,
-  GET_PINGS,
+  SET_PINGS,
   SELECT_PING,
   ADD_PING,
   UPDATE_PING,
   DELETE_PING,
-  GET_SNMPS,
+  SET_SNMPS,
   SELECT_SNMP,
   ADD_SNMP,
   UPDATE_SNMP,
@@ -36,7 +36,7 @@ export default function(state = initialState, action) {
         ...state,
         selectedPing: action.payload
       };
-    case GET_PINGS:
+    case SET_PINGS:
       return {
         ...state,
         pings: action.payload
@@ -61,7 +61,7 @@ export default function(state = initialState, action) {
         ...state,
         selectedSnmp: action.payload
       };
-    case GET_SNMPS:
+    case SET_SNMPS:
       return {
         ...state,
         snmps: action.payload

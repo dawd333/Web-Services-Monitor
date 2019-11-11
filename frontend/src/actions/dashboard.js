@@ -2,12 +2,12 @@ import {
   CHANGE_VIEW,
   SELECT_SERVICE,
   SELECT_PING,
-  GET_PINGS,
+  SET_PINGS,
   ADD_PING,
   UPDATE_PING,
   DELETE_PING,
   SELECT_SNMP,
-  GET_SNMPS,
+  SET_SNMPS,
   ADD_SNMP,
   UPDATE_SNMP,
   DELETE_SNMP
@@ -44,14 +44,21 @@ export const changeView = view => {
   };
 };
 
-// GET PINGS
-export const getPings = serviceId => (dispatch, getState) => {
+// GET SERVICE WITH CONFIGURATIONS
+export const getServiceWithConfigurations = serviceId => (
+  dispatch,
+  getState
+) => {
   axios
-    .get(`/api/ping/${serviceId}/`, tokenConfig(getState))
+    .get(`/api/services/${serviceId}/`, tokenConfig(getState))
     .then(response => {
       dispatch({
-        type: GET_PINGS,
-        payload: response.data
+        type: SET_PINGS,
+        payload: response.data.ping_configurations
+      });
+      dispatch({
+        type: SET_SNMPS,
+        payload: response.data.snmp_configurations
       });
     })
     .catch(error => {
@@ -111,21 +118,6 @@ export const deletePing = (serviceId, pingId) => async (dispatch, getState) => {
     .catch(error =>
       dispatch(returnErrors(error.response.data, error.response.status))
     );
-};
-
-// GET SNMPS
-export const getSnmps = serviceId => (dispatch, getState) => {
-  axios
-    .get(`/api/snmp/${serviceId}/`, tokenConfig(getState))
-    .then(response => {
-      dispatch({
-        type: GET_SNMPS,
-        payload: response.data
-      });
-    })
-    .catch(error => {
-      dispatch(returnErrors(error.response.data, error.response.status));
-    });
 };
 
 // ADD SNMP
