@@ -119,7 +119,9 @@ class SnmpPreview extends React.Component {
           <VerticalBarSeries
             barWidth={0.7}
             color={"#af1c21"}
-            data={this.translateErrorPercentage(5, 20, 70)}
+            data={this.translateErrorPercentage(
+              this.props.model.error_percentage
+            )}
           />
         </XYPlot>
       </div>
@@ -136,11 +138,11 @@ class SnmpPreview extends React.Component {
     this.props.changeView(view.EDIT_SNMP);
   };
 
-  translateErrorPercentage = (day, week, month) => {
-    const monthData = { x: "month", y: month };
-    const weekData = { x: "week", y: week };
-    const dayData = { x: "day", y: day };
-    return [monthData, weekData, dayData];
+  translateErrorPercentage = error_percentage => {
+    const weekData = { x: "week", y: error_percentage.week };
+    const dayData = { x: "day", y: error_percentage.day };
+    const hourData = { x: "hour", y: error_percentage.hour };
+    return [weekData, dayData, hourData];
   };
 }
 

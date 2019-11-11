@@ -1,5 +1,6 @@
 from rest_framework import viewsets, permissions
 from .serializers import ServiceSerializer, ServiceSerializerConfigurations
+from scheduler import services_api
 
 
 # Service ViewSet
@@ -19,3 +20,7 @@ class ServiceViewSet(viewsets.ModelViewSet):
 
     def perform_create(self, serializer):
         serializer.save(owner=self.request.user)
+
+    def perform_destroy(self, instance):
+        services_api.delete_service_jobs(instance.id)
+        instance.delete()

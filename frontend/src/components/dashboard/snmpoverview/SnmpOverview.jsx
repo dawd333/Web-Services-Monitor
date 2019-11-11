@@ -252,7 +252,7 @@ class SnmpOverview extends React.Component {
           <Col xs={10}>
             <XYPlot
               width={880}
-              height={300}
+              height={350}
               xType="time"
               xDomain={[this.state.fromDate, this.state.toDate]}
             >
@@ -290,7 +290,7 @@ class SnmpOverview extends React.Component {
           <Col xs={10}>
             <XYPlot
               width={880}
-              height={300}
+              height={350}
               xType="time"
               xDomain={[this.state.fromDate, this.state.toDate]}
             >

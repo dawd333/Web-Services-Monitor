@@ -1,7 +1,9 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from services.models import Service
-from services.error_percentage import ErrorPercentage
+from services.error_percentage import ErrorPercentage, calculate_error_percentage
+from datetime import datetime, timedelta
+import pytz
 
 
 class PingConfiguration(models.Model):
@@ -10,13 +12,23 @@ class PingConfiguration(models.Model):
     is_active = models.BooleanField()
     number_of_requests = models.PositiveIntegerField()
     timeout = models.PositiveIntegerField()
-    service = models.ForeignKey(Service, related_name="ping_configuration", on_delete=models.CASCADE)
+    service = models.ForeignKey(Service, related_name="ping_configurations", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
     @property
     def error_percentage(self):
-        return ErrorPercentage(hour=1, day=1, week=1)
+        datetime_week = datetime.now(pytz.utc) - timedelta(days=7)
+        datetime_day = datetime.now(pytz.utc) - timedelta(days=1)
+        datetime_hour = datetime.now(pytz.utc) - timedelta(hours=1)
+
+        ping_results_week = PingResults.objects.filter(ping_configuration=self, created_at__gte=datetime_week)
+        ping_results_day = ping_results_week.filter(created_at__gte=datetime_day)
+        ping_results_hour = ping_results_week.filter(created_at__gte=datetime_hour)
+
+        return ErrorPercentage(week=calculate_error_percentage(ping_results_week),
+                               day=calculate_error_percentage(ping_results_day),
+                               hour=calculate_error_percentage(ping_results_hour))
 
     def __str__(self):
         return "{0} {1}".format(self.service.__str__(), self.ip)
