@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
-from services.models import Service, ErrorPercentage
+from services.models import Service
+from services.error_percentage import ErrorPercentage
 from enum import Enum
 
 

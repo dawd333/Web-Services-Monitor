@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from .models import SnmpConfiguration, SnmpResults
-from services.serializers import ErrorPercentageSerializer
 from scheduler import snmp_v3_api
+from services.error_percentage import ErrorPercentageSerializer
 
 
 # SnmpConfiguration Serializer
@@ -11,7 +11,7 @@ class SnmpConfigurationSerializer(serializers.ModelSerializer):
     class Meta:
         model = SnmpConfiguration
         fields = '__all__'
-        read_only_fields = ['id', 'service', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'service', 'created_at', 'updated_at', 'error_percentage']
         extra_kwargs = {'authentication_password': {'write_only': True}, 'privacy_password': {'write_only': True}}
 
     def validate(self, attrs):

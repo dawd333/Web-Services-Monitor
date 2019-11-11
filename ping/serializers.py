@@ -1,13 +1,16 @@
 from rest_framework import serializers
 from .models import PingConfiguration, PingResults
+from services.error_percentage import ErrorPercentageSerializer
 
 
 # PingConfiguration Serializer
 class PingConfigurationSerializer(serializers.ModelSerializer):
+    error_percentage = ErrorPercentageSerializer(read_only=True)
+
     class Meta:
         model = PingConfiguration
         fields = '__all__'
-        read_only_fields = ['id', 'service', 'created_at', 'updated_at']
+        read_only_fields = ['id', 'service', 'created_at', 'updated_at', 'error_percentage']
 
 
 # PingResults Serializer
