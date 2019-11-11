@@ -4,8 +4,9 @@ import PropTypes from "prop-types";
 import { deleteService } from "../../../actions/services";
 import { Card, ListGroup, Button } from "react-bootstrap";
 import styles from "./SideNav.less";
-import { Service, view } from "../DashboardModel";
-import { changeView, selectService } from "../../../actions/dashboard";
+import {Service, view} from "../DashboardModel";
+import {changeView, selectService} from "../../../actions/dashboard";
+import {DeleteModal} from "../../common/DeleteModal/DeleteModal";
 
 export class SideNav extends React.Component {
   static propTypes = {
@@ -16,6 +17,10 @@ export class SideNav extends React.Component {
     deleteService: PropTypes.func.isRequired
   };
 
+
+  state = {showDeleteModal: false};
+
+
   render() {
     return (
       <div className={styles.sideNav}>
@@ -25,6 +30,12 @@ export class SideNav extends React.Component {
             <Card.Header>{"Add service"}</Card.Header>
           </a>
         </Card>
+        <DeleteModal
+          label={`Delete service \"${this.getServiceName(this.props.selectedServiceId)}\" with entire data`}
+          show={this.state.showDeleteModal}
+          onClose={() => this.setState({...this.state, showDeleteModal: false})}
+          onDelete={this.deleteService}
+        />
       </div>
     );
   }
@@ -76,7 +87,7 @@ export class SideNav extends React.Component {
           <Button
             variant="danger"
             className={styles.accordionButton}
-            onClick={this.props.deleteService.bind(this, service.id)}
+            onClick={this.onDeleteClick}
           >
             {"Delete Service"}
           </Button>
@@ -94,6 +105,26 @@ export class SideNav extends React.Component {
     this.props.changeView(view.OVERVIEW);
     this.props.selectService(serviceId);
   };
+
+  onDeleteClick = () => {
+    this.setState({
+      ...this.state,
+      showDeleteModal: true,
+    })
+  };
+
+  deleteService = async () => {
+    await this.props.deleteService(this.props.selectedServiceId);
+    this.setState({
+      ...this.state,
+      showDeleteModal: false,
+    })
+  };
+
+  getServiceName = (serviceId) => {
+    return this.props.services[serviceId]?.name ? this.props.services[serviceId].name : "";
+  }
+
 }
 
 const mapStateToProps = state => ({

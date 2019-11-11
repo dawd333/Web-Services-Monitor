@@ -6,6 +6,7 @@ import {
   ADD_PING,
   UPDATE_PING,
   DELETE_PING,
+  GET_PING_RESULTS,
 } from "./types";
 import {createMessage, returnErrors} from "./messages";
 import {tokenConfig} from "../axios-config";
@@ -79,3 +80,16 @@ import {tokenConfig} from "../axios-config";
 //     .catch(error => console.log(error));
 //   getPings(serviceId);
 // };
+
+export const getPingResults = (pingId, fromDate, toDate) => async (dispatch, getState) => {
+  await axios
+    .get(`/api/ping-results/${pingId}/`,
+      {...tokenConfig(getState), params: {'from-date': fromDate, 'to-date': toDate}})
+    .then(response => {
+      dispatch({
+        type: GET_PING_RESULTS,
+        payload: response.data,
+      });
+    })
+    .catch(error => dispatch(returnErrors(error.response.data, error.response.status)));
+};

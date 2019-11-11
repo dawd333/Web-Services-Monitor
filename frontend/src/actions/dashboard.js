@@ -75,15 +75,11 @@ export const addPing = (serviceId, ping) => async (dispatch, getState) => {
     .catch(error => {
       dispatch(returnErrors(error.response.data, error.response.status));
     });
-  getPings(serviceId);
   return pingId;
 };
 
 // UPDATE PING
-export const updatePing = (serviceId, pingId, ping) => async (
-  dispatch,
-  getState
-) => {
+export const updatePing = (serviceId, pingId, ping) => async (dispatch, getState) => {
   await axios
     .put(`/api/ping/${serviceId}/${pingId}/`, ping, tokenConfig(getState))
     .then(response => {
@@ -96,13 +92,12 @@ export const updatePing = (serviceId, pingId, ping) => async (
     .catch(error => {
       dispatch(returnErrors(error.response.data, error.response.status));
     });
-  getPings(serviceId);
 };
 
 // DELETE PING
 export const deletePing = (serviceId, pingId) => async (dispatch, getState) => {
   await axios
-    .delete(`/api/services/${serviceId}/${pingId}/`, tokenConfig(getState))
+    .delete(`/api/ping/${serviceId}/${pingId}/`, tokenConfig(getState))
     .then(() => {
       dispatch(createMessage({ deletePing: "Ping configuration deleted" }));
       dispatch({
@@ -110,8 +105,7 @@ export const deletePing = (serviceId, pingId) => async (dispatch, getState) => {
         payload: pingId
       });
     })
-    .catch(error => console.log(error));
-  getPings(serviceId);
+    .catch(error => returnErrors(error.response.data, error.response.status));
 };
 
 // GET SNMPS

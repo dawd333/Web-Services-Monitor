@@ -5,6 +5,7 @@ import auth from "./auth";
 import services from "./services";
 import dashboard from "./dashboard";
 import snmp from "./snmp";
+import ping from "./ping";
 
 export default combineReducers({
   dashboard,
@@ -12,5 +13,6 @@ export default combineReducers({
   messages,
   auth,
   services,
+  ping,
   snmp
 });

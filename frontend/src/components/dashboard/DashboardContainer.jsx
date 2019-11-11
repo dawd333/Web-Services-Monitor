@@ -26,6 +26,8 @@ import { PingForm } from "./forms/pingform/PingForm";
 import { SnmpForm } from "./forms/snmpform/SnmpForm";
 import SnmpOverview from "./snmpoverview/SnmpOverview";
 import DashboardContent from "./dashboardcontent/DashboardContent";
+import PingOverview from "./pingoverview/PingOverview";
+import PingForm from "./forms/pingform/PingForm";
 
 class DashboardContainer extends React.Component {
   static propTypes = {
@@ -99,6 +101,7 @@ class DashboardContainer extends React.Component {
             {this.props.selectedPing && (
               <PingForm
                 key={this.props.selectedPing.id}
+                id={this.props.selectedPing.id}
                 label={"Update ping configuration"}
                 ip={this.props.selectedPing.ip}
                 interval={this.props.selectedPing.interval}
@@ -110,6 +113,12 @@ class DashboardContainer extends React.Component {
             )}
           </>
         );
+        case view.PING_OVERVIEW:
+        return (
+          <PingOverview
+            key={this.props.selectedPing.id}
+            pingModel={this.props.selectedPing}
+          />);
       case view.ADD_SNMP:
         return (
           <SnmpForm
@@ -124,6 +133,7 @@ class DashboardContainer extends React.Component {
             {this.props.selectedSnmp && (
               <SnmpForm
                 key={this.props.selectedSnmp.id}
+                id={this.props.selectedSnmp.id}
                 label={"Update snmp configuration"}
                 ip={this.props.selectedSnmp.ip}
                 interval={this.props.selectedSnmp.interval}

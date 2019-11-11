@@ -36,4 +36,5 @@ class CalendarRangePicker extends React.Component {
   };
 }
 const mapStateToProps = state => ({});
+
 export default connect(mapStateToProps)(CalendarRangePicker);

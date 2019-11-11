@@ -20,6 +20,7 @@ export const GET_PINGS = "GET_PINGS";
 export const ADD_PING = "ADD_PING";
 export const UPDATE_PING = "UPDATE_PING";
 export const DELETE_PING = "DELETE_PING";
+export const GET_PING_RESULTS = "GET_PINGS_RESULTS";
 
 export const GET_SNMPS = "GET_SNMPS";
 export const ADD_SNMP = "ADD_SNMP";
