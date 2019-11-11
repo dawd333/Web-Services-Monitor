@@ -3,15 +3,14 @@ import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
 import PropTypes from "prop-types";
-import {connect} from "react-redux";
-import {changeView, deletePing} from "../../../../actions/dashboard";
-import {view} from "../../DashboardModel";
+import { connect } from "react-redux";
+import { changeView, deletePing } from "../../../../actions/dashboard";
+import { view } from "../../DashboardModel";
 import styles from "../../pingoverview/PingOverview.less";
-import {ButtonToolbar, Container} from "react-bootstrap";
-import {DeleteModal} from "../../../common/DeleteModal/DeleteModal";
+import { ButtonToolbar } from "react-bootstrap";
+import { DeleteModal } from "../../../common/DeleteModal/DeleteModal";
 
-
-class PingForm extends React.Component {
+export class PingForm extends React.Component {
   static propTypes = {
     id: PropTypes.number,
     label: PropTypes.string.isRequired,
@@ -20,7 +19,7 @@ class PingForm extends React.Component {
     isActive: PropTypes.bool,
     timeout: PropTypes.number,
     numberOfRequests: PropTypes.number,
-    onSubmit: PropTypes.func.isRequired,
+    onSubmit: PropTypes.func.isRequired
   };
 
   constructor(props) {
@@ -31,17 +30,15 @@ class PingForm extends React.Component {
       isActive: props.isActive ? props.isActive : false,
       numberOfRequests: props.numberOfRequests ? props.numberOfRequests : 4,
       timeout: props.timeout ? props.timeout : 15,
-      showDeleteModal: false,
-    }
+      showDeleteModal: false
+    };
   }
 
   render() {
     return (
       <Form onSubmit={this.onSubmit}>
         <Form.Group>
-          <Form.Label column={"ip"}>
-            {"Ip"}
-          </Form.Label>
+          <Form.Label column={"ip"}>{"Ip"}</Form.Label>
           <FormControl
             type="text"
             name="ip"
@@ -59,9 +56,7 @@ class PingForm extends React.Component {
             onChange={this.onChange}
             value={this.state.interval}
           />
-          <Form.Label column={"is_active"}>
-            {"Is active:"}
-          </Form.Label>
+          <Form.Label column={"is_active"}>{"Is active:"}</Form.Label>
           <FormControl
             type="checkbox"
             name="isActive"
@@ -77,9 +72,7 @@ class PingForm extends React.Component {
             onChange={this.onChange}
             value={this.state.numberOfRequests}
           />
-          <Form.Label column={"timeout"}>
-            {"Timeout:"}
-          </Form.Label>
+          <Form.Label column={"timeout"}>{"Timeout:"}</Form.Label>
           <FormControl
             type="number"
             name="timeout"
@@ -91,39 +84,41 @@ class PingForm extends React.Component {
           <Button type="submit" variant="success">
             {this.props.label}
           </Button>
-          {this.props.id &&
-          <>
-            <Button variant="primary" onClick={this.onDetailsClick}>
-              {"Details"}
-            </Button>
-            <Button variant="danger" onClick={this.onDeleteClick}>
-              {"Delete"}
-            </Button>
-          </>
-          }
+          {this.props.id && (
+            <>
+              <Button variant="primary" onClick={this.onDetailsClick}>
+                {"Details"}
+              </Button>
+              <Button variant="danger" onClick={this.onDeleteClick}>
+                {"Delete"}
+              </Button>
+            </>
+          )}
         </ButtonToolbar>
         <DeleteModal
           label={"Delete this ping configuration"}
           show={this.state.showDeleteModal}
-          onClose={() => this.setState({...this.state, showDeleteModal: false})}
+          onClose={() =>
+            this.setState({ ...this.state, showDeleteModal: false })
+          }
           onDelete={this.deletePingConfiguration}
         />
       </Form>
-    )
-  };
+    );
+  }
 
   onChange = event => {
     this.setState({
       ...this.state,
-      [event.target.name]: event.target.value,
-    })
+      [event.target.name]: event.target.value
+    });
   };
 
   onChangeBoolean = event => {
     this.setState({
       ...this.state,
-      [event.target.name]: !this.state[event.target.name],
-    })
+      [event.target.name]: !this.state[event.target.name]
+    });
   };
 
   onSubmit = event => {
@@ -134,27 +129,26 @@ class PingForm extends React.Component {
       interval: this.state.interval,
       is_active: this.state.isActive,
       number_of_requests: this.state.numberOfRequests,
-      timeout: this.state.timeout,
+      timeout: this.state.timeout
     };
     this.props.onSubmit(configuration);
   };
 
   onDetailsClick = () => {
-    this.props.changeView(view.PING_OVERVIEW)
+    this.props.changeView(view.PING_OVERVIEW);
   };
 
   onDeleteClick = () => {
     this.setState({
       ...this.state,
-      showDeleteModal: true,
-    })
+      showDeleteModal: true
+    });
   };
 
   deletePingConfiguration = async () => {
     await this.props.deletePing(this.props.serviceId, this.props.id);
     this.props.changeView(view.OVERVIEW);
   };
-
 }
 
 const mapStateToProps = state => ({
@@ -163,5 +157,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  {changeView, deletePing},
+  { changeView, deletePing }
 )(PingForm);

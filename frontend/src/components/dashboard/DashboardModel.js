@@ -7,6 +7,9 @@ export const view = {
   PING_OVERVIEW: "PING_OVERVIEW",
   ADD_PING: "ADD_PING",
   EDIT_PING: "EDIT_PING",
+  SNMP_OVERVIEW: "SNMP_OVERVIEW",
+  ADD_SNMP: "ADD_SNMP",
+  EDIT_SNMP: "EDIT_SNMP"
 };
 
 export const Service = {

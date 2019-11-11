@@ -60,7 +60,7 @@ class PingResultsViewSet(viewsets.ModelViewSet):
                                               ping_configuration=ping_configuration,
                                               created_at__range=(from_date, to_date))
         else:
-            raise ValidationError({"detail": "Date not valid,"})
+            raise ValidationError({"detail": "Date not valid."})
 
     def get_object(self):
         raise MethodNotAllowed(method="GET")

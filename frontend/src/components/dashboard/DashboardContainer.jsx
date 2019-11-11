@@ -1,16 +1,32 @@
 import React from "react";
-import {connect} from "react-redux";
+import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import styles from "./DashboardContainer.less";
 import SideNav from "./sidenav/SideNav";
-import {view} from "./DashboardModel";
-import {Service} from "./DashboardModel";
-import {ServiceForm} from "./forms/serviceform/ServiceForm";
-import {addService, deleteService, getServices, updateService} from "../../actions/services";
-import {addPing, changeView, selectPing, selectService, updatePing} from "../../actions/dashboard";
-import DashboardContent from "./dashboardcontent/DashboardContent";
+import { view } from "./DashboardModel";
+import { Service } from "./DashboardModel";
+import { ServiceForm } from "./forms/serviceform/ServiceForm";
+import {
+  addService,
+  deleteService,
+  getServices,
+  updateService
+} from "../../actions/services";
+import {
+  changeView,
+  selectService,
+  selectPing,
+  addPing,
+  updatePing,
+  selectSnmp,
+  addSnmp,
+  updateSnmp
+} from "../../actions/dashboard";
+import { PingForm } from "./forms/pingform/PingForm";
+import { SnmpForm } from "./forms/snmpform/SnmpForm";
 import PingOverview from "./pingoverview/PingOverview";
-import PingForm from "./forms/pingform/PingForm";
+import SnmpOverview from "./snmpoverview/SnmpOverview";
+import DashboardContent from "./dashboardcontent/DashboardContent";
 
 class DashboardContainer extends React.Component {
   static propTypes = {
@@ -18,6 +34,7 @@ class DashboardContainer extends React.Component {
     currentView: PropTypes.oneOf(Object.values(view)),
     selectedServiceId: PropTypes.number,
     selectedPing: PropTypes.object, // TODO Create shape for ping object
+    selectedSnmp: PropTypes.object // TODO Create shape for snmp object
   };
 
   componentDidMount() {
@@ -39,10 +56,11 @@ class DashboardContainer extends React.Component {
     );
   }
 
-  displayContent = (props) => {
+  displayContent = props => {
     switch (props.currentView) {
       case view.OVERVIEW:
-        if (this.props.selectedServiceId) { // This is not clean code :/ Change it when we decide what to display by default
+        if (this.props.selectedServiceId) {
+          // This is not clean code :/ Change it when we decide what to display by default
           return (
             <DashboardContent
               key={this.props.selectedServiceId}
@@ -74,36 +92,72 @@ class DashboardContainer extends React.Component {
             key={"add_ping"}
             label={"Add ping configuration"}
             onSubmit={this.onAddPing}
-          />);
+          />
+        );
       case view.EDIT_PING:
         return (
           <>
-            {this.props.selectedPing &&
-            <PingForm
-              key={this.props.selectedPing.id}
-              id={this.props.selectedPing.id}
-              label={"Update ping configuration"}
-              ip={this.props.selectedPing.ip}
-              interval={this.props.selectedPing.interval}
-              isActive={this.props.selectedPing.is_active}
-              numberOfRequests={this.props.selectedPing.number_of_requests}
-              timeout={this.props.selectedPing.timeout}
-              onSubmit={this.onUpdatePing}
-            />
-            }
-          </>);
+            {this.props.selectedPing && (
+              <PingForm
+                key={this.props.selectedPing.id}
+                id={this.props.selectedPing.id}
+                label={"Update ping configuration"}
+                ip={this.props.selectedPing.ip}
+                interval={this.props.selectedPing.interval}
+                isActive={this.props.selectedPing.is_active}
+                numberOfRequests={this.props.selectedPing.number_of_requests}
+                timeout={this.props.selectedPing.timeout}
+                onSubmit={this.onUpdatePing}
+              />
+            )}
+          </>
+        );
       case view.PING_OVERVIEW:
         return (
           <PingOverview
             key={this.props.selectedPing.id}
             pingModel={this.props.selectedPing}
-          />);
+          />
+        );
+      case view.ADD_SNMP:
+        return (
+          <SnmpForm
+            key={"add_snmp"}
+            label={"Add snmp configuration"}
+            onSubmit={this.onAddSnmp}
+          />
+        );
+      case view.EDIT_SNMP:
+        return (
+          <>
+            {this.props.selectedSnmp && (
+              <SnmpForm
+                key={this.props.selectedSnmp.id}
+                id={this.props.selectedSnmp.id}
+                label={"Update snmp configuration"}
+                ip={this.props.selectedSnmp.ip}
+                interval={this.props.selectedSnmp.interval}
+                isActive={this.props.selectedSnmp.is_active}
+                platform={this.props.selectedSnmp.platform}
+                username={this.props.selectedSnmp.username}
+                onSubmit={this.onUpdateSnmp}
+              />
+            )}
+          </>
+        );
+      case view.SNMP_OVERVIEW:
+        return (
+          <SnmpOverview
+            key={this.props.selectedSnmp.id}
+            snmpModel={this.props.selectedSnmp}
+          />
+        );
       default:
-        return (<div>{"DEFAULT VIEW"}</div>)
+        return <div>{"DEFAULT VIEW"}</div>;
     }
   };
 
-  onAddService = async (service) => {
+  onAddService = async service => {
     const newServiceId = await this.props.addService(service);
     if (newServiceId) {
       this.props.selectService(newServiceId);
@@ -111,50 +165,82 @@ class DashboardContainer extends React.Component {
     }
   };
 
-  onUpdateService = async (service) => {
+  onUpdateService = async service => {
     await this.props.updateService(this.props.selectedServiceId, service);
     this.props.changeView(view.OVERVIEW);
   };
 
-  onAddPing = async (ping) => {
-    const newPingId = await this.props.addPing(this.props.selectedServiceId, ping);
+  onAddPing = async ping => {
+    const newPingId = await this.props.addPing(
+      this.props.selectedServiceId,
+      ping
+    );
     if (newPingId) {
       this.props.changeView(view.OVERVIEW);
     }
   };
 
-  onUpdatePing = async (ping) => {
-    await this.props.updatePing(this.props.selectedServiceId, this.props.selectedPing.id, ping);
+  onUpdatePing = async ping => {
+    await this.props.updatePing(
+      this.props.selectedServiceId,
+      this.props.selectedPing.id,
+      ping
+    );
     this.props.selectPing(undefined);
     this.props.changeView(view.OVERVIEW);
   };
 
-  retrieveSelectedService = () => {
-    const service = Object.values(this.props.services).find(service => service.id === this.props.selectedServiceId);
-    return service ? service : {name: ""};
-  }
-}
+  onAddSnmp = async snmp => {
+    const newSnmpId = await this.props.addSnmp(
+      this.props.selectedServiceId,
+      snmp
+    );
+    if (newSnmpId) {
+      this.props.changeView(view.OVERVIEW);
+    }
+  };
 
+  onUpdateSnmp = async snmp => {
+    await this.props.updateSnmp(
+      this.props.selectedServiceId,
+      this.props.selectedSnmp.id,
+      snmp
+    );
+    this.props.selectSnmp(undefined);
+    this.props.changeView(view.OVERVIEW);
+  };
+
+  retrieveSelectedService = () => {
+    const service = Object.values(this.props.services).find(
+      service => service.id === this.props.selectedServiceId
+    );
+    return service ? service : { name: "" };
+  };
+}
 
 const mapStateToProps = state => ({
   services: state.services.services,
   currentView: state.dashboard.currentView,
   selectedServiceId: state.dashboard.selectedServiceId,
   selectedPing: state.dashboard.selectedPing,
+  selectedSnmp: state.dashboard.selectedSnmp
 });
 
 const connected = connect(
   mapStateToProps,
   {
-    selectService,
-    selectPing,
     changeView,
     getServices,
+    selectService,
     addService,
-    deleteService,
     updateService,
+    deleteService,
+    selectPing,
     addPing,
     updatePing,
-  },
+    selectSnmp,
+    addSnmp,
+    updateSnmp
+  }
 )(DashboardContainer);
-export {connected as DashboardContainer}
+export { connected as DashboardContainer };

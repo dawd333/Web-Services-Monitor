@@ -39,11 +39,13 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'knox',
-    'servers',
     'frontend',
     'accounts',
     'services',
+    # 'ping',
+    # 'snmp_v3'
     'ping.apps.PingConfig',
+    'snmp_v3.apps.SnmpV3Config'
 ]
 
 REST_FRAMEWORK = {

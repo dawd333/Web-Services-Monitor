@@ -1,5 +1,5 @@
 from rest_framework import viewsets, permissions
-from .serializers import ServiceSerializer
+from .serializers import ServiceSerializer, ServiceSerializerConfigurations
 
 
 # Service ViewSet
@@ -8,7 +8,11 @@ class ServiceViewSet(viewsets.ModelViewSet):
         permissions.IsAuthenticated
     ]
 
-    serializer_class = ServiceSerializer
+    def get_serializer_class(self):
+        if self.action == 'retrieve':
+            return ServiceSerializerConfigurations
+        else:
+            return ServiceSerializer
 
     def get_queryset(self):
         return self.request.user.services.all()

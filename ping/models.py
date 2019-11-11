@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from services.models import Service
+from services.error_percentage import ErrorPercentage
 
 
 class PingConfiguration(models.Model):
@@ -12,6 +13,10 @@ class PingConfiguration(models.Model):
     service = models.ForeignKey(Service, related_name="ping_configuration", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+
+    @property
+    def error_percentage(self):
+        return ErrorPercentage(hour=1, day=1, week=1)
 
     def __str__(self):
         return "{0} {1}".format(self.service.__str__(), self.ip)

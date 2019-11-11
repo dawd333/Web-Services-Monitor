@@ -15,12 +15,14 @@ export const getCurrentDateUTC = () => {
   return moment().format(UTC_PATTERN);
 };
 
-export const getDateUtc = (date) => {
+export const getDateUtc = date => {
   return moment(date).format(UTC_PATTERN);
 };
 
 export const getDateFromTodayUTC = diff => {
-  return moment().add(diff, 'days').format(UTC_PATTERN);
+  return moment()
+    .add(diff, "days")
+    .format(UTC_PATTERN);
 };
 
 // Date part for charts
@@ -30,6 +32,8 @@ export const convertFromUTCtoDate = utc => {
 
 export const convertFromUTCtoDateWithSecondsDifference = (utc, diff) => {
   diff = diff ? diff : 0;
-  return moment.utc(utc, UTC_PATTERN).add(diff, 'seconds').toDate();
+  return moment
+    .utc(utc, UTC_PATTERN)
+    .add(diff, "seconds")
+    .toDate();
 };
-

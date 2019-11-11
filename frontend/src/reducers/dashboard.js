@@ -1,56 +1,85 @@
-import {view} from "../components/dashboard/DashboardModel";
+import { view } from "../components/dashboard/DashboardModel";
 import {
-  ADD_PING,
   CHANGE_VIEW,
-  DELETE_PING,
+  SELECT_SERVICE,
   GET_PINGS,
   SELECT_PING,
-  SELECT_SERVICE,
-  UPDATE_PING
+  ADD_PING,
+  UPDATE_PING,
+  DELETE_PING,
+  GET_SNMPS,
+  SELECT_SNMP,
+  ADD_SNMP,
+  UPDATE_SNMP,
+  DELETE_SNMP
 } from "../actions/types";
-
 
 const initialState = {
   currentView: view.OVERVIEW,
-  selectedServiceId: null,
+  selectedServiceId: null
 };
 
-export default function (state = initialState, action) {
+export default function(state = initialState, action) {
   switch (action.type) {
     case CHANGE_VIEW:
       return {
         ...state,
-        currentView: action.payload,
+        currentView: action.payload
       };
     case SELECT_SERVICE:
       return {
         ...state,
-        selectedServiceId: action.payload,
+        selectedServiceId: action.payload
       };
     case SELECT_PING:
       return {
         ...state,
-        selectedPing: action.payload,
+        selectedPing: action.payload
       };
     case GET_PINGS:
       return {
         ...state,
-        pings: action.payload,
+        pings: action.payload
       };
     case ADD_PING:
       return {
-        ...state,
+        ...state
         // Do nothing? We want to call GET_PINGS again rather than updating only one item in list
       };
     case UPDATE_PING:
       return {
-        ...state,
+        ...state
         // Do nothing? We want to call GET_PINGS again rather than updating only one item in list
       };
     case DELETE_PING:
       return {
-        ...state,
+        ...state
         // Do nothing? We want to call GET_PINGS again rather than updating only one item in list
+      };
+    case SELECT_SNMP:
+      return {
+        ...state,
+        selectedSnmp: action.payload
+      };
+    case GET_SNMPS:
+      return {
+        ...state,
+        snmps: action.payload
+      };
+    case ADD_SNMP:
+      return {
+        ...state
+        // Do nothing? We want to call GET_SNMPS again rather than updating only one item in list
+      };
+    case UPDATE_SNMP:
+      return {
+        ...state
+        // Do nothing? We want to call GET_SNMPS again rather than updating only one item in list
+      };
+    case DELETE_SNMP:
+      return {
+        ...state
+        // Do nothing? We want to call GET_SNMPS again rather than updating only one item in list
       };
     default:
       return state;
