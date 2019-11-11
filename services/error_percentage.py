@@ -13,14 +13,14 @@ def calculate_error_percentage(results):
 
 # Error Percentage
 class ErrorPercentage(object):
-    def __init__(self, day, week, month):
-        self.day = day
+    def __init__(self, week, day, hour):
         self.week = week
-        self.month = month
+        self.day = day
+        self.hour = hour
 
 
 # Error Percentage Serializer
 class ErrorPercentageSerializer(serializers.Serializer):
-    day = serializers.IntegerField()
     week = serializers.IntegerField()
-    month = serializers.IntegerField()
+    day = serializers.IntegerField()
+    hour = serializers.IntegerField()

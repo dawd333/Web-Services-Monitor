@@ -18,17 +18,17 @@ class PingConfiguration(models.Model):
 
     @property
     def error_percentage(self):
-        datetime_month = datetime.now(pytz.utc) - timedelta(days=30)  # let's not talk about it :D
         datetime_week = datetime.now(pytz.utc) - timedelta(days=7)
         datetime_day = datetime.now(pytz.utc) - timedelta(days=1)
+        datetime_hour = datetime.now(pytz.utc) - timedelta(hours=1)
 
-        ping_results_month = PingResults.objects.filter(ping_configuration=self, created_at__gte=datetime_month)
-        ping_results_week = ping_results_month.filter(created_at__gte=datetime_week)
-        ping_results_day = ping_results_month.filter(created_at__gte=datetime_day)
+        ping_results_week = PingResults.objects.filter(ping_configuration=self, created_at__gte=datetime_week)
+        ping_results_day = ping_results_week.filter(created_at__gte=datetime_day)
+        ping_results_hour = ping_results_week.filter(created_at__gte=datetime_hour)
 
-        return ErrorPercentage(day=calculate_error_percentage(ping_results_day),
-                               week=calculate_error_percentage(ping_results_week),
-                               month=calculate_error_percentage(ping_results_month))
+        return ErrorPercentage(week=calculate_error_percentage(ping_results_week),
+                               day=calculate_error_percentage(ping_results_day),
+                               hour=calculate_error_percentage(ping_results_hour))
 
     def __str__(self):
         return "{0} {1}".format(self.service.__str__(), self.ip)

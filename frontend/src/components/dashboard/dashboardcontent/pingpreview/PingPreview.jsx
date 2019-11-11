@@ -144,10 +144,10 @@ class PingPreview extends React.Component {
   };
 
   translateErrorPercentage = error_percentage => {
-    const dayData = { x: "day", y: error_percentage.day };
     const weekData = { x: "week", y: error_percentage.week };
-    const monthData = { x: "month", y: error_percentage.month };
-    return [dayData, weekData, monthData];
+    const dayData = { x: "day", y: error_percentage.day };
+    const hourData = { x: "hour", y: error_percentage.hour };
+    return [weekData, dayData, hourData];
   };
 }
 
