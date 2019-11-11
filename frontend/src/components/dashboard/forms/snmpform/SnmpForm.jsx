@@ -3,10 +3,17 @@ import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
 import PropTypes from "prop-types";
+import { connect } from "react-redux";
+import { changeView, deleteSnmp } from "../../../../actions/dashboard";
+import { view } from "../../DashboardModel";
+import styles from "../../snmpoverview/SnmpOverview.less";
+import { ButtonToolbar } from "react-bootstrap";
+import { DeleteModal } from "../../../common/DeleteModal/DeleteModal";
 
 export class SnmpForm extends React.Component {
   static propTypes = {
     label: PropTypes.string.isRequired,
+    id: PropTypes.number,
     ip: PropTypes.string,
     interval: PropTypes.number,
     isActive: PropTypes.bool,
@@ -24,7 +31,8 @@ export class SnmpForm extends React.Component {
       platform: props.platform ? props.platform : "Linux",
       username: props.username ? props.username : "",
       authenticationPassword: "",
-      privacyPassword: ""
+      privacyPassword: "",
+      showDeleteModal: false
     };
   }
 
@@ -92,11 +100,29 @@ export class SnmpForm extends React.Component {
             value={this.state.privacyPassword}
           />
         </Form.Group>
-        <Form.Group>
-          <Button type="submit" variant="primary">
+        <ButtonToolbar className={styles.snmpOverview__nav}>
+          <Button type="submit" variant="success">
             {this.props.label}
           </Button>
-        </Form.Group>
+          {this.props.id && (
+            <>
+              <Button variant="primary" onClick={this.onDetailsClick}>
+                {"Details"}
+              </Button>
+              <Button variant="danger" onClick={this.onDeleteClick}>
+                {"Delete"}
+              </Button>
+            </>
+          )}
+        </ButtonToolbar>
+        <DeleteModal
+          label={"Delete this snmp configuration"}
+          show={this.state.showDeleteModal}
+          onClose={() =>
+            this.setState({ ...this.state, showDeleteModal: false })
+          }
+          onDelete={this.deleteSnmpConfiguration}
+        />
       </Form>
     );
   }
@@ -129,4 +155,29 @@ export class SnmpForm extends React.Component {
     };
     this.props.onSubmit(configuration);
   };
+
+  onDetailsClick = () => {
+    this.props.changeView(view.SNMP_OVERVIEW);
+  };
+
+  onDeleteClick = () => {
+    this.setState({
+      ...this.state,
+      showDeleteModal: true
+    });
+  };
+
+  deleteSnmpConfiguration = async () => {
+    await this.props.deleteSnmp(this.props.serviceId, this.props.id);
+    this.props.changeView(view.OVERVIEW);
+  };
 }
+
+const mapStateToProps = state => ({
+  serviceId: state.dashboard.selectedServiceId
+});
+
+export default connect(
+  mapStateToProps,
+  { changeView, deleteSnmp }
+)(SnmpForm);

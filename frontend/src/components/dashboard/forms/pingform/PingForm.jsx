@@ -3,12 +3,12 @@ import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
 import PropTypes from "prop-types";
-import {connect} from "react-redux";
-import {changeView, deletePing} from "../../../../actions/dashboard";
-import {view} from "../../DashboardModel";
+import { connect } from "react-redux";
+import { changeView, deletePing } from "../../../../actions/dashboard";
+import { view } from "../../DashboardModel";
 import styles from "../../pingoverview/PingOverview.less";
-import {ButtonToolbar, Container} from "react-bootstrap";
-import {DeleteModal} from "../../../common/DeleteModal/DeleteModal";
+import { ButtonToolbar } from "react-bootstrap";
+import { DeleteModal } from "../../../common/DeleteModal/DeleteModal";
 
 export class PingForm extends React.Component {
   static propTypes = {
@@ -30,8 +30,8 @@ export class PingForm extends React.Component {
       isActive: props.isActive ? props.isActive : false,
       numberOfRequests: props.numberOfRequests ? props.numberOfRequests : 4,
       timeout: props.timeout ? props.timeout : 15,
-      showDeleteModal: false,
-    }
+      showDeleteModal: false
+    };
   }
 
   render() {
@@ -84,21 +84,23 @@ export class PingForm extends React.Component {
           <Button type="submit" variant="success">
             {this.props.label}
           </Button>
-          {this.props.id &&
-          <>
-            <Button variant="primary" onClick={this.onDetailsClick}>
-              {"Details"}
-            </Button>
-            <Button variant="danger" onClick={this.onDeleteClick}>
-              {"Delete"}
-            </Button>
-          </>
-          }
+          {this.props.id && (
+            <>
+              <Button variant="primary" onClick={this.onDetailsClick}>
+                {"Details"}
+              </Button>
+              <Button variant="danger" onClick={this.onDeleteClick}>
+                {"Delete"}
+              </Button>
+            </>
+          )}
         </ButtonToolbar>
         <DeleteModal
           label={"Delete this ping configuration"}
           show={this.state.showDeleteModal}
-          onClose={() => this.setState({...this.state, showDeleteModal: false})}
+          onClose={() =>
+            this.setState({ ...this.state, showDeleteModal: false })
+          }
           onDelete={this.deletePingConfiguration}
         />
       </Form>
@@ -133,21 +135,20 @@ export class PingForm extends React.Component {
   };
 
   onDetailsClick = () => {
-    this.props.changeView(view.PING_OVERVIEW)
+    this.props.changeView(view.PING_OVERVIEW);
   };
 
   onDeleteClick = () => {
     this.setState({
       ...this.state,
-      showDeleteModal: true,
-    })
+      showDeleteModal: true
+    });
   };
 
   deletePingConfiguration = async () => {
     await this.props.deletePing(this.props.serviceId, this.props.id);
     this.props.changeView(view.OVERVIEW);
   };
-
 }
 
 const mapStateToProps = state => ({
@@ -156,5 +157,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  {changeView, deletePing},
+  { changeView, deletePing }
 )(PingForm);

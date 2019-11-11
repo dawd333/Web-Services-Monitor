@@ -8,7 +8,8 @@ import {
   Table,
   Accordion,
   Card,
-  Button
+  Button,
+  ButtonToolbar
 } from "react-bootstrap";
 import { getSnmpResults } from "../../../actions/snmp";
 import {
@@ -34,6 +35,9 @@ import styles from "./SnmpOverview.less";
 import CalendarRangePicker from "../../common/CalendarRangePicker/CalendarRangePicker";
 import moment from "moment";
 import { isArray } from "util";
+import { view } from "../DashboardModel";
+import { changeView, deleteSnmp } from "../../../actions/dashboard";
+import { DeleteModal } from "../../common/DeleteModal/DeleteModal";
 
 class SnmpOverview extends React.Component {
   //todo hinting in line series and vertical rect series???
@@ -47,6 +51,7 @@ class SnmpOverview extends React.Component {
       .subtract(7, "days")
       .toDate(),
     toDate: new Date(),
+    showDeleteModal: false,
     cpuHintValue: false,
     diskHintValue: false
   };
@@ -388,6 +393,22 @@ class SnmpOverview extends React.Component {
             />
           </Col>
         </Row>
+        <ButtonToolbar className={styles.snmpOverview__nav}>
+          <Button variant={"primary"} onClick={this.onConfigurationClick}>
+            {"Configuration"}
+          </Button>
+          <Button variant={"danger"} onClick={this.onDeleteClick}>
+            {"Delete"}
+          </Button>
+        </ButtonToolbar>
+        <DeleteModal
+          label={"Delete this snmp configuration"}
+          show={this.state.showDeleteModal}
+          onClose={() =>
+            this.setState({ ...this.state, showDeleteModal: false })
+          }
+          onDelete={this.deleteSnmpConfiguration}
+        />
       </Container>
     );
   }
@@ -591,6 +612,25 @@ class SnmpOverview extends React.Component {
       getDateUtc(toDate)
     );
   };
+
+  onConfigurationClick = () => {
+    this.props.changeView(view.EDIT_SNMP);
+  };
+
+  onDeleteClick = () => {
+    this.setState({
+      ...this.state,
+      showDeleteModal: true
+    });
+  };
+
+  deleteSnmpConfiguration = async () => {
+    await this.props.deleteSnmp(
+      this.props.snmpModel.service,
+      this.props.snmpModel.id
+    );
+    this.props.changeView(view.OVERVIEW);
+  };
 }
 
 const mapStateToProps = state => ({
@@ -599,5 +639,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getSnmpResults }
+  { getSnmpResults, changeView, deleteSnmp }
 )(SnmpOverview);
