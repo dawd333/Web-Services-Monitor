@@ -2,10 +2,12 @@ import React from "react";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import styles from "./PingPreview.less"
-import {Badge, Button, ButtonToolbar, Nav} from "react-bootstrap";
+import {Badge, Button, ButtonToolbar, Container, Nav} from "react-bootstrap";
 import {convertFromUTC} from "../../../../commons/utils";
 import {view} from "../../DashboardModel";
 import {changeView, selectPing, selectService} from "../../../../actions/dashboard";
+import {HorizontalGridLines, VerticalRectSeries, XAxis, XYPlot, YAxis} from "react-vis";
+import VerticalBarSeries from "react-vis/es/plot/series/vertical-bar-series";
 
 class PingPreview extends React.Component {
   static propTypes = {
@@ -25,12 +27,14 @@ class PingPreview extends React.Component {
         </div>
         <ButtonToolbar>
           <Button
+            className={styles.pingPreview__button}
             variant={"primary"}
             onClick={this.onDetailsClick}
           >
             {"Details"}
           </Button>
           <Button
+            className={styles.pingPreview__button}
             variant={"primary"}
             onClick={this.onConfigurationClick}
           >
@@ -73,18 +77,40 @@ class PingPreview extends React.Component {
 
         <span className={styles.pingPreview__label}>{"Last modified at:"}</span><br/>
         <span>{convertFromUTC(this.props.model.updated_at)}</span><br/>
+
+        <span className={styles.pingPreview__label}>{"Percentage of failure in last"}</span><br/>
+        <XYPlot
+          width={180}
+          height={120}
+          stackBy="y"
+          xType="ordinal"
+          yDomain={[0, 100]}
+        >
+          <HorizontalGridLines/>
+          <XAxis/>
+          <YAxis/>
+          <VerticalBarSeries barWidth={0.7} color={"#af1c21"} data={this.translateErrorPercentage(5, 20, 70)}/>
+        </XYPlot>
       </div>
     )
   };
 
   onDetailsClick = () => {
-
+    this.props.selectPing(this.props.model);
+    this.props.changeView(view.PING_OVERVIEW);
   };
 
   onConfigurationClick = () => {
     this.props.selectPing(this.props.model);
     this.props.changeView(view.EDIT_PING);
   };
+
+  translateErrorPercentage = (day, week, month) => {
+    const monthData = {x: "month", y: month};
+    const weekData = {x: "week", y: week};
+    const dayData = {x: "day", y: day};
+    return [monthData, weekData, dayData];
+  }
 }
 
 

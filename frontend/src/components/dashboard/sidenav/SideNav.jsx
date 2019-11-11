@@ -12,6 +12,7 @@ import {
 import styles from "./SideNav.less";
 import {Service, view} from "../DashboardModel";
 import {changeView, selectService} from "../../../actions/dashboard";
+import {DeleteModal} from "../../common/DeleteModal/DeleteModal";
 
 export class SideNav extends React.Component {
 
@@ -22,6 +23,9 @@ export class SideNav extends React.Component {
     selectService: PropTypes.func.isRequired,
     deleteService: PropTypes.func.isRequired
   };
+
+
+  state = {showDeleteModal: false};
 
 
   render() {
@@ -35,6 +39,12 @@ export class SideNav extends React.Component {
             </Card.Header>
           </a>
         </Card>
+        <DeleteModal
+          label={`Delete service \"${this.getServiceName(this.props.selectedServiceId)}\" with entire data`}
+          show={this.state.showDeleteModal}
+          onClose={() => this.setState({...this.state, showDeleteModal: false})}
+          onDelete={this.deleteService}
+        />
       </div>
     );
   }
@@ -83,10 +93,7 @@ export class SideNav extends React.Component {
           <Button
             variant="danger"
             className={styles.accordionButton}
-            onClick={this.props.deleteService.bind(
-              this,
-              service.id
-            )}
+            onClick={this.onDeleteClick}
           >
             {"Delete Service"}
           </Button>
@@ -104,6 +111,25 @@ export class SideNav extends React.Component {
     this.props.changeView(view.OVERVIEW);
     this.props.selectService(serviceId);
   };
+
+  onDeleteClick = () => {
+    this.setState({
+      ...this.state,
+      showDeleteModal: true,
+    })
+  };
+
+  deleteService = async () => {
+    await this.props.deleteService(this.props.selectedServiceId);
+    this.setState({
+      ...this.state,
+      showDeleteModal: false,
+    })
+  };
+
+  getServiceName = (serviceId) => {
+    return this.props.services[serviceId]?.name ? this.props.services[serviceId].name : "";
+  }
 
 }
 
