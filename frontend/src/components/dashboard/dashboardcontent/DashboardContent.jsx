@@ -3,29 +3,28 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { Container, Row } from "react-bootstrap";
 import styles from "./DashboardContent.less";
-import { getPings, getSnmps } from "../../../actions/dashboard";
+import { getServiceWithConfigurations } from "../../../actions/dashboard";
 import PingPreview from "./pingpreview/PingPreview";
 import SnmpPreview from "./snmppreview/SnmpPreview";
 
 class DashboardContent extends React.Component {
   static propTypes = {
     serviceId: PropTypes.number.isRequired,
+    getServiceWithConfigurations: PropTypes.func.isRequired,
     pings: PropTypes.array,
-    getPings: PropTypes.func.isRequired,
-    snmps: PropTypes.array,
-    getSnmps: PropTypes.func.isRequired
+    snmps: PropTypes.array
   };
 
   componentDidMount() {
-    this.props.getPings(this.props.serviceId);
-    this.props.getSnmps(this.props.serviceId);
+    this.props.getServiceWithConfigurations(this.props.serviceId);
   }
 
   render() {
     return (
       <Container className={styles.dashboardContent}>
-        {this.props.pings && this.renderRow2(this.translatePingsToComponent())}
-        {this.props.snmps && this.renderRow2(this.translateSnmpsToComponent())}
+        {this.props.pings &&
+          this.props.snmps &&
+          this.renderRow2(this.translateConfigurationsToComponents())}
       </Container>
     );
   }
@@ -43,8 +42,8 @@ class DashboardContent extends React.Component {
     return <>{rows}</>;
   };
 
-  translatePingsToComponent = () => {
-    return this.props.pings.map((ping, index) => {
+  translateConfigurationsToComponents = () => {
+    const pingPreviews = this.props.pings.map((ping, index) => {
       return (
         <PingPreview
           key={index}
@@ -53,10 +52,8 @@ class DashboardContent extends React.Component {
         />
       );
     });
-  };
 
-  translateSnmpsToComponent = () => {
-    return this.props.snmps.map((snmp, index) => {
+    const snmpPreviews = this.props.snmps.map((snmp, index) => {
       return (
         <SnmpPreview
           key={index}
@@ -65,6 +62,8 @@ class DashboardContent extends React.Component {
         />
       );
     });
+
+    return pingPreviews.concat(snmpPreviews);
   };
 }
 
@@ -75,5 +74,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { getPings, getSnmps }
+  { getServiceWithConfigurations }
 )(DashboardContent);
