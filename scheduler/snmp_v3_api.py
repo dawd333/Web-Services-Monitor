@@ -26,8 +26,8 @@ linux_full_requests = [[ObjectType(ObjectIdentity('1.3.6.1.2.1.1.1.0'))],  # sys
                        [ObjectType(ObjectIdentity('1.3.6.1.4.1.2021.4.3.0'))],  # total swap size
                        [ObjectType(ObjectIdentity('1.3.6.1.4.1.2021.4.4.0'))],  # available swap space
                        [ObjectType(ObjectIdentity('1.3.6.1.4.1.2021.4.5.0'))],  # total ram
-                       [ObjectType(ObjectIdentity('1.3.6.1.4.1.2021.4.6.0'))],  # used ram
-                       [ObjectType(ObjectIdentity('1.3.6.1.4.1.2021.4.11.0'))],  # free ram
+                       [ObjectType(ObjectIdentity('1.3.6.1.4.1.2021.4.6.0'))],  # available ram
+                       [ObjectType(ObjectIdentity('1.3.6.1.4.1.2021.4.11.0'))],  # total free ram
                        [ObjectType(ObjectIdentity('1.3.6.1.4.1.2021.4.13.0'))],  # shared ram
                        [ObjectType(ObjectIdentity('1.3.6.1.4.1.2021.4.14.0'))],  # buffered ram
                        [ObjectType(ObjectIdentity('1.3.6.1.4.1.2021.4.15.0'))],  # cached memory
