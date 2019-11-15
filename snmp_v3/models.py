@@ -8,7 +8,6 @@ import pytz
 
 
 class PlatformChoices(Enum):
-    Windows = ('Windows', 'Windows')
     Linux = ('Linux', 'Linux')
 
     @classmethod

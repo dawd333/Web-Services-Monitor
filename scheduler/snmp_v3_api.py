@@ -1,9 +1,9 @@
 from pysnmp.hlapi import *
-from .scheduler import Scheduler
+from .scheduler import get_scheduler
 from django.utils.ipv6 import is_valid_ipv6_address
 from snmp_v3.models import PlatformChoices, SnmpConfiguration, SnmpResults
 
-scheduler = Scheduler()
+scheduler = get_scheduler()
 
 linux_test_requests = [[ObjectType(ObjectIdentity('1.3.6.1.2.1.1.1.0'))],  # system description
                        [ObjectType(ObjectIdentity('1.3.6.1.2.1.1.3.0'))],  # system uptime
@@ -77,11 +77,6 @@ def is_test_request_valid(snmp_configuration):
                 return False
             elif error_status:
                 return False
-
-    elif snmp_configuration.platform == PlatformChoices.get_value('Windows'):
-        print("to implement")
-        return False
-
     return True
 
 
@@ -111,9 +106,6 @@ def snmp_job(snmp_configuration):
             else:
                 for var_bind in var_binds:
                     results.append(str(var_bind).split("= ", 1)[1])
-
-    elif snmp_configuration.platform == PlatformChoices.get_value('Windows'):
-        print("to implement")
 
     SnmpResults.objects.create(snmp_configuration=snmp_configuration, results=results, error_messages=error_messages)
 

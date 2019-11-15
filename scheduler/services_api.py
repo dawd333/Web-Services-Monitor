@@ -1,9 +1,9 @@
-from .scheduler import Scheduler
+from .scheduler import get_scheduler
 from services.models import Service
 from ping.models import PingConfiguration
 from snmp_v3.models import SnmpConfiguration
 
-scheduler = Scheduler()
+scheduler = get_scheduler()
 
 
 def delete_service_jobs(service_id):

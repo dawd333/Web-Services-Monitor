@@ -72,7 +72,7 @@ class SnmpForm extends React.Component {
             onChange={this.onChange}
             value={this.state.platform}
           >
-            <option>Linux</option> <option>Windows</option>
+            <option>Linux</option>
           </FormControl>
           <Form.Label column={"username"}>{"Username:"}</Form.Label>
           <FormControl
@@ -177,7 +177,4 @@ const mapStateToProps = state => ({
   serviceId: state.dashboard.selectedServiceId
 });
 
-export default connect(
-  mapStateToProps,
-  { changeView, deleteSnmp }
-)(SnmpForm);
+export default connect(mapStateToProps, { changeView, deleteSnmp })(SnmpForm);
