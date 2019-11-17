@@ -28,7 +28,8 @@ import {
   HorizontalGridLines,
   XAxis,
   YAxis,
-  VerticalRectSeries
+  VerticalRectSeries,
+  Highlight
 } from "react-vis";
 import "../../../../../node_modules/react-vis/dist/style.css"; // import react-vis stylesheet
 import styles from "./SnmpOverview.less";
@@ -40,13 +41,15 @@ import { changeView, deleteSnmp } from "../../../actions/dashboard";
 import { DeleteModal } from "../../common/DeleteModal/DeleteModal";
 
 class SnmpOverview extends React.Component {
-  //todo hinting in line series and vertical rect series???
   static propTypes = {
     snmpModel: PropTypes.object.isRequired,
     results: PropTypes.array
   };
 
   state = {
+    cpuLoadLastDrawLocation: null,
+    memoryLastDrawLocation: null,
+    interfacesLastDrawLocation: null,
     fromDate: moment()
       .subtract(7, "days")
       .toDate(),
@@ -65,7 +68,13 @@ class SnmpOverview extends React.Component {
   }
 
   render() {
-    const { cpuHintValue, diskHintValue } = this.state;
+    const {
+      cpuHintValue,
+      diskHintValue,
+      cpuLoadLastDrawLocation,
+      memoryLastDrawLocation,
+      interfacesLastDrawLocation
+    } = this.state;
 
     const lastResult = this.getLastResult(this.props.results);
 
@@ -86,6 +95,37 @@ class SnmpOverview extends React.Component {
     const interfacesIsInput = [true, true, false, false];
 
     const errors = this.getErrors(this.props.results);
+
+    let xDomainCPULoad;
+    let xDomainMemory;
+    let xDomainInterfaces;
+
+    if (cpuLoadLastDrawLocation) {
+      xDomainCPULoad = [
+        cpuLoadLastDrawLocation.left,
+        cpuLoadLastDrawLocation.right
+      ];
+    } else {
+      xDomainCPULoad = [this.state.fromDate, this.state.toDate];
+    }
+
+    if (memoryLastDrawLocation) {
+      xDomainMemory = [
+        memoryLastDrawLocation.left,
+        memoryLastDrawLocation.right
+      ];
+    } else {
+      xDomainMemory = [this.state.fromDate, this.state.toDate];
+    }
+
+    if (interfacesLastDrawLocation) {
+      xDomainInterfaces = [
+        interfacesLastDrawLocation.left,
+        interfacesLastDrawLocation.right
+      ];
+    } else {
+      xDomainInterfaces = [this.state.fromDate, this.state.toDate];
+    }
 
     return (
       <Container className={styles.snmpOverview}>
@@ -251,10 +291,17 @@ class SnmpOverview extends React.Component {
         <Row className={styles.snmpOverview__row}>
           <Col xs={10}>
             <XYPlot
+              animation
               width={880}
               height={350}
               xType="time"
-              xDomain={[this.state.fromDate, this.state.toDate]}
+              xDomain={xDomainCPULoad}
+              yDomain={
+                cpuLoadLastDrawLocation && [
+                  cpuLoadLastDrawLocation.bottom,
+                  cpuLoadLastDrawLocation.top
+                ]
+              }
             >
               <HorizontalGridLines />
               <XAxis tickLabelAngle={-35} />
@@ -273,6 +320,12 @@ class SnmpOverview extends React.Component {
                 );
               })}
               <LineSeries data={[{ x: new Date(), y: 0 }]} />
+              <Highlight
+                drag={false}
+                onBrushEnd={area =>
+                  this.setState({ cpuLoadLastDrawLocation: area })
+                }
+              />
             </XYPlot>
           </Col>
           <Col xs={2}>
@@ -289,10 +342,17 @@ class SnmpOverview extends React.Component {
         <Row className={styles.snmpOverview__row}>
           <Col xs={10}>
             <XYPlot
+              animation
               width={880}
               height={350}
               xType="time"
-              xDomain={[this.state.fromDate, this.state.toDate]}
+              xDomain={xDomainMemory}
+              yDomain={
+                memoryLastDrawLocation && [
+                  memoryLastDrawLocation.bottom,
+                  memoryLastDrawLocation.top
+                ]
+              }
             >
               <HorizontalGridLines />
               <XAxis tickLabelAngle={-35} />
@@ -313,6 +373,12 @@ class SnmpOverview extends React.Component {
                 );
               })}
               <LineSeries data={[{ x: new Date(), y: 0 }]} />
+              <Highlight
+                drag={false}
+                onBrushEnd={area =>
+                  this.setState({ memoryLastDrawLocation: area })
+                }
+              />
             </XYPlot>
           </Col>
           <Col xs={2}>
@@ -329,10 +395,17 @@ class SnmpOverview extends React.Component {
         <Row className={styles.snmpOverview__row}>
           <Col xs={10}>
             <XYPlot
+              animation
               width={880}
               height={400}
               xType="time"
-              xDomain={[this.state.fromDate, this.state.toDate]}
+              xDomain={xDomainInterfaces}
+              yDomain={
+                interfacesLastDrawLocation && [
+                  interfacesLastDrawLocation.bottom,
+                  interfacesLastDrawLocation.top
+                ]
+              }
             >
               <HorizontalGridLines />
               <XAxis tickLabelAngle={-35} />
@@ -351,38 +424,12 @@ class SnmpOverview extends React.Component {
                 );
               })}
               <VerticalRectSeries data={[{ x: new Date(), y: 0 }]} />
-              {/* <VerticalRectSeries //todo this are just to show error bars for tests
-                color={"#00909e"}
-                data={this.translateResultsForInterfaces(
-                  this.props.results,
-                  true,
-                  22
-                )}
+              <Highlight
+                drag={false}
+                onBrushEnd={area =>
+                  this.setState({ interfacesLastDrawLocation: area })
+                }
               />
-              <VerticalRectSeries
-                color={"#f88020"}
-                data={this.translateResultsForInterfacesErrorTest(
-                  this.props.results,
-                  true,
-                  23
-                )}
-              />
-              <VerticalRectSeries
-                color={"#472b62"}
-                data={this.translateResultsForInterfaces(
-                  this.props.results,
-                  false,
-                  24
-                )}
-              />
-              <VerticalRectSeries
-                color={"#c70d3a"}
-                data={this.translateResultsForInterfacesErrorTest(
-                  this.props.results,
-                  false,
-                  25
-                )}
-              /> */}
             </XYPlot>
           </Col>
           <Col xs={2}>
@@ -524,8 +571,8 @@ class SnmpOverview extends React.Component {
   memoryChartLegendData = () => {
     return [
       { title: "Available Swap space", color: "#00909e" },
-      { title: "Used RAM", color: "#c70d3a" },
-      { title: "Free RAM", color: "#1aaf54" },
+      { title: "Available RAM", color: "#c70d3a" },
+      { title: "Total free RAM", color: "#1aaf54" },
       { title: "Shared RAM", color: "#fed766" },
       { title: "Buffered RAM", color: "#f88020" },
       { title: "Cached Memory", color: "#472b62" }
@@ -554,24 +601,6 @@ class SnmpOverview extends React.Component {
             x: convertFromUTCtoDateWithSecondsDifference(result.created_at),
             y: 0
           };
-      });
-    } else return [];
-  };
-
-  translateResultsForInterfacesErrorTest = (results, isInput, resultIndex) => {
-    if (results) {
-      return results.map(result => {
-        return {
-          x0: convertFromUTCtoDateWithSecondsDifference(
-            result.created_at,
-            -this.props.snmpModel.interval * 0.4
-          ),
-          x: convertFromUTCtoDateWithSecondsDifference(
-            result.created_at,
-            this.props.snmpModel.interval * 0.4
-          ),
-          y: isInput ? 1000 : -1500
-        };
       });
     } else return [];
   };
@@ -637,7 +666,8 @@ const mapStateToProps = state => ({
   results: state.snmp.results
 });
 
-export default connect(
-  mapStateToProps,
-  { getSnmpResults, changeView, deleteSnmp }
-)(SnmpOverview);
+export default connect(mapStateToProps, {
+  getSnmpResults,
+  changeView,
+  deleteSnmp
+})(SnmpOverview);

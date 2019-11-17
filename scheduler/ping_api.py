@@ -1,8 +1,8 @@
 from ping.models import PingConfiguration, PingResults
-from .scheduler import Scheduler
+from .scheduler import get_scheduler
 from pythonping import ping
 
-scheduler = Scheduler()
+scheduler = get_scheduler()
 
 
 def ping_job(ping_configuration):

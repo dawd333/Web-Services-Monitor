@@ -1,9 +1,9 @@
 from pysnmp.hlapi import *
-from .scheduler import Scheduler
+from .scheduler import get_scheduler
 from django.utils.ipv6 import is_valid_ipv6_address
 from snmp_v3.models import PlatformChoices, SnmpConfiguration, SnmpResults
 
-scheduler = Scheduler()
+scheduler = get_scheduler()
 
 linux_test_requests = [[ObjectType(ObjectIdentity('1.3.6.1.2.1.1.1.0'))],  # system description
                        [ObjectType(ObjectIdentity('1.3.6.1.2.1.1.3.0'))],  # system uptime
@@ -26,8 +26,8 @@ linux_full_requests = [[ObjectType(ObjectIdentity('1.3.6.1.2.1.1.1.0'))],  # sys
                        [ObjectType(ObjectIdentity('1.3.6.1.4.1.2021.4.3.0'))],  # total swap size
                        [ObjectType(ObjectIdentity('1.3.6.1.4.1.2021.4.4.0'))],  # available swap space
                        [ObjectType(ObjectIdentity('1.3.6.1.4.1.2021.4.5.0'))],  # total ram
-                       [ObjectType(ObjectIdentity('1.3.6.1.4.1.2021.4.6.0'))],  # used ram
-                       [ObjectType(ObjectIdentity('1.3.6.1.4.1.2021.4.11.0'))],  # free ram
+                       [ObjectType(ObjectIdentity('1.3.6.1.4.1.2021.4.6.0'))],  # available ram
+                       [ObjectType(ObjectIdentity('1.3.6.1.4.1.2021.4.11.0'))],  # total free ram
                        [ObjectType(ObjectIdentity('1.3.6.1.4.1.2021.4.13.0'))],  # shared ram
                        [ObjectType(ObjectIdentity('1.3.6.1.4.1.2021.4.14.0'))],  # buffered ram
                        [ObjectType(ObjectIdentity('1.3.6.1.4.1.2021.4.15.0'))],  # cached memory
@@ -77,11 +77,6 @@ def is_test_request_valid(snmp_configuration):
                 return False
             elif error_status:
                 return False
-
-    elif snmp_configuration.platform == PlatformChoices.get_value('Windows'):
-        print("to implement")
-        return False
-
     return True
 
 
@@ -111,9 +106,6 @@ def snmp_job(snmp_configuration):
             else:
                 for var_bind in var_binds:
                     results.append(str(var_bind).split("= ", 1)[1])
-
-    elif snmp_configuration.platform == PlatformChoices.get_value('Windows'):
-        print("to implement")
 
     SnmpResults.objects.create(snmp_configuration=snmp_configuration, results=results, error_messages=error_messages)
 

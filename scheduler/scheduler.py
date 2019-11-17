@@ -29,3 +29,10 @@ class Scheduler:
 
     def remove_job(self, job_id):
         self._scheduler.remove_job(job_id=job_id)
+
+
+scheduler = Scheduler()
+
+
+def get_scheduler():
+    return scheduler
