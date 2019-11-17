@@ -81,16 +81,16 @@ import {tokenConfig} from "../axios-config";
 //   getPings(serviceId);
 // };
 
-export const getPingResults = (pingId, fromDate, toDate) => async (dispatch, getState) => {
-  await axios
-    .get(`/api/ping-results/${pingId}/`,
-      {...tokenConfig(getState), params: {'from-date': fromDate, 'to-date': toDate}})
-    .then(response => {
-      console.log(response);
-      dispatch({
-        type: GET_PING_RESULTS,
-        payload: response.data,
-      });
-    })
-    .catch(error => dispatch(returnErrors(error.response.data, error.response.status)));
-};
+// export const getPingResults = (pingId, fromDate, toDate) => async (dispatch, getState) => {
+//   await axios
+//     .get(`/api/ping-results/${pingId}/`,
+//       {...tokenConfig(getState), params: {'from-date': fromDate, 'to-date': toDate}})
+//     .then(response => {
+//       console.log(response);
+//       dispatch({
+//         type: GET_PING_RESULTS,
+//         payload: response.data,
+//       });
+//     })
+//     .catch(error => dispatch(returnErrors(error.response.data, error.response.status)));
+// };

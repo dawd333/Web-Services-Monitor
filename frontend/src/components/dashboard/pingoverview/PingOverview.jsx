@@ -2,7 +2,6 @@ import React from "react";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
 import {Badge, Button, ButtonToolbar, Container} from "react-bootstrap";
-import {getPingResults} from "../../../actions/ping";
 import {
   convertFromUTC,
   getCurrentDateUTC,
@@ -14,7 +13,7 @@ import CalendarRangePicker from "../../common/CalendarRangePicker/CalendarRangeP
 import moment from "moment";
 import Table from "react-bootstrap/Table";
 import {view} from "../DashboardModel";
-import {changeView, deletePing} from "../../../actions/dashboard";
+import {changeView, deletePing, getPingResults} from "../../../actions/dashboard";
 import {DeleteModal} from "../../common/DeleteModal/DeleteModal";
 import {PingChart} from "../charts/PingChart";
 
@@ -152,7 +151,7 @@ class PingOverview extends React.Component {
 }
 
 const mapStateToProps = state => ({
-  results: state.ping.results,
+  results: state.dashboard.pingResults,
 });
 
 export default connect(
