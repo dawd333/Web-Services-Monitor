@@ -1,15 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
 import {connect} from "react-redux";
-import {Badge, Button, ButtonToolbar, Container, FormGroup, Row} from "react-bootstrap";
+import {Badge, Button, ButtonToolbar, Container, FormGroup, OverlayTrigger, Popover, Row} from "react-bootstrap";
 import {getPingResults} from "../../../actions/ping";
 import {
   convertFromUTC,
   convertFromUTCtoDateWithSecondsDifference,
   getCurrentDateUTC,
   getDateFromTodayUTC, getDateUtc
-} from "../../../commons/utils";
+} from "../../../commons/dateUtils";
 import {
+  Hint,
   HorizontalGridLines,
   VerticalRectSeries,
   XAxis,
@@ -24,6 +25,8 @@ import Table from "react-bootstrap/Table";
 import {view} from "../DashboardModel";
 import {changeView, deletePing} from "../../../actions/dashboard";
 import {DeleteModal} from "../../common/DeleteModal/DeleteModal";
+import {SimpleTooltip} from "../../common/tooltip/SimpleTooltip";
+import {listToStringWithCount} from "../../../commons/utils";
 
 
 class PingOverview extends React.Component {
@@ -42,6 +45,7 @@ class PingOverview extends React.Component {
       fromDate: moment().subtract(7, 'days').toDate(),
       toDate: new Date(),
       showDeleteModal: false,
+      error: null,
     }
   }
 
@@ -57,7 +61,6 @@ class PingOverview extends React.Component {
           onChange={this.onChangeCalendar}
         />
         <XYPlot
-          className={styles.pingOverview__plot}
           width={800}
           height={350}
           stackBy="y"
@@ -71,9 +74,15 @@ class PingOverview extends React.Component {
           <XAxis tickLabelAngle={-35}/>
           <YAxis/>
           <VerticalRectSeries color={"#1aaf54"} data={this.translateResultsPassed(this.props.results)}/>
-          <VerticalRectSeries color={"#af1c21"} data={this.translateResultsFailed(this.props.results)}/>
+          <VerticalRectSeries color={"#c70d3a"} data={this.translateResultsFailed(this.props.results)}
+                              onValueMouseOver={this.valueOnMouseOver} onValueMouseOut={this.valueOnMouseOut}/>
           {/* This is trick to bypass not rendering chart when data is empty */}
           <VerticalRectSeries data={[{x: new Date(), y: 0}]}/>
+          {this.state.error ?
+            <Hint value={this.buildErrorValue(this.state.error)}>
+              <SimpleTooltip content={listToStringWithCount(this.state.error.errors)}/>
+            </Hint> : null
+          }
         </XYPlot>
         <br/>
         <Table bordered>
@@ -144,6 +153,26 @@ class PingOverview extends React.Component {
     );
   }
 
+  valueOnMouseOver = (dataPoint) => {
+    this.setState({...this.state, error: dataPoint}
+    )
+  };
+
+  valueOnMouseOut = () => {
+    this.setState({...this.state, error: null}
+    )
+  };
+
+  buildErrorValue(hoveredCell) {
+    const {x0, x, y, error, y0} = hoveredCell;
+    const x_pos = new Date((x0.getTime() + x.getTime()) / 2);
+    const y_pos = (y0 + y) / 2;
+    return {
+      x: x_pos,
+      y: y_pos
+    };
+  }
+
   translateResultsPassed = (results) => {
     return results ? results.map(result => {
       return {
@@ -160,6 +189,7 @@ class PingOverview extends React.Component {
         x0: convertFromUTCtoDateWithSecondsDifference(result.created_at, -this.props.pingModel.interval * 0.4),
         x: convertFromUTCtoDateWithSecondsDifference(result.created_at, this.props.pingModel.interval * 0.4),
         y: result.rtt_avg_ms * result?.error_messages?.length,
+        errors: result.error_messages
       }
     }) : [];
   };
