@@ -86,6 +86,7 @@ export const getPingResults = (pingId, fromDate, toDate) => async (dispatch, get
     .get(`/api/ping-results/${pingId}/`,
       {...tokenConfig(getState), params: {'from-date': fromDate, 'to-date': toDate}})
     .then(response => {
+      console.log(response);
       dispatch({
         type: GET_PING_RESULTS,
         payload: response.data,
