@@ -2,10 +2,10 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import styles from "./DashboardContainer.less";
-import SideNav from "./sidenav/SideNav";
+import SideNav from "./side-nav/SideNav";
 import { view } from "./DashboardModel";
 import { Service } from "./DashboardModel";
-import { ServiceForm } from "./forms/serviceform/ServiceForm";
+import { ServiceForm } from "./forms/service-form/ServiceForm";
 import {
   addService,
   deleteService,
@@ -25,13 +25,13 @@ import {
   addDjangoHealthCheck,
   updateDjangoHealthCheck
 } from "../../actions/dashboard";
-import PingOverview from "./pingoverview/PingOverview";
-import SnmpOverview from "./snmpoverview/SnmpOverview";
-import DjangoHealthCheckOverview from "./djangohealthcheckoverview/DjangoHealthCheckOverview";
-import DashboardContent from "./dashboardcontent/DashboardContent";
-import PingForm from "./forms/pingform/PingForm";
-import SnmpForm from "./forms/snmpform/SnmpForm";
-import DjangoHealthCheckForm from "./forms/djangohealthcheckform/DjangoHealthCheckForm";
+import PingOverview from "./ping-overview/PingOverview";
+import SnmpOverview from "./snmp-overview/SnmpOverview";
+import DjangoHealthCheckOverview from "./django-health-check-overview/DjangoHealthCheckOverview";
+import DashboardContent from "./dashboard-content/DashboardContent";
+import PingForm from "./forms/ping-form/PingForm";
+import SnmpForm from "./forms/snmp-form/SnmpForm";
+import DjangoHealthCheckForm from "./forms/django-health-check-form/DjangoHealthCheckForm";
 
 class DashboardContainer extends React.Component {
   static propTypes = {

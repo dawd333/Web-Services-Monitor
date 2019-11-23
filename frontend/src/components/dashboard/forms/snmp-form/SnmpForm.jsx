@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { changeView, deleteSnmp } from "../../../../actions/dashboard";
 import { view } from "../../DashboardModel";
-import styles from "../../snmpoverview/SnmpOverview.less";
+import styles from "../../snmp-overview/SnmpOverview.less";
 import { ButtonToolbar } from "react-bootstrap";
 import { DeleteModal } from "../../../common/delete-modal/DeleteModal";
 

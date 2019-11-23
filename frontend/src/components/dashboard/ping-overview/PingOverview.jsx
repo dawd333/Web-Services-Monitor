@@ -20,7 +20,7 @@ import {
   getPingResults
 } from "../../../actions/dashboard";
 import { DeleteModal } from "../../common/delete-modal/DeleteModal";
-import { PingChart } from "../charts/PingChart";
+import { PingChart } from "../charts/ping-charts/PingChart";
 
 class PingOverview extends React.Component {
   static propTypes = {
@@ -64,6 +64,8 @@ class PingOverview extends React.Component {
           toDate={this.state.toDate}
           results={this.props.results}
           interval={this.props.pingModel.interval}
+          brushing={true}
+          hint={true}
         />
         <br />
         <Table bordered>

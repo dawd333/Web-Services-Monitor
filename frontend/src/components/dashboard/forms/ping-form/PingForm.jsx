@@ -6,7 +6,7 @@ import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import { changeView, deletePing } from "../../../../actions/dashboard";
 import { view } from "../../DashboardModel";
-import styles from "../../pingoverview/PingOverview.less";
+import styles from "../../ping-overview/PingOverview.less";
 import { ButtonToolbar } from "react-bootstrap";
 import { DeleteModal } from "../../../common/delete-modal/DeleteModal";
 

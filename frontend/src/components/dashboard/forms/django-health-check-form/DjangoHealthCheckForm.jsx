@@ -9,7 +9,7 @@ import {
   deleteDjangoHealthCheck
 } from "../../../../actions/dashboard";
 import { view } from "../../DashboardModel";
-import styles from "../../djangohealthcheckoverview/DjangoHealthCheckOverview.less";
+import styles from "../../django-health-check-overview/DjangoHealthCheckOverview.less";
 import { ButtonToolbar } from "react-bootstrap";
 import { DeleteModal } from "../../../common/delete-modal/DeleteModal";
 

@@ -5,12 +5,11 @@ import {
   Hint,
   HorizontalGridLines,
   VerticalRectSeries,
-  VerticalRectSeriesCanvas,
   XAxis,
   XYPlot,
   YAxis
 } from "react-vis";
-import "../../../../../node_modules/react-vis/dist/style.css"; // import react-vis stylesheet
+import "../../../../../../node_modules/react-vis/dist/style.css"; // import react-vis stylesheet
 import { SimpleTooltip } from "../../../common/tooltip/SimpleTooltip";
 import { listToStringWithCount } from "../../../../commons/utils";
 import { convertFromUTCtoDateWithSecondsDifference } from "../../../../commons/dateUtils";
@@ -22,18 +21,30 @@ export class PingChart extends React.Component {
     fromDate: PropTypes.objectOf(Date).isRequired,
     toDate: PropTypes.objectOf(Date).isRequired,
     results: PropTypes.array,
-    interval: PropTypes.number.isRequired
+    interval: PropTypes.number.isRequired,
+    brushing: PropTypes.bool,
+    hint: PropTypes.bool
   };
 
   constructor(props) {
     super(props);
     this.state = {
       mouseEventClass: null,
-      fromDate: props.fromDate,
-      toDate: props.toDate,
       error: null,
       lastDrawLocation: null
     };
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (
+      prevProps.fromDate !== this.props.fromDate ||
+      prevProps.toDate !== this.props.toDate
+    ) {
+      this.setState({
+        ...this.state,
+        lastDrawLocation: null
+      });
+    }
   }
 
   render() {
@@ -45,14 +56,15 @@ export class PingChart extends React.Component {
           stackBy="y"
           xType="time"
           xDomain={
-            this.state.lastDrawLocation
+            this.props.brushing && this.state.lastDrawLocation
               ? [
                   this.state.lastDrawLocation.left,
                   this.state.lastDrawLocation.right
                 ]
-              : [this.state.fromDate, this.state.toDate]
+              : [this.props.fromDate, this.props.toDate]
           }
           yDomain={
+            this.props.brushing &&
             this.state.lastDrawLocation && [
               this.state.lastDrawLocation.bottom,
               this.state.lastDrawLocation.top
@@ -60,21 +72,23 @@ export class PingChart extends React.Component {
           }
         >
           <HorizontalGridLines />
-          <Highlight
-            onBrushStart={() =>
-              this.setState({ mouseEventClass: styles.mouseEventsOff })
-            }
-            onBrushEnd={area => {
-              if (area) {
-                area.bottom = area.bottom > 0 ? area.bottom : 0;
-                area.top = area.top > 0 ? area.top : 1;
+          {this.props.brushing && (
+            <Highlight
+              onBrushStart={() =>
+                this.setState({ mouseEventClass: styles.mouseEventsOff })
               }
-              this.setState({
-                lastDrawLocation: area,
-                mouseEventClass: null
-              });
-            }}
-          />
+              onBrushEnd={area => {
+                if (area) {
+                  area.bottom = area.bottom > 0 ? area.bottom : 0;
+                  area.top = area.top > 0 ? area.top : 1;
+                }
+                this.setState({
+                  lastDrawLocation: area,
+                  mouseEventClass: null
+                });
+              }}
+            />
+          )}
           <VerticalRectSeries
             className={this.state.mouseEventClass}
             color={"#1aaf54"}
@@ -92,7 +106,7 @@ export class PingChart extends React.Component {
             data={[{ x0: new Date(), x: new Date(), y: 0 }]}
           />
           <Borders className={styles.border} />
-          {this.state.error ? (
+          {this.props.hint && this.state.error ? (
             <Hint value={this.buildErrorValue(this.state.error)}>
               <SimpleTooltip
                 content={listToStringWithCount(this.state.error.errors)}
