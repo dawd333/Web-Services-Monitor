@@ -42,10 +42,16 @@ INSTALLED_APPS = [
     'frontend',
     'accounts',
     'services',
-    'ping',
-    'snmp_v3'
-    # 'ping.apps.PingConfig',
-    # 'snmp_v3.apps.SnmpV3Config'
+    'health_check',
+    'health_check.db',
+    'health_check.cache',
+    'health_check.storage',
+    # 'ping',
+    # 'snmp_v3',
+    # 'django_health_check',
+    'ping.apps.PingConfig',
+    'snmp_v3.apps.SnmpV3Config',
+    'django_health_check.apps.DjangoHealthCheckConfig'
 ]
 
 REST_FRAMEWORK = {

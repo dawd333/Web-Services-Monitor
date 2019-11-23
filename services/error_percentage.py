@@ -1,4 +1,10 @@
 from rest_framework import serializers
+from datetime import datetime, timedelta
+import pytz
+
+DATETIME_WEEK = datetime.now(pytz.utc) - timedelta(days=7)
+DATETIME_DAY = datetime.now(pytz.utc) - timedelta(days=1)
+DATETIME_HOUR = datetime.now(pytz.utc) - timedelta(hours=1)
 
 
 def calculate_error_percentage(results):

@@ -7,5 +7,7 @@ urlpatterns = [
     path('', include('accounts.urls')),
     path('', include('services.urls')),
     path('', include('ping.urls')),
-    path('', include('snmp_v3.urls'))
+    path('', include('snmp_v3.urls')),
+    path(r'ht/', include('health_check.urls')),
+    path('', include('django_health_check.urls'))
 ]
