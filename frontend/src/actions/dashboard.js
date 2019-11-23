@@ -11,6 +11,7 @@ import {
   ADD_SNMP,
   UPDATE_SNMP,
   DELETE_SNMP,
+  GET_PING_RESULTS,
   SELECT_DJANGO_HEALTH_CHECK,
   SET_DJANGO_HEALTH_CHECKS,
   ADD_DJANGO_HEALTH_CHECK,
@@ -134,6 +135,21 @@ export const deletePing = (serviceId, pingId) => async (dispatch, getState) => {
     .catch(error =>
       dispatch(returnErrors(error.response.data, error.response.status))
     );
+};
+
+// GET PING RESULTS
+export const getPingResults = (pingId, fromDate, toDate) => async (dispatch, getState) => {
+  await axios
+    .get(`/api/ping-results/${pingId}/`,
+      {...tokenConfig(getState), params: {'from-date': fromDate, 'to-date': toDate}})
+    .then(response => {
+      console.log(response);
+      dispatch({
+        type: GET_PING_RESULTS,
+        payload: response.data,
+      });
+    })
+    .catch(error => dispatch(returnErrors(error.response.data, error.response.status)));
 };
 
 // ADD SNMP

@@ -16,7 +16,8 @@ import {
   SELECT_DJANGO_HEALTH_CHECK,
   ADD_DJANGO_HEALTH_CHECK,
   UPDATE_DJANGO_HEALTH_CHECK,
-  DELETE_DJANGO_HEALTH_CHECK
+  DELETE_DJANGO_HEALTH_CHECK,
+  GET_PING_RESULTS
 } from "../actions/types";
 
 const initialState = {
@@ -24,12 +25,16 @@ const initialState = {
   selectedServiceId: null
 };
 
-export default function(state = initialState, action) {
+export default function (state = initialState, action) {
   switch (action.type) {
     case CHANGE_VIEW:
       return {
         ...state,
-        currentView: action.payload
+        currentView: action.payload,
+        selectedPing:
+          action.payload === view.PING_OVERVIEW || view.EDIT_PING ?
+            state.selectedPing : undefined,
+        pingResults: undefined,
       };
     case SELECT_SERVICE:
       return {
@@ -60,6 +65,11 @@ export default function(state = initialState, action) {
       return {
         ...state
         // Do nothing? We want to call GET_PINGS again rather than updating only one item in list
+      };
+    case GET_PING_RESULTS:
+      return {
+        ...state,
+        pingResults: action.payload,
       };
     case SELECT_SNMP:
       return {
