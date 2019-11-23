@@ -10,7 +10,12 @@ import {
   SET_SNMPS,
   ADD_SNMP,
   UPDATE_SNMP,
-  DELETE_SNMP
+  DELETE_SNMP,
+  SELECT_DJANGO_HEALTH_CHECK,
+  SET_DJANGO_HEALTH_CHECKS,
+  ADD_DJANGO_HEALTH_CHECK,
+  UPDATE_DJANGO_HEALTH_CHECK,
+  DELETE_DJANGO_HEALTH_CHECK
 } from "./types";
 import axios from "axios";
 import { tokenConfig } from "../axios-config";
@@ -37,6 +42,13 @@ export const selectSnmp = snmp => {
   };
 };
 
+export const selectDjangoHealthCheck = djangoHealthCheck => {
+  return {
+    type: SELECT_DJANGO_HEALTH_CHECK,
+    payload: djangoHealthCheck
+  };
+};
+
 export const changeView = view => {
   return {
     type: CHANGE_VIEW,
@@ -59,6 +71,10 @@ export const getServiceWithConfigurations = serviceId => (
       dispatch({
         type: SET_SNMPS,
         payload: response.data.snmp_configurations
+      });
+      dispatch({
+        type: SET_DJANGO_HEALTH_CHECKS,
+        payload: response.data.django_health_check_configurations
       });
     })
     .catch(error => {
@@ -167,6 +183,90 @@ export const deleteSnmp = (serviceId, snmpId) => async (dispatch, getState) => {
       dispatch({
         type: DELETE_SNMP,
         payload: snmpId
+      });
+    })
+    .catch(error =>
+      dispatch(returnErrors(error.response.data, error.response.status))
+    );
+};
+
+// ADD DJANGO HEALTH CHECK
+export const addDjangoHealthCheck = (serviceId, djangoHealthCheck) => async (
+  dispatch,
+  getState
+) => {
+  let djangoHealthCheckId;
+  await axios
+    .post(
+      `/api/django-health-check/${serviceId}/`,
+      djangoHealthCheck,
+      tokenConfig(getState)
+    )
+    .then(response => {
+      dispatch(
+        createMessage({
+          addDjangoHealthCheck: "Django Health Check configuration created"
+        })
+      );
+      dispatch({
+        type: ADD_DJANGO_HEALTH_CHECK,
+        payload: response.data
+      });
+      djangoHealthCheckId = response.data.id;
+    })
+    .catch(error => {
+      dispatch(returnErrors(error.response.data, error.response.status));
+    });
+  return djangoHealthCheckId;
+};
+
+// UPDATE DJANGO HEALTH CHECK
+export const updateDjangoHealthCheck = (
+  serviceId,
+  djangoHealthCheckId,
+  djangoHealthCheck
+) => async (dispatch, getState) => {
+  await axios
+    .put(
+      `/api/django-health-check/${serviceId}/${djangoHealthCheckId}/`,
+      djangoHealthCheck,
+      tokenConfig(getState)
+    )
+    .then(response => {
+      dispatch(
+        createMessage({
+          updateDjangoHealthCheck: "Django Health Check configuration updated"
+        })
+      );
+      dispatch({
+        type: UPDATE_DJANGO_HEALTH_CHECK,
+        payload: response.data
+      });
+    })
+    .catch(error => {
+      dispatch(returnErrors(error.response.data, error.response.status));
+    });
+};
+
+// DELETE DJANGO HEALTH CHECK
+export const deleteDjangoHealthCheck = (
+  serviceId,
+  djangoHealthCheckId
+) => async (dispatch, getState) => {
+  await axios
+    .delete(
+      `/api/django-health-check/${serviceId}/${djangoHealthCheckId}/`,
+      tokenConfig(getState)
+    )
+    .then(() => {
+      dispatch(
+        createMessage({
+          deleteDjangoHealthCheck: "Django Health Check configuration deleted"
+        })
+      );
+      dispatch({
+        type: DELETE_DJANGO_HEALTH_CHECK,
+        payload: djangoHealthCheckId
       });
     })
     .catch(error =>

@@ -17,6 +17,16 @@ def calculate_error_percentage(results):
     return int(round(errors * 100/len(results)))
 
 
+def calculate_error_percentage_django_health_check(results):
+    if len(results) == 0:
+        return 0
+    errors = 0
+    for result in results:
+        if not result.was_success:
+            errors += 1
+    return int(round(errors * 100/len(results)))
+
+
 # Error Percentage
 class ErrorPercentage(object):
     def __init__(self, week, day, hour):

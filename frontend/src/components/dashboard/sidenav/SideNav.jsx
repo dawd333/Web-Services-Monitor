@@ -1,12 +1,12 @@
-import React, { useState } from "react";
+import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import { deleteService } from "../../../actions/services";
 import { Card, ListGroup, Button } from "react-bootstrap";
 import styles from "./SideNav.less";
-import {Service, view} from "../DashboardModel";
-import {changeView, selectService} from "../../../actions/dashboard";
-import {DeleteModal} from "../../common/DeleteModal/DeleteModal";
+import { Service, view } from "../DashboardModel";
+import { changeView, selectService } from "../../../actions/dashboard";
+import { DeleteModal } from "../../common/DeleteModal/DeleteModal";
 
 export class SideNav extends React.Component {
   static propTypes = {
@@ -17,9 +17,7 @@ export class SideNav extends React.Component {
     deleteService: PropTypes.func.isRequired
   };
 
-
-  state = {showDeleteModal: false};
-
+  state = { showDeleteModal: false };
 
   render() {
     return (
@@ -31,9 +29,13 @@ export class SideNav extends React.Component {
           </a>
         </Card>
         <DeleteModal
-          label={`Delete service \"${this.getServiceName(this.props.selectedServiceId)}\" with entire data`}
+          label={`Delete service \"${this.getServiceName(
+            this.props.selectedServiceId
+          )}\" with entire data`}
           show={this.state.showDeleteModal}
-          onClose={() => this.setState({...this.state, showDeleteModal: false})}
+          onClose={() =>
+            this.setState({ ...this.state, showDeleteModal: false })
+          }
           onDelete={this.deleteService}
         />
       </div>
@@ -52,7 +54,7 @@ export class SideNav extends React.Component {
     );
   };
 
-  renderServiceMenu = service => {
+  renderServiceMenu = () => {
     return (
       <Card.Body>
         <ListGroup>
@@ -85,6 +87,16 @@ export class SideNav extends React.Component {
             {"Add snmp"}
           </Button>
           <Button
+            variant="primary"
+            className={styles.accordionButton}
+            onClick={this.props.changeView.bind(
+              this,
+              view.ADD_DJANGO_HEALTH_CHECK
+            )}
+          >
+            {"Add Django Health Check"}
+          </Button>
+          <Button
             variant="danger"
             className={styles.accordionButton}
             onClick={this.onDeleteClick}
@@ -109,29 +121,31 @@ export class SideNav extends React.Component {
   onDeleteClick = () => {
     this.setState({
       ...this.state,
-      showDeleteModal: true,
-    })
+      showDeleteModal: true
+    });
   };
 
   deleteService = async () => {
     await this.props.deleteService(this.props.selectedServiceId);
     this.setState({
       ...this.state,
-      showDeleteModal: false,
-    })
+      showDeleteModal: false
+    });
   };
 
-  getServiceName = (serviceId) => {
-    return this.props.services[serviceId]?.name ? this.props.services[serviceId].name : "";
-  }
-
+  getServiceName = serviceId => {
+    return this.props.services[serviceId]?.name
+      ? this.props.services[serviceId].name
+      : "";
+  };
 }
 
 const mapStateToProps = state => ({
   selectedServiceId: state.dashboard.selectedServiceId
 });
 
-export default connect(
-  mapStateToProps,
-  { selectService, changeView, deleteService }
-)(SideNav);
+export default connect(mapStateToProps, {
+  selectService,
+  changeView,
+  deleteService
+})(SideNav);

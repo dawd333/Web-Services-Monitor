@@ -6,6 +6,7 @@ import services from "./services";
 import dashboard from "./dashboard";
 import ping from "./ping";
 import snmp from "./snmp";
+import djangoHealthCheck from "./django-health-check";
 
 export default combineReducers({
   dashboard,
@@ -14,5 +15,6 @@ export default combineReducers({
   auth,
   services,
   ping,
-  snmp
+  snmp,
+  djangoHealthCheck
 });

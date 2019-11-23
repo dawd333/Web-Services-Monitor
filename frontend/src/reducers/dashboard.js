@@ -11,7 +11,12 @@ import {
   SELECT_SNMP,
   ADD_SNMP,
   UPDATE_SNMP,
-  DELETE_SNMP
+  DELETE_SNMP,
+  SET_DJANGO_HEALTH_CHECKS,
+  SELECT_DJANGO_HEALTH_CHECK,
+  ADD_DJANGO_HEALTH_CHECK,
+  UPDATE_DJANGO_HEALTH_CHECK,
+  DELETE_DJANGO_HEALTH_CHECK
 } from "../actions/types";
 
 const initialState = {
@@ -80,6 +85,32 @@ export default function(state = initialState, action) {
       return {
         ...state
         // Do nothing? We want to call GET_SNMPS again rather than updating only one item in list
+      };
+
+    case SELECT_DJANGO_HEALTH_CHECK:
+      return {
+        ...state,
+        selectedDjangoHealthCheck: action.payload
+      };
+    case SET_DJANGO_HEALTH_CHECKS:
+      return {
+        ...state,
+        djangoHealthChecks: action.payload
+      };
+    case ADD_DJANGO_HEALTH_CHECK:
+      return {
+        ...state
+        // Do nothing? We want to call GET_DJANGO_HEALTH_CHECKS again rather than updating only one item in list
+      };
+    case UPDATE_DJANGO_HEALTH_CHECK:
+      return {
+        ...state
+        // Do nothing? We want to call GET_DJANGO_HEALTH_CHECKS again rather than updating only one item in list
+      };
+    case DELETE_DJANGO_HEALTH_CHECK:
+      return {
+        ...state
+        // Do nothing? We want to call GET_DJANGO_HEALTH_CHECKS again rather than updating only one item in list
       };
     default:
       return state;

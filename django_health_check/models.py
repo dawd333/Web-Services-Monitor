@@ -1,6 +1,6 @@
 from django.db import models
 from services.models import Service
-from services.error_percentage import ErrorPercentage, calculate_error_percentage, \
+from services.error_percentage import ErrorPercentage, calculate_error_percentage_django_health_check, \
     DATETIME_WEEK, DATETIME_DAY, DATETIME_HOUR
 
 
@@ -20,9 +20,9 @@ class DjangoHealthCheckConfiguration(models.Model):
         django_health_check_results_day = django_health_check_results_week.filter(created_at__gte=DATETIME_DAY)
         django_health_check_results_hour = django_health_check_results_week.filter(created_at__gte=DATETIME_HOUR)
 
-        return ErrorPercentage(week=calculate_error_percentage(django_health_check_results_week),
-                               day=calculate_error_percentage(django_health_check_results_day),
-                               hour=calculate_error_percentage(django_health_check_results_hour))
+        return ErrorPercentage(week=calculate_error_percentage_django_health_check(django_health_check_results_week),
+                               day=calculate_error_percentage_django_health_check(django_health_check_results_day),
+                               hour=calculate_error_percentage_django_health_check(django_health_check_results_hour))
 
     def __str__(self):
         return "{0} {1}".format(self.service.__str__(), self.ip)

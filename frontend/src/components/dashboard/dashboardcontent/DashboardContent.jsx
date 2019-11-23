@@ -6,13 +6,15 @@ import styles from "./DashboardContent.less";
 import { getServiceWithConfigurations } from "../../../actions/dashboard";
 import PingPreview from "./pingpreview/PingPreview";
 import SnmpPreview from "./snmppreview/SnmpPreview";
+import DjangoHealthChechPreview from "./djangohealthcheckpreview/DjangoHealthCheckPreview";
 
 class DashboardContent extends React.Component {
   static propTypes = {
     serviceId: PropTypes.number.isRequired,
     getServiceWithConfigurations: PropTypes.func.isRequired,
     pings: PropTypes.array,
-    snmps: PropTypes.array
+    snmps: PropTypes.array,
+    djangoHealthChecks: PropTypes.array
   };
 
   componentDidMount() {
@@ -24,6 +26,7 @@ class DashboardContent extends React.Component {
       <Container className={styles.dashboardContent}>
         {this.props.pings &&
           this.props.snmps &&
+          this.props.djangoHealthChecks &&
           this.renderRow2(this.translateConfigurationsToComponents())}
       </Container>
     );
@@ -46,7 +49,7 @@ class DashboardContent extends React.Component {
     const pingPreviews = this.props.pings.map((ping, index) => {
       return (
         <PingPreview
-          key={index}
+          key={"ping_" + index}
           serviceId={this.props.serviceId}
           model={ping}
         />
@@ -56,23 +59,35 @@ class DashboardContent extends React.Component {
     const snmpPreviews = this.props.snmps.map((snmp, index) => {
       return (
         <SnmpPreview
-          key={index}
+          key={"snmp_" + index}
           serviceId={this.props.serviceId}
           model={snmp}
         />
       );
     });
 
-    return pingPreviews.concat(snmpPreviews);
+    const djangoHealthCheckPreviews = this.props.djangoHealthChecks.map(
+      (djangoHealthCheck, index) => {
+        return (
+          <DjangoHealthChechPreview
+            key={"django_health_check_" + index}
+            serviceId={this.props.serviceId}
+            model={djangoHealthCheck}
+          />
+        );
+      }
+    );
+
+    return pingPreviews.concat(snmpPreviews).concat(djangoHealthCheckPreviews);
   };
 }
 
 const mapStateToProps = state => ({
   pings: state.dashboard.pings,
-  snmps: state.dashboard.snmps
+  snmps: state.dashboard.snmps,
+  djangoHealthChecks: state.dashboard.djangoHealthChecks
 });
 
-export default connect(
-  mapStateToProps,
-  { getServiceWithConfigurations }
-)(DashboardContent);
+export default connect(mapStateToProps, { getServiceWithConfigurations })(
+  DashboardContent
+);
