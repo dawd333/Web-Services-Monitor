@@ -6,17 +6,19 @@ import {
   ADD_PING,
   UPDATE_PING,
   DELETE_PING,
+  GET_PING_RESULTS,
   SELECT_SNMP,
   SET_SNMPS,
   ADD_SNMP,
   UPDATE_SNMP,
   DELETE_SNMP,
-  GET_PING_RESULTS,
+  GET_SNMP_RESULTS,
   SELECT_DJANGO_HEALTH_CHECK,
   SET_DJANGO_HEALTH_CHECKS,
   ADD_DJANGO_HEALTH_CHECK,
   UPDATE_DJANGO_HEALTH_CHECK,
-  DELETE_DJANGO_HEALTH_CHECK
+  DELETE_DJANGO_HEALTH_CHECK,
+  GET_DJANGO_HEALTH_CHECK_RESULTS
 } from "./types";
 import axios from "axios";
 import { tokenConfig } from "../axios-config";
@@ -138,18 +140,25 @@ export const deletePing = (serviceId, pingId) => async (dispatch, getState) => {
 };
 
 // GET PING RESULTS
-export const getPingResults = (pingId, fromDate, toDate) => async (dispatch, getState) => {
+export const getPingResults = (pingId, fromDate, toDate) => async (
+  dispatch,
+  getState
+) => {
   await axios
-    .get(`/api/ping-results/${pingId}/`,
-      {...tokenConfig(getState), params: {'from-date': fromDate, 'to-date': toDate}})
+    .get(`/api/ping-results/${pingId}/`, {
+      ...tokenConfig(getState),
+      params: { "from-date": fromDate, "to-date": toDate }
+    })
     .then(response => {
       console.log(response);
       dispatch({
         type: GET_PING_RESULTS,
-        payload: response.data,
+        payload: response.data
       });
     })
-    .catch(error => dispatch(returnErrors(error.response.data, error.response.status)));
+    .catch(error =>
+      dispatch(returnErrors(error.response.data, error.response.status))
+    );
 };
 
 // ADD SNMP
@@ -199,6 +208,27 @@ export const deleteSnmp = (serviceId, snmpId) => async (dispatch, getState) => {
       dispatch({
         type: DELETE_SNMP,
         payload: snmpId
+      });
+    })
+    .catch(error =>
+      dispatch(returnErrors(error.response.data, error.response.status))
+    );
+};
+
+// GET SNMP RESULTS
+export const getSnmpResults = (snmpId, fromDate, toDate) => async (
+  dispatch,
+  getState
+) => {
+  await axios
+    .get(`/api/snmp-results/${snmpId}/`, {
+      ...tokenConfig(getState),
+      params: { "from-date": fromDate, "to-date": toDate }
+    })
+    .then(response => {
+      dispatch({
+        type: GET_SNMP_RESULTS,
+        payload: response.data
       });
     })
     .catch(error =>
@@ -283,6 +313,28 @@ export const deleteDjangoHealthCheck = (
       dispatch({
         type: DELETE_DJANGO_HEALTH_CHECK,
         payload: djangoHealthCheckId
+      });
+    })
+    .catch(error =>
+      dispatch(returnErrors(error.response.data, error.response.status))
+    );
+};
+
+// GET DJANGO HEALTH CHECK RESULTS
+export const getDjangoHealthCheckResults = (
+  djangoHealthCheckId,
+  fromDate,
+  toDate
+) => async (dispatch, getState) => {
+  await axios
+    .get(`/api/django-health-check-results/${djangoHealthCheckId}/`, {
+      ...tokenConfig(getState),
+      params: { "from-date": fromDate, "to-date": toDate }
+    })
+    .then(response => {
+      dispatch({
+        type: GET_DJANGO_HEALTH_CHECK_RESULTS,
+        payload: response.data
       });
     })
     .catch(error =>
