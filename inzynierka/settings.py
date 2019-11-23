@@ -92,6 +92,7 @@ WSGI_APPLICATION = 'inzynierka.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+import psycopg2.extensions
 
 DATABASES = {
     'default': {
@@ -101,6 +102,9 @@ DATABASES = {
         'PASSWORD': 'password',
         'HOST': 'localhost',
         'PORT': '',
+        'OPTIONS': {
+            'isolation_level': psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE
+        }
     }
 }
 
