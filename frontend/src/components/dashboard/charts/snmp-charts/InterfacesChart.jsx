@@ -7,7 +7,8 @@ import {
   XAxis,
   YAxis,
   VerticalRectSeries,
-  Highlight
+  Highlight,
+  Borders
 } from "react-vis";
 import "../../../../../../node_modules/react-vis/dist/style.css"; // import react-vis stylesheet
 import { convertFromUTCtoDateWithSecondsDifference } from "../../../../commons/dateUtils";
@@ -19,7 +20,8 @@ export class InterfacesChart extends Component {
     fromDate: PropTypes.objectOf(Date).isRequired,
     toDate: PropTypes.objectOf(Date).isRequired,
     results: PropTypes.array,
-    interval: PropTypes.number.isRequired
+    interval: PropTypes.number.isRequired,
+    brushing: PropTypes.bool
   };
 
   state = {
@@ -45,30 +47,28 @@ export class InterfacesChart extends Component {
     const interfacesResultIndexes = [22, 23, 24, 25];
     const interfacesIsInput = [true, true, false, false];
 
-    let xDomainInterfaces;
-    if (interfacesLastDrawLocation) {
-      xDomainInterfaces = [
-        interfacesLastDrawLocation.left,
-        interfacesLastDrawLocation.right
-      ];
-    } else {
-      xDomainInterfaces = [this.props.fromDate, this.props.toDate];
-    }
-
     return (
       <Fragment>
-        <Row className={styles.snmpOverview__row}>
-          <h4 className={styles.snmpOverview__chartTitle}>{"Interfaces"}</h4>
+        <Row className={styles.snmpCharts__row}>
+          <h4 className={styles.snmpCharts__chartTitle}>{"Interfaces"}</h4>
         </Row>
-        <Row className={styles.snmpOverview__row}>
+        <Row className={styles.snmpCharts__row}>
           <Col xs={10}>
             <XYPlot
               animation
               width={880}
               height={400}
               xType="time"
-              xDomain={xDomainInterfaces}
+              xDomain={
+                this.props.brushing && interfacesLastDrawLocation
+                  ? [
+                      interfacesLastDrawLocation.left,
+                      interfacesLastDrawLocation.right
+                    ]
+                  : [this.props.fromDate, this.props.toDate]
+              }
               yDomain={
+                this.props.brushing &&
                 interfacesLastDrawLocation && [
                   interfacesLastDrawLocation.bottom,
                   interfacesLastDrawLocation.top
@@ -76,8 +76,6 @@ export class InterfacesChart extends Component {
               }
             >
               <HorizontalGridLines />
-              <XAxis tickLabelAngle={-35} />
-              <YAxis title={"octets / 1000000"} />
               {interfacesResultIndexes.map((resultIndex, index) => {
                 return (
                   <VerticalRectSeries
@@ -91,13 +89,20 @@ export class InterfacesChart extends Component {
                   />
                 );
               })}
-              <VerticalRectSeries data={[{ x: new Date(), y: 0 }]} />
-              <Highlight
-                drag={false}
-                onBrushEnd={area =>
-                  this.setState({ interfacesLastDrawLocation: area })
-                }
+              <VerticalRectSeries
+                data={[{ x0: new Date(), x: new Date(), y: 0 }]}
               />
+              <Borders className={styles.border} />
+              {this.props.brushing && (
+                <Highlight
+                  drag={false}
+                  onBrushEnd={area =>
+                    this.setState({ interfacesLastDrawLocation: area })
+                  }
+                />
+              )}
+              <XAxis tickLabelAngle={-35} />
+              <YAxis title={"octets / 1000000"} />
             </XYPlot>
           </Col>
           <Col xs={2}>
@@ -113,29 +118,31 @@ export class InterfacesChart extends Component {
   }
 
   translateResultsForInterfaces = (results, isInput, resultIndex) => {
-    if (results) {
-      return results.map(result => {
-        if (result.error_messages.length === 0) {
-          return {
-            x0: convertFromUTCtoDateWithSecondsDifference(
-              result.created_at,
-              -this.props.interval * 0.4
-            ),
-            x: convertFromUTCtoDateWithSecondsDifference(
-              result.created_at,
-              this.props.interval * 0.4
-            ),
-            y: isInput
-              ? result.results[resultIndex] / 1000000
-              : -result.results[resultIndex] / 1000000
-          };
-        } else
-          return {
-            x: convertFromUTCtoDateWithSecondsDifference(result.created_at),
-            y: 0
-          };
-      });
-    } else return [];
+    return results
+      ? results
+          .map(result => {
+            if (result.error_messages.length === 0) {
+              return {
+                x0: convertFromUTCtoDateWithSecondsDifference(
+                  result.created_at,
+                  -this.props.interval * 0.4
+                ),
+                x: convertFromUTCtoDateWithSecondsDifference(
+                  result.created_at,
+                  this.props.interval * 0.4
+                ),
+                y: isInput
+                  ? result.results[resultIndex] / 1000000
+                  : -result.results[resultIndex] / 1000000
+              };
+            } else
+              return {
+                x: convertFromUTCtoDateWithSecondsDifference(result.created_at),
+                y: 0
+              };
+          })
+          .filter(result => result.y !== 0)
+      : [];
   };
 
   interfacesChartLegendData = () => {

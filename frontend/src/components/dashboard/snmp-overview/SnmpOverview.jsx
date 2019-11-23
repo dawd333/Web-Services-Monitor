@@ -175,17 +175,20 @@ class SnmpOverview extends React.Component {
           fromDate={this.state.fromDate}
           toDate={this.state.toDate}
           results={this.props.results}
+          brushing={true}
         />
         <MemoryChart
           fromDate={this.state.fromDate}
           toDate={this.state.toDate}
           results={this.props.results}
+          brushing={true}
         />
         <InterfacesChart
           fromDate={this.state.fromDate}
           toDate={this.state.toDate}
           results={this.props.results}
           interval={this.props.snmpModel.interval}
+          brushing={true}
         />
         <ButtonToolbar className={styles.snmpOverview__nav}>
           <Button variant={"primary"} onClick={this.onConfigurationClick}>

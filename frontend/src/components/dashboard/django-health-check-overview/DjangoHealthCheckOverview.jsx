@@ -29,6 +29,7 @@ import {
   deleteDjangoHealthCheck
 } from "../../../actions/dashboard";
 import { DeleteModal } from "../../common/delete-modal/DeleteModal";
+import { DjangoHealthCheckChart } from "../charts/django-health-check-charts/DjangoHealthCheckChart";
 
 class DjangoHealthCheckOverview extends React.Component {
   static propTypes = {
@@ -37,7 +38,6 @@ class DjangoHealthCheckOverview extends React.Component {
   };
 
   state = {
-    lastDrawLocation: null,
     fromDate: moment()
       .subtract(7, "days")
       .toDate(),
@@ -54,16 +54,6 @@ class DjangoHealthCheckOverview extends React.Component {
   }
 
   render() {
-    const lastDrawLocation = this.state.lastDrawLocation;
-
-    let xDomain;
-
-    if (lastDrawLocation) {
-      xDomain = [lastDrawLocation.left, lastDrawLocation.right];
-    } else {
-      xDomain = [this.state.fromDate, this.state.toDate];
-    }
-
     return (
       <Container className={styles.djangoHealthCheckOverview}>
         <span className={styles.djangoHealthCheckOverview__header}>
@@ -74,37 +64,13 @@ class DjangoHealthCheckOverview extends React.Component {
           toDate={this.state.toDate}
           onChange={this.onChangeCalendar}
         />
-        <XYPlot
-          animation
-          width={850}
-          height={350}
-          stackBy="y"
-          xType="time"
-          xDomain={xDomain}
-          yDomain={
-            this.state.lastDrawLocation && [
-              this.state.lastDrawLocation.bottom,
-              this.state.lastDrawLocation.top
-            ]
-          }
-        >
-          <HorizontalGridLines />
-          <XAxis tickLabelAngle={-35} />
-          <YAxis />
-          <VerticalRectSeries
-            color={"#1aaf54"}
-            data={this.translateResultsPassed(this.props.results)}
-          />
-          <VerticalRectSeries
-            color={"#c70d3a"}
-            data={this.translateResultsFailed(this.props.results)}
-          />
-          {/* <VerticalRectSeries data={[{ x: new Date(), y: 0 }]} /> */}
-          <Highlight
-            drag={false}
-            onBrushEnd={area => this.setState({ lastDrawLocation: area })}
-          />
-        </XYPlot>
+        <DjangoHealthCheckChart
+          fromDate={this.state.fromDate}
+          toDate={this.state.toDate}
+          results={this.props.results}
+          interval={this.props.djangoHealthCheckModel.interval}
+          brushing={true}
+        />
         <br />
         <Table bordered>
           <tbody>
@@ -168,50 +134,6 @@ class DjangoHealthCheckOverview extends React.Component {
       </Container>
     );
   }
-
-  translateResultsPassed = results => {
-    return results
-      ? results.map(result => {
-          let yValue = 0;
-          if (result.was_success) {
-            yValue = 1;
-          }
-          return {
-            x0: convertFromUTCtoDateWithSecondsDifference(
-              result.created_at,
-              -this.props.djangoHealthCheckModel.interval * 0.4
-            ),
-            x: convertFromUTCtoDateWithSecondsDifference(
-              result.created_at,
-              this.props.djangoHealthCheckModel.interval * 0.4
-            ),
-            y: yValue
-          };
-        })
-      : [];
-  };
-
-  translateResultsFailed = results => {
-    return results
-      ? results.map(result => {
-          let yValue = 0;
-          if (!result.was_success) {
-            yValue = 1;
-          }
-          return {
-            x0: convertFromUTCtoDateWithSecondsDifference(
-              result.created_at,
-              -this.props.djangoHealthCheckModel.interval * 0.4
-            ),
-            x: convertFromUTCtoDateWithSecondsDifference(
-              result.created_at,
-              this.props.djangoHealthCheckModel.interval * 0.4
-            ),
-            y: yValue
-          };
-        })
-      : [];
-  };
 
   onChangeCalendar = (fromDate, toDate) => {
     this.setState({

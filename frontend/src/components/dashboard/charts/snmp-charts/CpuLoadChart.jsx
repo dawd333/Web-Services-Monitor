@@ -7,7 +7,8 @@ import {
   HorizontalGridLines,
   XAxis,
   YAxis,
-  Highlight
+  Highlight,
+  Borders
 } from "react-vis";
 import "../../../../../../node_modules/react-vis/dist/style.css"; // import react-vis stylesheet
 import { convertFromUTCtoDateWithSecondsDifference } from "../../../../commons/dateUtils";
@@ -18,7 +19,8 @@ export class CpuLoadChart extends Component {
   static propTypes = {
     fromDate: PropTypes.objectOf(Date).isRequired,
     toDate: PropTypes.objectOf(Date).isRequired,
-    results: PropTypes.array
+    results: PropTypes.array,
+    brushing: PropTypes.bool
   };
 
   state = {
@@ -43,16 +45,6 @@ export class CpuLoadChart extends Component {
     const cpuLoadColors = ["#fe4a49", "#1aaf54", "#fed766"];
     const cpuLoadResultIndexes = [4, 5, 6];
 
-    let xDomainCPULoad;
-    if (cpuLoadLastDrawLocation) {
-      xDomainCPULoad = [
-        cpuLoadLastDrawLocation.left,
-        cpuLoadLastDrawLocation.right
-      ];
-    } else {
-      xDomainCPULoad = [this.props.fromDate, this.props.toDate];
-    }
-
     return (
       <Fragment>
         <Row className={styles.snmpCharts__row}>
@@ -65,8 +57,16 @@ export class CpuLoadChart extends Component {
               width={880}
               height={350}
               xType="time"
-              xDomain={xDomainCPULoad}
+              xDomain={
+                this.props.brushing && cpuLoadLastDrawLocation
+                  ? [
+                      cpuLoadLastDrawLocation.left,
+                      cpuLoadLastDrawLocation.right
+                    ]
+                  : [this.props.fromDate, this.props.toDate]
+              }
               yDomain={
+                this.props.brushing &&
                 cpuLoadLastDrawLocation && [
                   cpuLoadLastDrawLocation.bottom,
                   cpuLoadLastDrawLocation.top
@@ -74,8 +74,6 @@ export class CpuLoadChart extends Component {
               }
             >
               <HorizontalGridLines />
-              <XAxis tickLabelAngle={-35} />
-              <YAxis />
               {cpuLoadResultIndexes.map((resultIndex, index) => {
                 return (
                   <LineSeries
@@ -90,12 +88,17 @@ export class CpuLoadChart extends Component {
                 );
               })}
               <LineSeries data={[{ x: new Date(), y: 0 }]} />
-              <Highlight
-                drag={false}
-                onBrushEnd={area =>
-                  this.setState({ cpuLoadLastDrawLocation: area })
-                }
-              />
+              <Borders className={styles.border} />
+              {this.props.brushing && (
+                <Highlight
+                  drag={false}
+                  onBrushEnd={area =>
+                    this.setState({ cpuLoadLastDrawLocation: area })
+                  }
+                />
+              )}
+              <XAxis tickLabelAngle={-35} />
+              <YAxis />
             </XYPlot>
           </Col>
           <Col xs={2}>
@@ -133,5 +136,9 @@ export class CpuLoadChart extends Component {
       { title: "5 min CPU load", color: "#1aaf54" },
       { title: "15 min CPU load", color: "#fed766" }
     ];
+  };
+
+  valueOnMouseOver = dataPoint => {
+    console.log(dataPoint);
   };
 }

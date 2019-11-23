@@ -7,7 +7,8 @@ import {
   HorizontalGridLines,
   XAxis,
   YAxis,
-  Highlight
+  Highlight,
+  Borders
 } from "react-vis";
 import "../../../../../../node_modules/react-vis/dist/style.css"; // import react-vis stylesheet
 import { convertFromUTCtoDateWithSecondsDifference } from "../../../../commons/dateUtils";
@@ -19,7 +20,8 @@ export class MemoryChart extends Component {
   static propTypes = {
     fromDate: PropTypes.objectOf(Date).isRequired,
     toDate: PropTypes.objectOf(Date).isRequired,
-    results: PropTypes.array
+    results: PropTypes.array,
+    brushing: PropTypes.bool
   };
 
   state = {
@@ -51,16 +53,6 @@ export class MemoryChart extends Component {
     ];
     const memoryResultIndexes = [11, 13, 14, 15, 16, 17];
 
-    let xDomainMemory;
-    if (memoryLastDrawLocation) {
-      xDomainMemory = [
-        memoryLastDrawLocation.left,
-        memoryLastDrawLocation.right
-      ];
-    } else {
-      xDomainMemory = [this.props.fromDate, this.props.toDate];
-    }
-
     return (
       <Fragment>
         <Row className={styles.snmpCharts__row}>
@@ -73,8 +65,13 @@ export class MemoryChart extends Component {
               width={880}
               height={350}
               xType="time"
-              xDomain={xDomainMemory}
+              xDomain={
+                this.props.brushing && memoryLastDrawLocation
+                  ? [memoryLastDrawLocation.left, memoryLastDrawLocation.right]
+                  : [this.props.fromDate, this.props.toDate]
+              }
               yDomain={
+                this.props.brushing &&
                 memoryLastDrawLocation && [
                   memoryLastDrawLocation.bottom,
                   memoryLastDrawLocation.top
@@ -82,8 +79,6 @@ export class MemoryChart extends Component {
               }
             >
               <HorizontalGridLines />
-              <XAxis tickLabelAngle={-35} />
-              <YAxis title={"GB"} />
               {memoryResultIndexes.map((resultIndex, index) => {
                 return (
                   <LineSeries
@@ -100,12 +95,17 @@ export class MemoryChart extends Component {
                 );
               })}
               <LineSeries data={[{ x: new Date(), y: 0 }]} />
-              <Highlight
-                drag={false}
-                onBrushEnd={area =>
-                  this.setState({ memoryLastDrawLocation: area })
-                }
-              />
+              <Borders className={styles.border} />
+              {this.props.brushing && (
+                <Highlight
+                  drag={false}
+                  onBrushEnd={area =>
+                    this.setState({ memoryLastDrawLocation: area })
+                  }
+                />
+              )}
+              <XAxis tickLabelAngle={-35} />
+              <YAxis title={"GB"} />
             </XYPlot>
           </Col>
           <Col xs={2}>
