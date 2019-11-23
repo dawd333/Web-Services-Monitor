@@ -54,6 +54,8 @@ class PingOverview extends React.Component {
           toDate={this.state.toDate}
           results={this.props.results}
           interval={this.props.pingModel.interval}
+          brushing={true}
+          hint={true}
         />
         <br/>
         <Table bordered>

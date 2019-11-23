@@ -4,7 +4,7 @@ import {
   Borders,
   Hint,
   HorizontalGridLines,
-  VerticalRectSeries, VerticalRectSeriesCanvas,
+  VerticalRectSeries,
   XAxis,
   XYPlot,
   YAxis,
@@ -22,17 +22,26 @@ export class PingChart extends React.Component {
     fromDate: PropTypes.objectOf(Date).isRequired,
     toDate: PropTypes.objectOf(Date).isRequired,
     results: PropTypes.array,
-    interval: PropTypes.number.isRequired
+    interval: PropTypes.number.isRequired,
+    brushing: PropTypes.bool,
+    hint: PropTypes.bool,
   };
 
   constructor(props) {
     super(props);
     this.state = {
       mouseEventClass: null,
-      fromDate: props.fromDate,
-      toDate: props.toDate,
       error: null,
       lastDrawLocation: null,
+    }
+  }
+
+  componentDidUpdate(prevProps, prevState, snapshot) {
+    if (prevProps.fromDate !== this.props.fromDate || prevProps.toDate !== this.props.toDate) {
+      this.setState({
+        ...this.state,
+        lastDrawLocation: null
+      })
     }
   }
 
@@ -45,16 +54,17 @@ export class PingChart extends React.Component {
           stackBy="y"
           xType="time"
           xDomain={
-            this.state.lastDrawLocation ?
+            (this.props.brushing && this.state.lastDrawLocation) ?
               [this.state.lastDrawLocation.left, this.state.lastDrawLocation.right] :
-              [this.state.fromDate, this.state.toDate]
+              [this.props.fromDate, this.props.toDate]
           }
           yDomain={
-            this.state.lastDrawLocation &&
+            (this.props.brushing && this.state.lastDrawLocation) &&
             [this.state.lastDrawLocation.bottom, this.state.lastDrawLocation.top]
           }
         >
           <HorizontalGridLines/>
+          {this.props.brushing &&
           <Highlight
             onBrushStart={() => this.setState({mouseEventClass: styles.mouseEventsOff})}
             onBrushEnd={area => {
@@ -68,6 +78,7 @@ export class PingChart extends React.Component {
               })
             }}
           />
+          }
           <VerticalRectSeries className={this.state.mouseEventClass} color={"#1aaf54"} data={this.translateResultsPassed(this.props.results)}/>
           <VerticalRectSeries className={this.state.mouseEventClass} color={"#c70d3a"}
                                     data={this.translateResultsFailed(this.props.results)}
@@ -75,7 +86,7 @@ export class PingChart extends React.Component {
           {/* This is trick to bypass not rendering chart when data is empty */}
           <VerticalRectSeries data={[{x0: new Date(), x: new Date(), y: 0}]}/>
           <Borders className={styles.border}/>
-          {this.state.error ?
+          {this.props.hint && this.state.error ?
             <Hint value={this.buildErrorValue(this.state.error)}>
               <SimpleTooltip content={listToStringWithCount(this.state.error.errors)}/>
             </Hint> : null
