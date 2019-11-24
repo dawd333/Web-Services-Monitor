@@ -1,16 +1,9 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
-from services.models import Service
+from services.models import Service, StatusPageType
 from services.error_percentage import ErrorPercentage, calculate_error_percentage, \
     DATETIME_WEEK, DATETIME_DAY, DATETIME_HOUR
 from enum import Enum
-
-
-class StatusPageType(Enum):
-    OFF = ("OFF", "OFF")
-    ERROR_PERCENTAGE = ("ERROR_PERCENTAGE", "ERROR_PERCENTAGE")
-    NO_ERRORS_CHART = ("NO_ERRORS_CHART", "NO_ERRORS_CHART")
-    FULL_CHART = ("FULL_CHART", "FULL_CHART")
 
 
 class PlatformChoices(Enum):
@@ -32,8 +25,7 @@ class SnmpConfiguration(models.Model):
     service = models.ForeignKey(Service, related_name="snmp_configurations", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    display_type = models.CharField(max_length=100, choices=[x.value for x in StatusPageType],
-                                    default="OFF")
+    display_type = models.CharField(max_length=100, choices=[x.value for x in StatusPageType], default="OFF")
 
     @property
     def error_percentage(self):

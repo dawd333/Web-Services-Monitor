@@ -1,5 +1,7 @@
 from rest_framework import viewsets, permissions
-from .serializers import ServiceSerializer, ServiceSerializerConfigurations
+
+from services.models import Service
+from .serializers import ServiceSerializer, ServiceSerializerConfigurations, ServiceStatusPageSerializer
 from scheduler import services_api
 
 
@@ -24,3 +26,16 @@ class ServiceViewSet(viewsets.ModelViewSet):
     def perform_destroy(self, instance):
         services_api.delete_service_jobs(instance.id)
         instance.delete()
+
+
+# Service Status Page ViewSet
+class ServiceStatusPageViewSet(viewsets.ReadOnlyModelViewSet):
+    permission_classes = [
+        permissions.AllowAny
+    ]
+
+    serializer_class = ServiceStatusPageSerializer
+
+    def get_queryset(self):
+        return Service.objects.all()
+

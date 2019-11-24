@@ -1,5 +1,5 @@
 from django.db import models
-from services.models import Service
+from services.models import Service, StatusPageType
 from services.error_percentage import ErrorPercentage, calculate_error_percentage_django_health_check, \
     DATETIME_WEEK, DATETIME_DAY, DATETIME_HOUR
 
@@ -11,6 +11,7 @@ class DjangoHealthCheckConfiguration(models.Model):
     service = models.ForeignKey(Service, related_name="django_health_check_configurations", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    display_type = models.CharField(max_length=100, choices=[x.value for x in StatusPageType], default="OFF")
 
     @property
     def error_percentage(self):
