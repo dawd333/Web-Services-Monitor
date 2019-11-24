@@ -3,6 +3,8 @@ import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
 import PropTypes from "prop-types";
+import {Container} from "react-bootstrap";
+import styles from "../common.less";
 
 
 export class ServiceForm extends React.Component {
@@ -21,24 +23,29 @@ export class ServiceForm extends React.Component {
 
   render() {
     return (
-      <Form onSubmit={this.onSubmit}>
-        <Form.Group>
-          <Form.Label column={"name"}>
-            {"Name"}
-          </Form.Label>
-          <FormControl
-            type="text"
-            name="name"
-            onChange={this.onChange}
-            value={this.state.name}
-          />
-        </Form.Group>
-        <Form.Group>
-          <Button type="submit" variant="primary">
-            {this.props.label}
-          </Button>
-        </Form.Group>
-      </Form>
+      <Container>
+        <div className={styles.form__header}>
+          <h4>{"Service"}</h4>
+        </div>
+        <Form onSubmit={this.onSubmit}>
+          <Form.Group>
+            <Form.Label column={"name"}>
+              {"Name"}
+            </Form.Label>
+            <FormControl
+              type="text"
+              name="name"
+              onChange={this.onChange}
+              value={this.state.name}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Button type="submit" variant="primary">
+              {this.props.label}
+            </Button>
+          </Form.Group>
+        </Form>
+      </Container>
     )
   };
 

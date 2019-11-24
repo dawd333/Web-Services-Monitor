@@ -12,6 +12,7 @@ import {
 } from "../../../../actions/dashboard";
 import { HorizontalGridLines, XAxis, XYPlot, YAxis } from "react-vis";
 import VerticalBarSeries from "react-vis/es/plot/series/vertical-bar-series";
+import {STATUS_PAGE_TYPE} from "../../../../commons/enums";
 
 class PingPreview extends React.Component {
   static propTypes = {
@@ -59,11 +60,11 @@ class PingPreview extends React.Component {
         <br />
         {this.props.model.is_active ? (
           <Badge pill={true} variant="success">
-            {"enabled"}
+            {"Enabled"}
           </Badge>
         ) : (
           <Badge pill={true} variant="danger">
-            {"disabled"}
+            {"Disabled"}
           </Badge>
         )}
         <br />
@@ -89,6 +90,15 @@ class PingPreview extends React.Component {
         </span>
         <br />
         <span>{this.props.model.number_of_requests}</span>
+        <br />
+
+        <span className={styles.pingPreview__label}>
+          {"Display on status page:"}
+        </span>
+        <br />
+          <Badge pill={true} variant="warning">
+            {STATUS_PAGE_TYPE[this.props.model.display_type]}
+          </Badge>
         <br />
       </div>
     );

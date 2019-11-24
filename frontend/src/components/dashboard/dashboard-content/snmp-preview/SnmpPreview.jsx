@@ -12,6 +12,7 @@ import {
   selectSnmp,
   selectService
 } from "../../../../actions/dashboard";
+import {STATUS_PAGE_TYPE} from "../../../../commons/enums";
 
 class SnmpPreview extends React.Component {
   static propTypes = {
@@ -59,11 +60,11 @@ class SnmpPreview extends React.Component {
         <br />
         {this.props.model.is_active ? (
           <Badge pill={true} variant="success">
-            {"enabled"}
+            {"Enabled"}
           </Badge>
         ) : (
           <Badge pill={true} variant="danger">
-            {"disabled"}
+            {"Disabled"}
           </Badge>
         )}
         <br />
@@ -84,6 +85,15 @@ class SnmpPreview extends React.Component {
         <span className={styles.snmpPreview__label}>{"Username:"}</span>
         <br />
         <span>{this.props.model.username}</span>
+        <br />
+
+        <span className={styles.snmpPreview__label}>
+          {"Display on status page:"}
+        </span>
+        <br />
+          <Badge pill={true} variant="warning">
+            {STATUS_PAGE_TYPE[this.props.model.display_type]}
+          </Badge>
         <br />
       </div>
     );

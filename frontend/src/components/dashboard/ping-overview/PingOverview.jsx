@@ -21,6 +21,7 @@ import {
 } from "../../../actions/dashboard";
 import { DeleteModal } from "../../common/delete-modal/DeleteModal";
 import { PingChart } from "../charts/ping-charts/PingChart";
+import { STATUS_PAGE_TYPE } from "../../../commons/enums";
 
 class PingOverview extends React.Component {
   static propTypes = {
@@ -113,6 +114,10 @@ class PingOverview extends React.Component {
             <tr>
               <td>{"Last modified at"}</td>
               <td>{convertFromUTC(this.props.pingModel.updated_at)}</td>
+            </tr>
+            <tr>
+              <td>{"Display on status page"}</td>
+              <td>{STATUS_PAGE_TYPE[this.props.pingModel.display_type]}</td>
             </tr>
           </tbody>
         </Table>
