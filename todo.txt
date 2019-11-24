@@ -1,5 +1,8 @@
 konfiguracja snmp i django health check - w formie pdfa / skryptu
-dublujace sie rekordy
+trigger na bazie na rekordy
 presuwajace sie dane w dol na wykresach barach
-status page calosc
-agregacja danych
+status page frontend
+agregacja danych dla django health check
+zmiana django health checka
+zjedzone wartosci na osi y + labelka y na pingu
+szerokosc slupka po agregacji dla wykresow z barami
