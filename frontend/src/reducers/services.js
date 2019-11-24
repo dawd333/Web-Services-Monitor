@@ -10,7 +10,7 @@ const initialState = {
   services: {}
 };
 
-export default function (state = initialState, action) {
+export default function(state = initialState, action) {
   switch (action.type) {
     case GET_SERVICES:
       return {
@@ -22,18 +22,15 @@ export default function (state = initialState, action) {
       };
     case ADD_SERVICE:
       return {
-        ...state,
-        // Do nothing? We want to call GET_SERVICES again rather than updating only one item in list
+        ...state
       };
     case UPDATE_SERVICE:
       return {
-        ...state,
-        // Do nothing? We want to call GET_SERVICES again rather than updating only one item in list
+        ...state
       };
     case DELETE_SERVICE:
       return {
-        ...state,
-        // Do nothing? We want to call GET_SERVICES again rather than updating only one item in list
+        ...state
       };
     case CLEAR_SERVICES:
       return {

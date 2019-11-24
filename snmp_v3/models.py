@@ -1,10 +1,9 @@
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from services.models import Service
-from services.error_percentage import ErrorPercentage, calculate_error_percentage
+from services.error_percentage import ErrorPercentage, calculate_error_percentage, \
+    DATETIME_WEEK, DATETIME_DAY, DATETIME_HOUR
 from enum import Enum
-from datetime import datetime, timedelta
-import pytz
 
 
 class PlatformChoices(Enum):
@@ -29,13 +28,9 @@ class SnmpConfiguration(models.Model):
 
     @property
     def error_percentage(self):
-        datetime_week = datetime.now(pytz.utc) - timedelta(days=7)
-        datetime_day = datetime.now(pytz.utc) - timedelta(days=1)
-        datetime_hour = datetime.now(pytz.utc) - timedelta(hours=1)
-
-        snmp_results_week = SnmpResults.objects.filter(snmp_configuration=self, created_at__gte=datetime_week)
-        snmp_results_day = snmp_results_week.filter(created_at__gte=datetime_day)
-        snmp_results_hour = snmp_results_week.filter(created_at__gte=datetime_hour)
+        snmp_results_week = SnmpResults.objects.filter(snmp_configuration=self, created_at__gte=DATETIME_WEEK)
+        snmp_results_day = snmp_results_week.filter(created_at__gte=DATETIME_DAY)
+        snmp_results_hour = snmp_results_week.filter(created_at__gte=DATETIME_HOUR)
 
         return ErrorPercentage(week=calculate_error_percentage(snmp_results_week),
                                day=calculate_error_percentage(snmp_results_day),

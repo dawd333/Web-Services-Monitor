@@ -60,6 +60,12 @@ export class Alerts extends Component {
       if (message.addSnmp) alert.success(message.addSnmp);
       if (message.updateSnmp) alert.success(message.updateSnmp);
       if (message.deleteSnmp) alert.success(message.deleteSnmp);
+      if (message.addDjangoHealthCheck)
+        alert.success(message.addDjangoHealthCheck);
+      if (message.updateDjangoHealthCheck)
+        alert.success(message.updateDjangoHealthCheck);
+      if (message.deleteDjangoHealthCheck)
+        alert.success(message.deleteDjangoHealthCheck);
     }
   }
 

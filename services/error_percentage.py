@@ -1,4 +1,10 @@
 from rest_framework import serializers
+from datetime import datetime, timedelta
+import pytz
+
+DATETIME_WEEK = datetime.now(pytz.utc) - timedelta(days=7)
+DATETIME_DAY = datetime.now(pytz.utc) - timedelta(days=1)
+DATETIME_HOUR = datetime.now(pytz.utc) - timedelta(hours=1)
 
 
 def calculate_error_percentage(results):
@@ -7,6 +13,16 @@ def calculate_error_percentage(results):
     errors = 0
     for result in results:
         if result.error_messages:
+            errors += 1
+    return int(round(errors * 100/len(results)))
+
+
+def calculate_error_percentage_django_health_check(results):
+    if len(results) == 0:
+        return 0
+    errors = 0
+    for result in results:
+        if not result.was_success:
             errors += 1
     return int(round(errors * 100/len(results)))
 
