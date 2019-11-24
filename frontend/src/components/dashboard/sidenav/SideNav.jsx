@@ -91,6 +91,13 @@ export class SideNav extends React.Component {
           >
             {"Delete Service"}
           </Button>
+          <Button
+            variant="info"
+            className={styles.accordionButton}
+            onClick={() => {}}
+          >
+            {"Status page"}
+          </Button>
         </ListGroup>
       </Card.Body>
     );

@@ -16,6 +16,7 @@ import {view} from "../DashboardModel";
 import {changeView, deletePing, getPingResults} from "../../../actions/dashboard";
 import {DeleteModal} from "../../common/DeleteModal/DeleteModal";
 import {PingChart} from "../charts/PingChart";
+import {STATUS_PAGE_TYPE} from "../../../commons/enums";
 
 
 class PingOverview extends React.Component {
@@ -98,6 +99,12 @@ class PingOverview extends React.Component {
             <td>{"Last modified at"}</td>
             <td>
               {convertFromUTC(this.props.pingModel.updated_at)}
+            </td>
+          </tr>
+          <tr>
+            <td>{"Display on status page"}</td>
+            <td>
+              {STATUS_PAGE_TYPE[this.props.pingModel.display_type]}
             </td>
           </tr>
           </tbody>

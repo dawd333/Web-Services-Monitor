@@ -3,12 +3,13 @@ import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { changeView, deletePing } from "../../../../actions/dashboard";
-import { view } from "../../DashboardModel";
-import styles from "../../pingoverview/PingOverview.less";
-import { ButtonToolbar } from "react-bootstrap";
-import { DeleteModal } from "../../../common/DeleteModal/DeleteModal";
+import {connect} from "react-redux";
+import {changeView, deletePing} from "../../../../actions/dashboard";
+import {view} from "../../DashboardModel";
+import styles from "../common.less";
+import {ButtonToolbar, Container} from "react-bootstrap";
+import {DeleteModal} from "../../../common/DeleteModal/DeleteModal";
+import {STATUS_PAGE_TYPE} from "../../../../commons/enums";
 
 class PingForm extends React.Component {
   static propTypes = {
@@ -19,6 +20,7 @@ class PingForm extends React.Component {
     isActive: PropTypes.bool,
     timeout: PropTypes.number,
     numberOfRequests: PropTypes.number,
+    statusPageType: PropTypes.oneOf(Object.keys(STATUS_PAGE_TYPE)),
     onSubmit: PropTypes.func.isRequired
   };
 
@@ -30,80 +32,98 @@ class PingForm extends React.Component {
       isActive: props.isActive ? props.isActive : false,
       numberOfRequests: props.numberOfRequests ? props.numberOfRequests : 4,
       timeout: props.timeout ? props.timeout : 15,
+      statusPageType: props.statusPageType ? props.statusPageType : "OFF",
       showDeleteModal: false
     };
   }
 
   render() {
     return (
-      <Form onSubmit={this.onSubmit}>
-        <Form.Group>
-          <Form.Label column={"ip"}>{"Ip"}</Form.Label>
-          <FormControl
-            type="text"
-            name="ip"
-            onChange={this.onChange}
-            value={this.state.ip}
+      <Container>
+        <div className={styles.form__header}>
+          <h4>{"Ping configuration"}</h4>
+        </div>
+        <Form onSubmit={this.onSubmit}>
+          <Form.Group>
+            <Form.Label column={"ip"}>{"Ip:"}</Form.Label>
+            <FormControl
+              type="text"
+              name="ip"
+              onChange={this.onChange}
+              value={this.state.ip}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label column={"interval"}>
+              {"Interval (in seconds):"}
+            </Form.Label>
+            <FormControl
+              type="number"
+              name="interval"
+              onChange={this.onChange}
+              value={this.state.interval}
+            />
+            <Form.Label column={"is_active"}>{"Is active:"}</Form.Label>
+            <FormControl
+              type="checkbox"
+              name="isActive"
+              onChange={this.onChangeBoolean}
+              checked={this.state.isActive}
+            />
+            <Form.Label column={"number_of_requests"}>
+              {"Number of requests:"}
+            </Form.Label>
+            <FormControl
+              type="number"
+              name="numberOfRequests"
+              onChange={this.onChange}
+              value={this.state.numberOfRequests}
+            />
+            <Form.Label column={"timeout"}>{"Timeout:"}</Form.Label>
+            <FormControl
+              type="number"
+              name="timeout"
+              onChange={this.onChange}
+              value={this.state.timeout}
+            />
+          </Form.Group>
+          <Form.Group>
+            <Form.Label column={"statusPageType"}>{"Display on status page:"}</Form.Label>
+            <FormControl
+              as="select"
+              name="statusPageType"
+              key={this.state.statusPageType}
+              value={STATUS_PAGE_TYPE[this.state.statusPageType]}
+              onChange={this.onChangeEnum}
+            >
+              {Object.entries(STATUS_PAGE_TYPE).map(entry => <option key={entry[0]}>{entry[1]}</option>)}
+            </FormControl>
+          </Form.Group>
+          <ButtonToolbar className={styles.form__buttons}>
+            <Button type="submit" variant="success">
+              {this.props.label}
+            </Button>
+            {this.props.id && (
+              <>
+                <Button variant="primary" onClick={this.onDetailsClick}>
+                  {"Details"}
+                </Button>
+                <Button variant="danger" onClick={this.onDeleteClick}>
+                  {"Delete"}
+                </Button>
+              </>
+            )}
+          </ButtonToolbar>
+          <DeleteModal
+            label={"Delete this ping configuration"}
+            show={this.state.showDeleteModal}
+            onClose={() =>
+              this.setState({...this.state, showDeleteModal: false})
+            }
+            onDelete={this.deletePingConfiguration}
           />
-        </Form.Group>
-        <Form.Group>
-          <Form.Label column={"interval"}>
-            {"Interval (in seconds):"}
-          </Form.Label>
-          <FormControl
-            type="number"
-            name="interval"
-            onChange={this.onChange}
-            value={this.state.interval}
-          />
-          <Form.Label column={"is_active"}>{"Is active:"}</Form.Label>
-          <FormControl
-            type="checkbox"
-            name="isActive"
-            onChange={this.onChangeBoolean}
-            checked={this.state.isActive}
-          />
-          <Form.Label column={"number_of_requests"}>
-            {"Number of requests:"}
-          </Form.Label>
-          <FormControl
-            type="number"
-            name="numberOfRequests"
-            onChange={this.onChange}
-            value={this.state.numberOfRequests}
-          />
-          <Form.Label column={"timeout"}>{"Timeout:"}</Form.Label>
-          <FormControl
-            type="number"
-            name="timeout"
-            onChange={this.onChange}
-            value={this.state.timeout}
-          />
-        </Form.Group>
-        <ButtonToolbar className={styles.pingOverview__nav}>
-          <Button type="submit" variant="success">
-            {this.props.label}
-          </Button>
-          {this.props.id && (
-            <>
-              <Button variant="primary" onClick={this.onDetailsClick}>
-                {"Details"}
-              </Button>
-              <Button variant="danger" onClick={this.onDeleteClick}>
-                {"Delete"}
-              </Button>
-            </>
-          )}
-        </ButtonToolbar>
-        <DeleteModal
-          label={"Delete this ping configuration"}
-          show={this.state.showDeleteModal}
-          onClose={() =>
-            this.setState({ ...this.state, showDeleteModal: false })
-          }
-          onDelete={this.deletePingConfiguration}
-        />
-      </Form>
+        </Form>
+      </Container>
     );
   }
 
@@ -111,6 +131,13 @@ class PingForm extends React.Component {
     this.setState({
       ...this.state,
       [event.target.name]: event.target.value
+    });
+  };
+
+  onChangeEnum = event => {
+    this.setState({
+      ...this.state,
+      [event.target.name]: Object.keys(STATUS_PAGE_TYPE).find(key => STATUS_PAGE_TYPE[key] === event.target.value)
     });
   };
 
@@ -129,7 +156,8 @@ class PingForm extends React.Component {
       interval: this.state.interval,
       is_active: this.state.isActive,
       number_of_requests: this.state.numberOfRequests,
-      timeout: this.state.timeout
+      timeout: this.state.timeout,
+      display_type: this.state.statusPageType,
     };
     this.props.onSubmit(configuration);
   };
@@ -157,5 +185,5 @@ const mapStateToProps = state => ({
 
 export default connect(
   mapStateToProps,
-  { changeView, deletePing }
+  {changeView, deletePing}
 )(PingForm);

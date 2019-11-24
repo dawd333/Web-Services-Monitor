@@ -33,3 +33,5 @@ export const CHANGE_VIEW = "CHANGE_VIEW";
 export const SELECT_SERVICE = "SELECT_SERVICE";
 export const SELECT_PING = "SELECT_PING";
 export const SELECT_SNMP = "SELECT_SNMP";
+
+export const GET_STATUS_PAGE = "GET_STATUS_PAGE";

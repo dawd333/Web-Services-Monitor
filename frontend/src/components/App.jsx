@@ -6,14 +6,12 @@ import {
   HashRouter as Router,
   Route,
   Switch,
-  Redirect
 } from "react-router-dom";
 
 import { Provider as AlertProvider } from "react-alert";
 import AlertTemplate from "react-alert-template-basic";
 
 import Header from "./layout/Header";
-import MainTitle from "./layout/MainTitle";
 import Alerts from "./layout/Alerts";
 import Login from "./accounts/Login";
 import Register from "./accounts/Register";
@@ -24,6 +22,7 @@ import { loadUser } from "../actions/auth";
 import { Container } from "react-bootstrap";
 import { DashboardContainer } from "./dashboard/DashboardContainer";
 import styles from "./App.less";
+import { StatusPageContainer } from "./statuspage/StatusPageContainer";
 
 // Alert Options
 const alertOptions = {
@@ -45,7 +44,6 @@ class App extends Component {
             <Fragment>
               <Header className={styles.header} />
               <Alerts />
-              {/*<MainTitle />*/}
               <Container fluid={true} className={styles.container}>
                 {" "}
                 {/* Make it 100% width*/}
@@ -53,6 +51,7 @@ class App extends Component {
                   <PrivateRoute exact path="/" component={DashboardContainer} />
                   <Route exact path="/register" component={Register} />
                   <Route exact path="/login" component={Login} />
+                  <Route component={StatusPageContainer} />
                 </Switch>
               </Container>
             </Fragment>

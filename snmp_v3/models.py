@@ -7,6 +7,13 @@ from datetime import datetime, timedelta
 import pytz
 
 
+class StatusPageType(Enum):
+    OFF = ("OFF", "OFF")
+    ERROR_PERCENTAGE = ("ERROR_PERCENTAGE", "ERROR_PERCENTAGE")
+    NO_ERRORS_CHART = ("NO_ERRORS_CHART", "NO_ERRORS_CHART")
+    FULL_CHART = ("FULL_CHART", "FULL_CHART")
+
+
 class PlatformChoices(Enum):
     Linux = ('Linux', 'Linux')
 
@@ -26,6 +33,8 @@ class SnmpConfiguration(models.Model):
     service = models.ForeignKey(Service, related_name="snmp_configurations", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    display_type = models.CharField(max_length=100, choices=[x.value for x in StatusPageType],
+                                    default="OFF")
 
     @property
     def error_percentage(self):

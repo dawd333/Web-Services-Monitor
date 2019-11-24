@@ -107,6 +107,7 @@ class DashboardContainer extends React.Component {
                 isActive={this.props.selectedPing.is_active}
                 numberOfRequests={this.props.selectedPing.number_of_requests}
                 timeout={this.props.selectedPing.timeout}
+                statusPageType={this.props.selectedPing.display_type}
                 onSubmit={this.onUpdatePing}
               />
             )}
@@ -141,6 +142,7 @@ class DashboardContainer extends React.Component {
                 platform={this.props.selectedSnmp.platform}
                 username={this.props.selectedSnmp.username}
                 onSubmit={this.onUpdateSnmp}
+                statusPageType={this.props.selectedSnmp.display_type}
               />
             )}
           </>
