@@ -2,10 +2,10 @@ import React from "react";
 import { connect } from "react-redux";
 import PropTypes from "prop-types";
 import styles from "./DashboardContainer.less";
-import SideNav from "./sidenav/SideNav";
+import SideNav from "./side-nav/SideNav";
 import { view } from "./DashboardModel";
 import { Service } from "./DashboardModel";
-import { ServiceForm } from "./forms/serviceform/ServiceForm";
+import { ServiceForm } from "./forms/service-form/ServiceForm";
 import {
   addService,
   deleteService,
@@ -20,13 +20,18 @@ import {
   updatePing,
   selectSnmp,
   addSnmp,
-  updateSnmp
+  updateSnmp,
+  selectDjangoHealthCheck,
+  addDjangoHealthCheck,
+  updateDjangoHealthCheck
 } from "../../actions/dashboard";
-import PingOverview from "./pingoverview/PingOverview";
-import SnmpOverview from "./snmpoverview/SnmpOverview";
-import DashboardContent from "./dashboardcontent/DashboardContent";
-import PingForm from "./forms/pingform/PingForm";
-import SnmpForm from "./forms/snmpform/SnmpForm";
+import PingOverview from "./ping-overview/PingOverview";
+import SnmpOverview from "./snmp-overview/SnmpOverview";
+import DjangoHealthCheckOverview from "./django-health-check-overview/DjangoHealthCheckOverview";
+import DashboardContent from "./dashboard-content/DashboardContent";
+import PingForm from "./forms/ping-form/PingForm";
+import SnmpForm from "./forms/snmp-form/SnmpForm";
+import DjangoHealthCheckForm from "./forms/django-health-check-form/DjangoHealthCheckForm";
 
 class DashboardContainer extends React.Component {
   static propTypes = {
@@ -34,7 +39,8 @@ class DashboardContainer extends React.Component {
     currentView: PropTypes.oneOf(Object.values(view)),
     selectedServiceId: PropTypes.number,
     selectedPing: PropTypes.object, // TODO Create shape for ping object
-    selectedSnmp: PropTypes.object // TODO Create shape for snmp object
+    selectedSnmp: PropTypes.object, // TODO Create shape for snmp object
+    selectedDjangoHealthCheck: PropTypes.object // TODO Create shape for Django Health Check object
   };
 
   componentDidMount() {
@@ -154,6 +160,38 @@ class DashboardContainer extends React.Component {
             snmpModel={this.props.selectedSnmp}
           />
         );
+
+      case view.ADD_DJANGO_HEALTH_CHECK:
+        return (
+          <DjangoHealthCheckForm
+            key={"add_django_health_check"}
+            label={"Add Django Health Check configuration"}
+            onSubmit={this.onAddDjangoHealthCheck}
+          />
+        );
+      case view.EDIT_DJANGO_HEALTH_CHECK:
+        return (
+          <>
+            {this.props.selectedDjangoHealthCheck && (
+              <DjangoHealthCheckForm
+                key={this.props.selectedDjangoHealthCheck.id}
+                id={this.props.selectedDjangoHealthCheck.id}
+                label={"Update Django Health Check configuration"}
+                ip={this.props.selectedDjangoHealthCheck.ip}
+                interval={this.props.selectedDjangoHealthCheck.interval}
+                isActive={this.props.selectedDjangoHealthCheck.is_active}
+                onSubmit={this.onUpdateDjangoHealthCheck}
+              />
+            )}
+          </>
+        );
+      case view.DJANGO_HEALTH_CHECK_OVERVIEW:
+        return (
+          <DjangoHealthCheckOverview
+            key={this.props.selectedDjangoHealthCheck.id}
+            djangoHealthCheckModel={this.props.selectedDjangoHealthCheck}
+          />
+        );
       default:
         return <div>{"DEFAULT VIEW"}</div>;
     }
@@ -212,6 +250,26 @@ class DashboardContainer extends React.Component {
     this.props.changeView(view.OVERVIEW);
   };
 
+  onAddDjangoHealthCheck = async djangoHealthCheck => {
+    const newDjangoHealthCheckId = await this.props.addDjangoHealthCheck(
+      this.props.selectedServiceId,
+      djangoHealthCheck
+    );
+    if (newDjangoHealthCheckId) {
+      this.props.changeView(view.OVERVIEW);
+    }
+  };
+
+  onUpdateDjangoHealthCheck = async djangoHealthCheck => {
+    await this.props.updateDjangoHealthCheck(
+      this.props.selectedServiceId,
+      this.props.selectedDjangoHealthCheck.id,
+      djangoHealthCheck
+    );
+    this.props.selectDjangoHealthCheck(undefined);
+    this.props.changeView(view.OVERVIEW);
+  };
+
   retrieveSelectedService = () => {
     const service = Object.values(this.props.services).find(
       service => service.id === this.props.selectedServiceId
@@ -225,24 +283,25 @@ const mapStateToProps = state => ({
   currentView: state.dashboard.currentView,
   selectedServiceId: state.dashboard.selectedServiceId,
   selectedPing: state.dashboard.selectedPing,
-  selectedSnmp: state.dashboard.selectedSnmp
+  selectedSnmp: state.dashboard.selectedSnmp,
+  selectedDjangoHealthCheck: state.dashboard.selectedDjangoHealthCheck
 });
 
-const connected = connect(
-  mapStateToProps,
-  {
-    changeView,
-    getServices,
-    selectService,
-    addService,
-    updateService,
-    deleteService,
-    selectPing,
-    addPing,
-    updatePing,
-    selectSnmp,
-    addSnmp,
-    updateSnmp
-  }
-)(DashboardContainer);
+const connected = connect(mapStateToProps, {
+  changeView,
+  getServices,
+  selectService,
+  addService,
+  updateService,
+  deleteService,
+  selectPing,
+  addPing,
+  updatePing,
+  selectSnmp,
+  addSnmp,
+  updateSnmp,
+  selectDjangoHealthCheck,
+  addDjangoHealthCheck,
+  updateDjangoHealthCheck
+})(DashboardContainer);
 export { connected as DashboardContainer };

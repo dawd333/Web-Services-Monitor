@@ -1,7 +1,10 @@
+from django.db import transaction
 from pysnmp.hlapi import *
 from .scheduler import get_scheduler
 from django.utils.ipv6 import is_valid_ipv6_address
 from snmp_v3.models import PlatformChoices, SnmpConfiguration, SnmpResults
+from datetime import datetime, timedelta
+import pytz
 
 scheduler = get_scheduler()
 
@@ -80,6 +83,7 @@ def is_test_request_valid(snmp_configuration):
     return True
 
 
+@transaction.atomic
 def snmp_job(snmp_configuration):
     if is_valid_ipv6_address(snmp_configuration.ip):
         get_command = get_command_ipv6(snmp_configuration.username, snmp_configuration.authentication_password,
@@ -107,7 +111,11 @@ def snmp_job(snmp_configuration):
                 for var_bind in var_binds:
                     results.append(str(var_bind).split("= ", 1)[1])
 
-    SnmpResults.objects.create(snmp_configuration=snmp_configuration, results=results, error_messages=error_messages)
+    if len(SnmpResults.objects.filter(
+            snmp_configuration=snmp_configuration,
+            created_at__gte=datetime.now(pytz.utc) - timedelta(seconds=snmp_configuration.interval * 0.8))) == 0:
+        SnmpResults.objects.create(snmp_configuration=snmp_configuration, results=results,
+                                   error_messages=error_messages)
 
 
 def start():

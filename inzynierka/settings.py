@@ -42,10 +42,16 @@ INSTALLED_APPS = [
     'frontend',
     'accounts',
     'services',
+    'health_check',
+    'health_check.db',
+    'health_check.cache',
+    'health_check.storage',
     # 'ping',
-    # 'snmp_v3'
+    # 'snmp_v3',
+    # 'django_health_check',
     'ping.apps.PingConfig',
-    'snmp_v3.apps.SnmpV3Config'
+    'snmp_v3.apps.SnmpV3Config',
+    'django_health_check.apps.DjangoHealthCheckConfig'
 ]
 
 REST_FRAMEWORK = {
@@ -86,6 +92,7 @@ WSGI_APPLICATION = 'inzynierka.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
+import psycopg2.extensions
 
 DATABASES = {
     'default': {
@@ -95,6 +102,9 @@ DATABASES = {
         'PASSWORD': 'password',
         'HOST': 'localhost',
         'PORT': '',
+        'OPTIONS': {
+            'isolation_level': psycopg2.extensions.ISOLATION_LEVEL_SERIALIZABLE
+        }
     }
 }
 

@@ -3,9 +3,8 @@ from enum import Enum
 from django.db import models
 from django.contrib.postgres.fields import ArrayField
 from services.models import Service
-from services.error_percentage import ErrorPercentage, calculate_error_percentage
-from datetime import datetime, timedelta
-import pytz
+from services.error_percentage import ErrorPercentage, calculate_error_percentage, \
+    DATETIME_WEEK, DATETIME_DAY, DATETIME_HOUR
 
 
 class StatusPageType(Enum):
@@ -29,13 +28,9 @@ class PingConfiguration(models.Model):
 
     @property
     def error_percentage(self):
-        datetime_week = datetime.now(pytz.utc) - timedelta(days=7)
-        datetime_day = datetime.now(pytz.utc) - timedelta(days=1)
-        datetime_hour = datetime.now(pytz.utc) - timedelta(hours=1)
-
-        ping_results_week = PingResults.objects.filter(ping_configuration=self, created_at__gte=datetime_week)
-        ping_results_day = ping_results_week.filter(created_at__gte=datetime_day)
-        ping_results_hour = ping_results_week.filter(created_at__gte=datetime_hour)
+        ping_results_week = PingResults.objects.filter(ping_configuration=self, created_at__gte=DATETIME_WEEK)
+        ping_results_day = ping_results_week.filter(created_at__gte=DATETIME_DAY)
+        ping_results_hour = ping_results_week.filter(created_at__gte=DATETIME_HOUR)
 
         return ErrorPercentage(week=calculate_error_percentage(ping_results_week),
                                day=calculate_error_percentage(ping_results_day),
