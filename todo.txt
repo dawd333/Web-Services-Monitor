@@ -1,5 +1,7 @@
-konfiguracja snmp i django health check - w formie pdfa / skryptu
-dublujace sie rekordy
-presuwajace sie dane w dol na wykresach barach
-status page calosc
-agregacja danych
+- Wysłać maila do promotorów!
+- Zmiana health checka z ip na urle
+- Konfiguracja snmp i django health check - w formie pdfa / skryptu
+- Przesuwajace sie dane w dol na wykresach barach
+- Dublujace sie rekordy                             // IN PROGRESS
+- Status page calosc                                // IN PROGRESS
+- Agregacja danych                                  // IN PROGRESS

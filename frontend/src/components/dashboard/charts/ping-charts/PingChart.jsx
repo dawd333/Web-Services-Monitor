@@ -51,6 +51,7 @@ export class PingChart extends React.Component {
     return (
       <div>
         <XYPlot
+          margin={{left: 50}}
           width={850}
           height={350}
           stackBy="y"

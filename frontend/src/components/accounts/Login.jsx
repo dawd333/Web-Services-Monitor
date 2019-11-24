@@ -34,8 +34,8 @@ export class Login extends Component {
 
     const { username, password } = this.state;
     return (
-      <Col md={6} className="m-auto">
-        <Card className="mt-5">
+      <Col md={6} className="m-auto pt-5">
+        <Card>
           <Card.Body>
             <h2 className="text-center">Login</h2>
             <Form onSubmit={this.onSubmit}>
