@@ -6,6 +6,8 @@ from django.shortcuts import get_object_or_404
 from scheduler import ping_api
 from django.db.models import Q
 from rest_framework.exceptions import ValidationError, MethodNotAllowed
+from .sql import get_ping_results_query_day_with_user, get_ping_results_query_20minutes_with_user
+from dateutil.parser import parse
 
 
 # PingConfiguration ViewSet
@@ -55,10 +57,21 @@ class PingResultsViewSet(viewsets.ModelViewSet):
         to_date = self.request.query_params.get('to-date', None)
 
         if from_date is not None and to_date is not None:
-            return PingResults.objects.filter(Q(ping_configuration__service__owner=self.request.user) |
-                                              Q(ping_configuration__service__allowed_users=self.request.user),
-                                              ping_configuration=ping_configuration,
-                                              created_at__range=(from_date, to_date))
+            days_difference = (parse(to_date) - parse(from_date)).days
+            if days_difference < 5:
+                return PingResults.objects.filter(Q(ping_configuration__service__owner=self.request.user) |
+                                                  Q(ping_configuration__service__allowed_users=self.request.user),
+                                                  ping_configuration=ping_configuration,
+                                                  created_at__range=(from_date, to_date)).order_by('created_at')
+            elif days_difference < 31:
+                return PingResults.objects.raw(
+                    get_ping_results_query_20minutes_with_user(ping_configuration=ping_configuration,
+                                                               user=self.request.user, from_date=from_date,
+                                                               to_date=to_date))
+            else:
+                return PingResults.objects.raw(
+                    get_ping_results_query_day_with_user(ping_configuration=ping_configuration, user=self.request.user,
+                                                         from_date=from_date, to_date=to_date))
         else:
             raise ValidationError({"detail": "Date not valid."})
 

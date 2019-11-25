@@ -1,6 +1,8 @@
 from abc import ABC
 
 from rest_framework import serializers
+
+from ping.sql import get_ping_results_query_status_page
 from .models import PingConfiguration, PingResults
 from services.error_percentage import ErrorPercentageSerializer, DATETIME_WEEK
 from services.models import status_page_type_switch, StatusPageType
@@ -81,9 +83,11 @@ class PingConfigurationStatusPageSerializer(serializers.BaseSerializer, ABC):
                 'error_percentage': ErrorPercentageSerializer(instance.error_percentage).data
             }
 
-        ping_results = PingResults.objects.filter(ping_configuration=instance.id, created_at__gte=DATETIME_WEEK)
+        ping_results = PingResults.objects.raw(
+            get_ping_results_query_status_page(ping_configuration=instance.id, from_date=DATETIME_WEEK))
         ping_results_serialized = []
         for ping_result in ping_results:
+            ping_result.ping_configuration = instance
             ping_results_serialized.append(PingResultsStatusPageSerializer(ping_result).data)
 
         if display_type == StatusPageType.NO_ERRORS_CHART or display_type == StatusPageType.FULL_CHART:
