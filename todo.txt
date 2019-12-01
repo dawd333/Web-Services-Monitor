@@ -1,10 +1,11 @@
 Konfiguracja snmp i django health check - w formie pdfa / skryptu
 Przesuwajace sie dane w dol na wykresach barach w trakcie przyblizania
-zjedzone wartosci na osi y + labelka y na pingu
 szerokosc slupka po agregacji dla wykresow z barami
-popatrzyć na baze i dublujace sie rekordy lub to ze niektore sie nie zapisuja, ewentualnie trigger na bazie
-przypatrzyć pingowi i rezultatom zwracanym przez niego, ewentualnie ipv6
+ping ipv6
 Zmiana health checka z ip na urle
 agregacja danych dla django health check
 zmiana django health checka
 popatrzyc na wykres django health checka
+bootswatch xd
+result w formie tekstowej
+status page w reduxie nie usuwa sie po wyjsciu ze status page

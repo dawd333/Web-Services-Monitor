@@ -48,7 +48,7 @@ export class DjangoHealthCheckChart extends Component {
       <Fragment>
         <XYPlot
           animation
-          width={850}
+          width={1100}
           height={350}
           xType="time"
           xDomain={
