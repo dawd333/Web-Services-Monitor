@@ -1,30 +1,26 @@
-from django.db import transaction
 from ping.models import PingConfiguration, PingResults
 from .scheduler import get_scheduler
 from pythonping import ping
-from datetime import datetime, timedelta
-import pytz
 
 scheduler = get_scheduler()
 
 
-@transaction.atomic
 def ping_job(ping_configuration):
-    response_list = ping(target=ping_configuration.ip, count=ping_configuration.number_of_requests,
-                         timeout=ping_configuration.timeout)
+    try:
+        response_list = ping(target=ping_configuration.ip, count=ping_configuration.number_of_requests,
+                             timeout=ping_configuration.timeout)
 
-    error_messages = []
-    for response in response_list:
-        if not response.success:
-            error_messages.append(response)
+        error_messages = []
+        for response in response_list:
+            if not response.success:
+                error_messages.append(response)
 
-    if len(PingResults.objects.filter(
-            ping_configuration=ping_configuration,
-            created_at__gte=datetime.now(pytz.utc) - timedelta(seconds=ping_configuration.interval * 0.8))) == 0:
         PingResults.objects.create(ping_configuration=ping_configuration,
                                    number_of_requests=ping_configuration.number_of_requests,
                                    rtt_avg_ms=response_list.rtt_avg_ms,
                                    error_messages=error_messages)
+    except TypeError:
+        print("Ping job duplication was prevented.")
 
 
 def start():

@@ -51,7 +51,9 @@ export class PingChart extends React.Component {
     return (
       <div>
         <XYPlot
-          width={850}
+          animation
+          margin={{ left: 50 }}
+          width={1100}
           height={350}
           stackBy="y"
           xType="time"
@@ -114,7 +116,7 @@ export class PingChart extends React.Component {
             </Hint>
           ) : null}
           <XAxis tickLabelAngle={-35} />
-          <YAxis />
+          <YAxis title={"ms"} />
         </XYPlot>
       </div>
     );

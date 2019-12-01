@@ -165,7 +165,7 @@ class DashboardContainer extends React.Component {
         return (
           <DjangoHealthCheckForm
             key={"add_django_health_check"}
-            label={"Add Django Health Check configuration"}
+            label={"Add Health Check configuration"}
             onSubmit={this.onAddDjangoHealthCheck}
           />
         );
@@ -180,6 +180,7 @@ class DashboardContainer extends React.Component {
                 ip={this.props.selectedDjangoHealthCheck.ip}
                 interval={this.props.selectedDjangoHealthCheck.interval}
                 isActive={this.props.selectedDjangoHealthCheck.is_active}
+                statusPageType={this.props.selectedDjangoHealthCheck.display_type}
                 onSubmit={this.onUpdateDjangoHealthCheck}
               />
             )}

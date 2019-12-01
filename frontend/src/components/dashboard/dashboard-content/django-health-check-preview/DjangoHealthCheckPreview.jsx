@@ -12,6 +12,7 @@ import {
 } from "../../../../actions/dashboard";
 import { HorizontalGridLines, XAxis, XYPlot, YAxis } from "react-vis";
 import VerticalBarSeries from "react-vis/es/plot/series/vertical-bar-series";
+import {STATUS_PAGE_TYPE} from "../../../../commons/enums";
 
 class DjangoHealthCheckPreview extends React.Component {
   static propTypes = {
@@ -80,6 +81,15 @@ class DjangoHealthCheckPreview extends React.Component {
           {this.props.model.interval}
           {" seconds"}
         </span>
+        <br />
+
+        <span className={styles.djangoHealthCheckPreview__label}>
+          {"Display on status page:"}
+        </span>
+        <br />
+          <Badge pill={true} variant="warning">
+            {STATUS_PAGE_TYPE[this.props.model.display_type]}
+          </Badge>
         <br />
       </div>
     );

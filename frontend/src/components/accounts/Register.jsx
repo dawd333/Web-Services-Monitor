@@ -48,8 +48,8 @@ export class Register extends Component {
 
     const { username, email, password, password2 } = this.state;
     return (
-      <Col md={6} className="m-auto">
-        <Card className="mt-5">
+      <Col md={6} className="m-auto pt-5">
+        <Card>
           <Card.Body>
             <h2 className="text-center">Register</h2>
             <Form onSubmit={this.onSubmit}>

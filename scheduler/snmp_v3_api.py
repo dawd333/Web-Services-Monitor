@@ -1,10 +1,7 @@
-from django.db import transaction
 from pysnmp.hlapi import *
 from .scheduler import get_scheduler
 from django.utils.ipv6 import is_valid_ipv6_address
 from snmp_v3.models import PlatformChoices, SnmpConfiguration, SnmpResults
-from datetime import datetime, timedelta
-import pytz
 
 scheduler = get_scheduler()
 
@@ -83,39 +80,39 @@ def is_test_request_valid(snmp_configuration):
     return True
 
 
-@transaction.atomic
 def snmp_job(snmp_configuration):
-    if is_valid_ipv6_address(snmp_configuration.ip):
-        get_command = get_command_ipv6(snmp_configuration.username, snmp_configuration.authentication_password,
-                                       snmp_configuration.privacy_password, snmp_configuration.ip)
-    else:
-        get_command = get_command_ipv4(snmp_configuration.username, snmp_configuration.authentication_password,
-                                       snmp_configuration.privacy_password, snmp_configuration.ip)
+    try:
+        if is_valid_ipv6_address(snmp_configuration.ip):
+            get_command = get_command_ipv6(snmp_configuration.username, snmp_configuration.authentication_password,
+                                           snmp_configuration.privacy_password, snmp_configuration.ip)
+        else:
+            get_command = get_command_ipv4(snmp_configuration.username, snmp_configuration.authentication_password,
+                                           snmp_configuration.privacy_password, snmp_configuration.ip)
 
-    next(get_command)
-    results = []
-    error_messages = []
+        next(get_command)
+        results = []
+        error_messages = []
 
-    if snmp_configuration.platform == PlatformChoices.get_value('Linux'):
-        linux_full_requests_copy = linux_full_requests.copy()
-        while linux_full_requests_copy:
-            error_indication, error_status, error_index, var_binds = get_command.send(linux_full_requests_copy.pop(0))
+        if snmp_configuration.platform == PlatformChoices.get_value('Linux'):
+            linux_full_requests_copy = linux_full_requests.copy()
+            while linux_full_requests_copy:
+                error_indication, error_status, error_index, var_binds = get_command.send(
+                    linux_full_requests_copy.pop(0))
 
-            if error_indication:
-                if error_indication not in error_messages:
-                    error_messages.append(error_indication)
-            elif error_status:
-                error_messages.append('%s at %s' % (error_status.prettyPrint(),
-                                                    error_index and var_binds[int(error_index) - 1][0] or '?'))
-            else:
-                for var_bind in var_binds:
-                    results.append(str(var_bind).split("= ", 1)[1])
+                if error_indication:
+                    if error_indication not in error_messages:
+                        error_messages.append(error_indication)
+                elif error_status:
+                    error_messages.append('%s at %s' % (error_status.prettyPrint(),
+                                                        error_index and var_binds[int(error_index) - 1][0] or '?'))
+                else:
+                    for var_bind in var_binds:
+                        results.append(str(var_bind).split("= ", 1)[1])
 
-    if len(SnmpResults.objects.filter(
-            snmp_configuration=snmp_configuration,
-            created_at__gte=datetime.now(pytz.utc) - timedelta(seconds=snmp_configuration.interval * 0.8))) == 0:
         SnmpResults.objects.create(snmp_configuration=snmp_configuration, results=results,
                                    error_messages=error_messages)
+    except TypeError:
+        print("Snmp job duplication was prevented.")
 
 
 def start():

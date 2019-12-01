@@ -94,7 +94,7 @@ export class SideNav extends React.Component {
               view.ADD_DJANGO_HEALTH_CHECK
             )}
           >
-            {"Add Django Health Check"}
+            {"Add Health Check"}
           </Button>
           <Button
             variant="danger"
@@ -106,7 +106,7 @@ export class SideNav extends React.Component {
           <Button
             variant="info"
             className={styles.accordionButton}
-            onClick={() => {}}
+            href={"#/" + this.props.selectedServiceId}
           >
             {"Status page"}
           </Button>
