@@ -56,19 +56,6 @@ class PingPreview extends React.Component {
         <span>{this.props.model.ip}</span>
         <br />
 
-        <span className={styles.pingPreview__label}>{"Status:"}</span>
-        <br />
-        {this.props.model.is_active ? (
-          <Badge pill={true} variant="success">
-            {"Enabled"}
-          </Badge>
-        ) : (
-          <Badge pill={true} variant="danger">
-            {"Disabled"}
-          </Badge>
-        )}
-        <br />
-
         <span className={styles.pingPreview__label}>{"Interval:"}</span>
         <br />
         <span>
@@ -100,6 +87,14 @@ class PingPreview extends React.Component {
             {STATUS_PAGE_TYPE[this.props.model.display_type]}
           </Badge>
         <br />
+        <span className={styles.pingPreview__label}>
+          {"Email notifications:"}
+        </span>
+        <br />
+        <Badge pill={true} variant="warning">
+          {this.props.model?.email_notifications ? "Enabled" : "Disabled"}
+        </Badge>
+        <br />
       </div>
     );
   };
@@ -115,6 +110,19 @@ class PingPreview extends React.Component {
         <span className={styles.pingPreview__label}>{"Last modified at:"}</span>
         <br />
         <span>{convertFromUTC(this.props.model.updated_at)}</span>
+        <br />
+
+        <span className={styles.pingPreview__label}>{"Status:"}</span>
+        <br />
+        {this.props.model.is_active ? (
+          <Badge pill={true} variant="success">
+            {"Enabled"}
+          </Badge>
+        ) : (
+          <Badge pill={true} variant="danger">
+            {"Disabled"}
+          </Badge>
+        )}
         <br />
 
         <span className={styles.pingPreview__label}>

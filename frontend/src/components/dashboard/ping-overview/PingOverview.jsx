@@ -119,6 +119,10 @@ class PingOverview extends React.Component {
               <td>{"Display on status page"}</td>
               <td>{STATUS_PAGE_TYPE[this.props.pingModel.display_type]}</td>
             </tr>
+            <tr>
+              <td>{"Email notifications"}</td>
+              <td>{this.props.pingModel?.email_notifications ? "Enabled" : "Disabled"}</td>
+            </tr>
           </tbody>
         </Table>
         <ButtonToolbar className={styles.pingOverview__nav}>

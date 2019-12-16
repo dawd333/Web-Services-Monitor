@@ -22,6 +22,7 @@ class DjangoHealthCheckForm extends React.Component {
     interval: PropTypes.number,
     isActive: PropTypes.bool,
     statusPageType: PropTypes.oneOf(Object.keys(STATUS_PAGE_TYPE)),
+    emailNotifications: PropTypes.bool,
     onSubmit: PropTypes.func.isRequired
   };
 
@@ -32,6 +33,7 @@ class DjangoHealthCheckForm extends React.Component {
       interval: props.interval ? props.interval : 1000,
       isActive: props.isActive ? props.isActive : false,
       statusPageType: props.statusPageType ? props.statusPageType : "OFF",
+      emailNotifications: props.emailNotifications ? props.emailNotifications : false,
       showDeleteModal: false
     };
   }
@@ -62,15 +64,23 @@ class DjangoHealthCheckForm extends React.Component {
               onChange={this.onChange}
               value={this.state.interval}
             />
-            <Form.Label column={"is_active"}>{"Is active:"}</Form.Label>
-            <FormControl
-              type="checkbox"
-              name="isActive"
-              onChange={this.onChangeBoolean}
-              checked={this.state.isActive}
-            />
           </Form.Group>
-                    <Form.Group>
+          <Form.Group>
+            <Form.Label column={"isActive"}>
+              {"Is active:"}
+            </Form.Label>
+            <FormControl
+              as="select"
+              name="isActive"
+              key={this.state.isActive}
+              value={this.state.isActive ? "Enabled" : "Disabled"}
+              onChange={this.onChangeBoolean}
+            >
+              <option key={false}>{"Disabled"}</option>
+              <option key={true}>{"Enabled"}</option>
+            </FormControl>
+          </Form.Group>
+          <Form.Group>
             <Form.Label column={"statusPageType"}>
               {"Display on status page:"}
             </Form.Label>
@@ -84,6 +94,21 @@ class DjangoHealthCheckForm extends React.Component {
               {Object.entries(STATUS_PAGE_TYPE).map(entry => (
                 <option key={entry[0]}>{entry[1]}</option>
               ))}
+            </FormControl>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label column={"emailNotifications"}>
+              {"Email notifications:"}
+            </Form.Label>
+            <FormControl
+              as="select"
+              name="emailNotifications"
+              key={this.state.emailNotifications}
+              value={this.state.emailNotifications ? "Enabled" : "Disabled"}
+              onChange={this.onChangeBoolean}
+            >
+              <option key={false}>{"Disabled"}</option>
+              <option key={true}>{"Enabled"}</option>
             </FormControl>
           </Form.Group>
           <ButtonToolbar className={styles.form__buttons}>
@@ -144,7 +169,8 @@ class DjangoHealthCheckForm extends React.Component {
       ip: this.state.ip,
       interval: this.state.interval,
       is_active: this.state.isActive,
-      display_type: this.state.statusPageType
+      display_type: this.state.statusPageType,
+      email_notifications: this.state.emailNotifications
     };
     this.props.onSubmit(configuration);
   };
