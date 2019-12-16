@@ -18,6 +18,7 @@ requests = "*"
 django-health-check = "*"
 python-dateutil = "*"
 drf-yasg = "*"
+django-apscheduler = "*"
 
 [requires]
 python_version = "3.6"

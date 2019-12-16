@@ -9,6 +9,7 @@ class PingConfiguration(models.Model):
     ip = models.GenericIPAddressField()
     interval = models.PositiveIntegerField()
     is_active = models.BooleanField()
+    email_notifications = models.BooleanField()
     number_of_requests = models.PositiveIntegerField()
     timeout = models.PositiveIntegerField()
     service = models.ForeignKey(Service, related_name="ping_configurations", on_delete=models.CASCADE)

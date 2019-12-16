@@ -38,4 +38,3 @@ class ServiceStatusPageViewSet(viewsets.ReadOnlyModelViewSet):
 
     def get_queryset(self):
         return Service.objects.all()
-

@@ -18,6 +18,7 @@ class SnmpConfiguration(models.Model):
     ip = models.GenericIPAddressField()
     interval = models.PositiveIntegerField()
     is_active = models.BooleanField()
+    email_notifications = models.BooleanField()
     platform = models.CharField(max_length=100, choices=[x.value for x in PlatformChoices])
     username = models.CharField(max_length=100)
     authentication_password = models.CharField(max_length=100)
