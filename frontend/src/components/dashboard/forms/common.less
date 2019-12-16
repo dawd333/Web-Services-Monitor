@@ -1,5 +1,12 @@
 @import (reference) "~bootstrap-less/bootstrap/index.less";
 
+.container {
+  padding-top: 1rem;
+  padding-bottom: 1rem;
+  background: #F3F3F3;
+  border: 1px solid #e1dfdf;
+}
+
 .form__header {
   background: @body-bg;
   border: 1px solid #ced4da;
@@ -16,3 +23,23 @@
     margin-right: 1rem;
   }
 }
+
+.instruction__container {
+  display: flex;
+  flex-direction: column;
+}
+
+.instruction__label {
+  padding: 1rem 1rem 0.5rem 1rem;
+  font-weight: 500;
+}
+
+.instruction__code {
+  width: 100%;
+  padding: 0.5rem 1rem;
+  background: @body-bg;
+  border: 1px solid #e1dfdf;
+  font-family: monospace;
+  white-space: pre;
+}
+

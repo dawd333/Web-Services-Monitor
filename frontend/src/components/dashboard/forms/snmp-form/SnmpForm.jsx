@@ -3,13 +3,13 @@ import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { changeView, deleteSnmp } from "../../../../actions/dashboard";
-import { view } from "../../DashboardModel";
+import {connect} from "react-redux";
+import {changeView, deleteSnmp} from "../../../../actions/dashboard";
+import {view} from "../../DashboardModel";
 import styles from "../common.less";
-import { ButtonToolbar, Container } from "react-bootstrap";
-import { DeleteModal } from "../../../common/delete-modal/DeleteModal";
-import { STATUS_PAGE_TYPE } from "../../../../commons/enums";
+import {ButtonToolbar, Container} from "react-bootstrap";
+import {DeleteModal} from "../../../common/delete-modal/DeleteModal";
+import {STATUS_PAGE_TYPE} from "../../../../commons/enums";
 
 class SnmpForm extends React.Component {
   static propTypes = {
@@ -43,7 +43,17 @@ class SnmpForm extends React.Component {
 
   render() {
     return (
-      <Container>
+      <Container className={styles.container}>
+        {this.renderSnmpForm()}
+        <br/>
+        {this.renderSnmpInstruction()}
+      </Container>
+    );
+  }
+
+  renderSnmpForm = () => {
+    return (
+      <>
         <div className={styles.form__header}>
           <h4>{"Snmp configuration"}</h4>
         </div>
@@ -158,14 +168,90 @@ class SnmpForm extends React.Component {
             label={"Delete this snmp configuration"}
             show={this.state.showDeleteModal}
             onClose={() =>
-              this.setState({ ...this.state, showDeleteModal: false })
+              this.setState({...this.state, showDeleteModal: false})
             }
             onDelete={this.deleteSnmpConfiguration}
           />
         </Form>
-      </Container>
-    );
-  }
+      </>
+    )
+  };
+
+  renderSnmpInstruction = () => {
+    return (
+      <div className={styles.instruction__container}>
+        <div className={styles.form__header}>
+          <h4>{"Snmp configuration - configuring agent"}</h4>
+        </div>
+
+        <span className={styles.instruction__label}>
+        {"Step 1: Install libraries for SNMP protocol"}
+        </span>
+        <span className={styles.instruction__code}>
+          {"sudo apt-get update\n" +
+          "sudo apt-get install snmp snmpd snmp-mibs-downloader libsnmp-dev"}
+        </span>
+
+        <span className={styles.instruction__label}>
+        {"Step 2: Edit snmp.conf - comment or remove line “mibs :” in the file"}
+        </span>
+        <span className={styles.instruction__code}>
+          {"sudo nano /etc/snmp/snmp.conf"}
+        </span>
+
+        <span className={styles.instruction__label}>
+        {"Step 3: Stop SNMP agent"}
+        </span>
+        <span className={styles.instruction__code}>
+          {"sudo service snmpd stop"}
+        </span>
+
+        <span className={styles.instruction__label}>
+        {"Step 4: Configure SNMP manager. Replace marked fields with your authentication password and privacy password"}
+        </span>
+        <span className={styles.instruction__code}>
+          {"sudo net-snmp-config --create-snmpv3-user -ro -x AES -a SHA -A \""}
+          <span style={{color: 'red'}}>{"authPass"}</span>
+          {"\" -X \""}
+          <span style={{color: 'red'}}>{"privPass"}</span>
+          {"\" username"}
+        </span>
+
+        <span className={styles.instruction__label}>
+        {"Step 5: Edit snmpd.conf file"}
+        </span>
+        <span className={styles.instruction__code}>
+          {"sudo nano /etc/snmp/snmpd.conf"}
+        </span>
+        <span className={styles.instruction__label}>
+        {"Replace its content with text below. Provide your username in the marked field"}
+        </span>
+        <span className={styles.instruction__code}>
+          {"agentAddress udp:161\n" +
+          "rouser "}
+          <span style={{color: 'red'}}>{"username"}</span>
+          {" AuthPriv\n" +
+          "disk / 100000\n" +
+          "includeAllDisks 10%"}
+        </span>
+
+        <span className={styles.instruction__label}>
+        {"Step 6: Start SNMP agent"}
+        </span>
+        <span className={styles.instruction__code}>
+          {"sudo service snmpd start"}
+        </span>
+
+        <span className={styles.instruction__label}>
+        {"Step 7: Check SNMP status"}
+        </span>
+        <span className={styles.instruction__code}>
+          {"sudo service snmpd status"}
+        </span>
+
+      </div>
+    )
+  };
 
   onChange = event => {
     this.setState({
@@ -228,4 +314,4 @@ const mapStateToProps = state => ({
   serviceId: state.dashboard.selectedServiceId
 });
 
-export default connect(mapStateToProps, { changeView, deleteSnmp })(SnmpForm);
+export default connect(mapStateToProps, {changeView, deleteSnmp})(SnmpForm);

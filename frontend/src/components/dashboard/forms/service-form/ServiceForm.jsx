@@ -23,7 +23,7 @@ export class ServiceForm extends React.Component {
 
   render() {
     return (
-      <Container>
+      <Container className={styles.container}>
         <div className={styles.form__header}>
           <h4>{"Service"}</h4>
         </div>

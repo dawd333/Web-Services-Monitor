@@ -41,7 +41,7 @@ class PingForm extends React.Component {
 
   render() {
     return (
-      <Container>
+      <Container className={styles.container}>
         <div className={styles.form__header}>
           <h4>{"Ping configuration"}</h4>
         </div>
