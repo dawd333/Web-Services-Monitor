@@ -59,21 +59,6 @@ class DjangoHealthCheckPreview extends React.Component {
         <br />
 
         <span className={styles.djangoHealthCheckPreview__label}>
-          {"Status:"}
-        </span>
-        <br />
-        {this.props.model.is_active ? (
-          <Badge pill={true} variant="success">
-            {"enabled"}
-          </Badge>
-        ) : (
-          <Badge pill={true} variant="danger">
-            {"disabled"}
-          </Badge>
-        )}
-        <br />
-
-        <span className={styles.djangoHealthCheckPreview__label}>
           {"Interval:"}
         </span>
         <br />
@@ -90,6 +75,14 @@ class DjangoHealthCheckPreview extends React.Component {
           <Badge pill={true} variant="warning">
             {STATUS_PAGE_TYPE[this.props.model.display_type]}
           </Badge>
+        <br />
+        <span className={styles.djangoHealthCheckPreview__label}>
+          {"Email notifications:"}
+        </span>
+        <br />
+        <Badge pill={true} variant="warning">
+          {this.props.model?.email_notifications ? "Enabled" : "Disabled"}
+        </Badge>
         <br />
       </div>
     );
@@ -110,6 +103,21 @@ class DjangoHealthCheckPreview extends React.Component {
         </span>
         <br />
         <span>{convertFromUTC(this.props.model.updated_at)}</span>
+        <br />
+
+        <span className={styles.djangoHealthCheckPreview__label}>
+          {"Status:"}
+        </span>
+        <br />
+        {this.props.model.is_active ? (
+          <Badge pill={true} variant="success">
+            {"enabled"}
+          </Badge>
+        ) : (
+          <Badge pill={true} variant="danger">
+            {"disabled"}
+          </Badge>
+        )}
         <br />
 
         <span className={styles.djangoHealthCheckPreview__label}>
