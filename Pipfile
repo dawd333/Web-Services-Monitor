@@ -17,6 +17,7 @@ pysnmp = "*"
 requests = "*"
 django-health-check = "*"
 python-dateutil = "*"
+drf-yasg = "*"
 
 [requires]
 python_version = "3.6"

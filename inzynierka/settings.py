@@ -49,7 +49,8 @@ INSTALLED_APPS = [
     # 'django_health_check',
     'ping.apps.PingConfig',
     'snmp_v3.apps.SnmpV3Config',
-    'django_health_check.apps.DjangoHealthCheckConfig'
+    'django_health_check.apps.DjangoHealthCheckConfig',
+    'drf_yasg'
 ]
 
 REST_FRAMEWORK = {
