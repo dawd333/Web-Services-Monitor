@@ -77,9 +77,9 @@ class DjangoHealthCheckOverview extends React.Component {
           <tbody>
             <tr>
               <td className={styles.djangoHealthCheckOverview__labelColumn}>
-                {"Ip"}
+                {"Url"}
               </td>
-              <td>{this.props.djangoHealthCheckModel.ip}</td>
+              <td>{this.props.djangoHealthCheckModel.url}</td>
             </tr>
             <tr>
               <td>{"Status"}</td>

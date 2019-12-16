@@ -53,9 +53,9 @@ class DjangoHealthCheckPreview extends React.Component {
   renderLeftColumn = () => {
     return (
       <div className={styles.djangoHealthCheckPreview__leftColumn}>
-        <span className={styles.djangoHealthCheckPreview__label}>{"Ip:"}</span>
+        <span className={styles.djangoHealthCheckPreview__label}>{"Url:"}</span>
         <br />
-        <span>{this.props.model.ip}</span>
+        <span>{this.props.model.url}</span>
         <br />
 
         <span className={styles.djangoHealthCheckPreview__label}>
