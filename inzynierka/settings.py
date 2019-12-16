@@ -44,13 +44,11 @@ INSTALLED_APPS = [
     'health_check.db',
     'health_check.cache',
     'health_check.storage',
-    # 'ping',
-    # 'snmp_v3',
-    # 'django_health_check',
     'ping.apps.PingConfig',
     'snmp_v3.apps.SnmpV3Config',
     'django_health_check.apps.DjangoHealthCheckConfig',
-    'drf_yasg'
+    'drf_yasg',
+    'django_apscheduler'
 ]
 
 REST_FRAMEWORK = {
@@ -107,7 +105,12 @@ DATABASES = {
 }
 
 # Email
-
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'webservicesmonitor@gmail.com'
+EMAIL_HOST_PASSWORD = 'lxwjynyznmnqqmlq'
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
