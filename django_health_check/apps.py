@@ -1,3 +1,5 @@
+import os
+
 from django.apps import AppConfig
 
 
@@ -6,4 +8,5 @@ class DjangoHealthCheckConfig(AppConfig):
 
     def ready(self):
         from scheduler import django_health_check_api
-        django_health_check_api.start()
+        if os.environ.get('RUN_MAIN', None) != 'true':
+            django_health_check_api.start()

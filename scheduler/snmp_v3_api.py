@@ -1,5 +1,6 @@
 from pysnmp.hlapi import *
 from .scheduler import get_scheduler
+from .email import snmp_send_email
 from django.utils.ipv6 import is_valid_ipv6_address
 from snmp_v3.models import PlatformChoices, SnmpConfiguration, SnmpResults
 
@@ -111,6 +112,16 @@ def snmp_job(snmp_configuration):
 
         SnmpResults.objects.create(snmp_configuration=snmp_configuration, results=results,
                                    error_messages=error_messages)
+
+        email_job_id = "snmp_email_" + str(snmp_configuration.id)
+        if error_messages:
+            if not scheduler.job_exists(email_job_id):
+                snmp_send_email(snmp_configuration, error_messages)
+                scheduler.add_job(job=snmp_send_email, interval=3600, args=(snmp_configuration, error_messages,),
+                                  job_id=email_job_id)
+        else:
+            if scheduler.job_exists(email_job_id):
+                scheduler.remove_job(job_id=email_job_id)
     except TypeError:
         print("Snmp job duplication was prevented.")
 

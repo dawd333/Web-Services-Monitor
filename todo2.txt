@@ -1,0 +1,27 @@
+poprawic screena bazy i innych z pycharma
+porpawka screenow w 5 rozdziale
+
+Czy w studium wykonalności fakt, że mamy już konkretne technologie jest problemem ?
+Co mamy zrobić z konfiguracją SNMP i Django Health Check w pracy inżynierskiej i aplikacji ? albo apka albo praca
+Czy wstęp dla serwera RESTowego jest spoko ?
+Deploy ? Testy ? Czy brak tego jest bardzo zły ? wrzucic na heroku
+Czy odnośniki do materiałów źródłowych dodawać zawsze, czy tylko raz ?
+Czy mamy uzasadnić w stosie technologicznym dlaczego te technologie wybralismy ?
+Pogadać o czwartym rozdziale  - opiekun pomocniczy mgr inz Agnieszka Rudnicka, można pisać w formie klienta, z nim ustaliśmy i weryfikowaliśmy pracę itd
+REST API jako załącznik czy jak ?
+
+zrobić powiadomienia mejlowe
+kiedy doczytalismy informacje z tej strony
+scheduler na ogolnym rysunku bo dwie bazy nie maja sensu
+dorzucci postgresql i sqllite do studium wykonalności
+rozwarzanie na temat framework frontowych
+aplikacja na wykresie schedulera
+w stopce strony lub w naglowko subsection
+wybor rest vs graphql czy 1.5 czy 3.3
+zrobic swaggera
+kod http statusowy
+wrzucic poczatkowa wizje ui na poczatku pracy - wizja produktu
+screeny rezultatow na json
+
+brak mockow i krotki rozdzial drugi :(
+podlinkowac wszystkie technologie w stosie technologicznym

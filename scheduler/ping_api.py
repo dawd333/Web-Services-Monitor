@@ -1,4 +1,5 @@
 from ping.models import PingConfiguration, PingResults
+from .email import ping_send_email
 from .scheduler import get_scheduler
 from pythonping import ping
 
@@ -19,6 +20,16 @@ def ping_job(ping_configuration):
                                    number_of_requests=ping_configuration.number_of_requests,
                                    rtt_avg_ms=response_list.rtt_avg_ms,
                                    error_messages=error_messages)
+
+        email_job_id = "ping_email_" + str(ping_configuration.id)
+        if error_messages:
+            if not scheduler.job_exists(email_job_id):
+                ping_send_email(ping_configuration, error_messages)
+                scheduler.add_job(job=ping_send_email, interval=3600, args=(ping_configuration, error_messages,),
+                                  job_id=email_job_id)
+        else:
+            if scheduler.job_exists(email_job_id):
+                scheduler.remove_job(job_id=email_job_id)
     except TypeError:
         print("Ping job duplication was prevented.")
 

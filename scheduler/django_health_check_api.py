@@ -1,5 +1,6 @@
 from django_health_check.models import DjangoHealthCheckConfiguration, DjangoHealthCheckResults
 from .scheduler import get_scheduler
+from .email import django_health_check_send_email
 import requests
 
 scheduler = get_scheduler()
@@ -16,6 +17,16 @@ def django_health_check_job(django_health_check_configuration):
 
         DjangoHealthCheckResults.objects.create(django_health_check_configuration=django_health_check_configuration,
                                                 was_success=was_success)
+
+        email_job_id = "django_health_check_email_" + str(django_health_check_configuration.id)
+        if not was_success:
+            if not scheduler.job_exists(email_job_id):
+                django_health_check_send_email(django_health_check_configuration)
+                scheduler.add_job(job=django_health_check_send_email, interval=3600,
+                                  args=(django_health_check_configuration,), job_id=email_job_id)
+        else:
+            if scheduler.job_exists(email_job_id):
+                scheduler.remove_job(job_id=email_job_id)
     except TypeError:
         print("Django Health Check job duplication was prevented.")
 
