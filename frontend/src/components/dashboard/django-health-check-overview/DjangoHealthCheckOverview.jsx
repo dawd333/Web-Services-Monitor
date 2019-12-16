@@ -30,6 +30,7 @@ import {
 } from "../../../actions/dashboard";
 import { DeleteModal } from "../../common/delete-modal/DeleteModal";
 import { DjangoHealthCheckChart } from "../charts/django-health-check-charts/DjangoHealthCheckChart";
+import {STATUS_PAGE_TYPE} from "../../../commons/enums";
 
 class DjangoHealthCheckOverview extends React.Component {
   static propTypes = {
@@ -112,6 +113,14 @@ class DjangoHealthCheckOverview extends React.Component {
               <td>
                 {convertFromUTC(this.props.djangoHealthCheckModel.updated_at)}
               </td>
+            </tr>
+            <tr>
+              <td>{"Display on status page"}</td>
+              <td>{STATUS_PAGE_TYPE[this.props.djangoHealthCheckModel.display_type]}</td>
+            </tr>
+            <tr>
+              <td>{"Email notifications"}</td>
+              <td>{this.props.djangoHealthCheckModel?.email_notifications ? "Enabled" : "Disabled"}</td>
             </tr>
           </tbody>
         </Table>

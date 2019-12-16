@@ -3,13 +3,13 @@ import Form from "react-bootstrap/Form";
 import FormControl from "react-bootstrap/FormControl";
 import Button from "react-bootstrap/Button";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { changeView, deletePing } from "../../../../actions/dashboard";
-import { view } from "../../DashboardModel";
+import {connect} from "react-redux";
+import {changeView, deletePing} from "../../../../actions/dashboard";
+import {view} from "../../DashboardModel";
 import styles from "../common.less";
-import { ButtonToolbar, Container } from "react-bootstrap";
-import { DeleteModal } from "../../../common/delete-modal/DeleteModal";
-import { STATUS_PAGE_TYPE } from "../../../../commons/enums";
+import {ButtonToolbar, Container} from "react-bootstrap";
+import {DeleteModal} from "../../../common/delete-modal/DeleteModal";
+import {STATUS_PAGE_TYPE} from "../../../../commons/enums";
 
 class PingForm extends React.Component {
   static propTypes = {
@@ -21,6 +21,7 @@ class PingForm extends React.Component {
     timeout: PropTypes.number,
     numberOfRequests: PropTypes.number,
     statusPageType: PropTypes.oneOf(Object.keys(STATUS_PAGE_TYPE)),
+    emailNotifications: PropTypes.bool,
     onSubmit: PropTypes.func.isRequired
   };
 
@@ -33,6 +34,7 @@ class PingForm extends React.Component {
       numberOfRequests: props.numberOfRequests ? props.numberOfRequests : 4,
       timeout: props.timeout ? props.timeout : 15,
       statusPageType: props.statusPageType ? props.statusPageType : "OFF",
+      emailNotifications: props.emailNotifications ? props.emailNotifications : false,
       showDeleteModal: false
     };
   }
@@ -63,13 +65,21 @@ class PingForm extends React.Component {
               onChange={this.onChange}
               value={this.state.interval}
             />
-            <Form.Label column={"is_active"}>{"Is active:"}</Form.Label>
-            <FormControl
-              type="checkbox"
-              name="isActive"
-              onChange={this.onChangeBoolean}
-              checked={this.state.isActive}
-            />
+            <Form.Group>
+              <Form.Label column={"isActive"}>
+                {"Is active:"}
+              </Form.Label>
+              <FormControl
+                as="select"
+                name="isActive"
+                key={this.state.isActive}
+                value={this.state.isActive ? "Enabled" : "Disabled"}
+                onChange={this.onChangeBoolean}
+              >
+                <option key={false}>{"Disabled"}</option>
+                <option key={true}>{"Enabled"}</option>
+              </FormControl>
+            </Form.Group>
             <Form.Label column={"number_of_requests"}>
               {"Number of requests:"}
             </Form.Label>
@@ -103,6 +113,21 @@ class PingForm extends React.Component {
               ))}
             </FormControl>
           </Form.Group>
+          <Form.Group>
+            <Form.Label column={"emailNotifications"}>
+              {"Email notifications:"}
+            </Form.Label>
+            <FormControl
+              as="select"
+              name="emailNotifications"
+              key={this.state.emailNotifications}
+              value={this.state.emailNotifications ? "Enabled" : "Disabled"}
+              onChange={this.onChangeBoolean}
+            >
+              <option key={false}>{"Disabled"}</option>
+              <option key={true}>{"Enabled"}</option>
+            </FormControl>
+          </Form.Group>
           <ButtonToolbar className={styles.form__buttons}>
             <Button type="submit" variant="success">
               {this.props.label}
@@ -122,7 +147,7 @@ class PingForm extends React.Component {
             label={"Delete this ping configuration"}
             show={this.state.showDeleteModal}
             onClose={() =>
-              this.setState({ ...this.state, showDeleteModal: false })
+              this.setState({...this.state, showDeleteModal: false})
             }
             onDelete={this.deletePingConfiguration}
           />
@@ -163,7 +188,8 @@ class PingForm extends React.Component {
       is_active: this.state.isActive,
       number_of_requests: this.state.numberOfRequests,
       timeout: this.state.timeout,
-      display_type: this.state.statusPageType
+      display_type: this.state.statusPageType,
+      email_notifications: this.state.emailNotifications
     };
     this.props.onSubmit(configuration);
   };
@@ -189,4 +215,4 @@ const mapStateToProps = state => ({
   serviceId: state.dashboard.selectedServiceId
 });
 
-export default connect(mapStateToProps, { changeView, deletePing })(PingForm);
+export default connect(mapStateToProps, {changeView, deletePing})(PingForm);

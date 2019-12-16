@@ -56,19 +56,6 @@ class SnmpPreview extends React.Component {
         <span>{this.props.model.ip}</span>
         <br />
 
-        <span className={styles.snmpPreview__label}>{"Status:"}</span>
-        <br />
-        {this.props.model.is_active ? (
-          <Badge pill={true} variant="success">
-            {"Enabled"}
-          </Badge>
-        ) : (
-          <Badge pill={true} variant="danger">
-            {"Disabled"}
-          </Badge>
-        )}
-        <br />
-
         <span className={styles.snmpPreview__label}>{"Interval:"}</span>
         <br />
         <span>
@@ -95,6 +82,14 @@ class SnmpPreview extends React.Component {
             {STATUS_PAGE_TYPE[this.props.model.display_type]}
           </Badge>
         <br />
+        <span className={styles.snmpPreview__label}>
+          {"Email notifications:"}
+        </span>
+        <br />
+        <Badge pill={true} variant="warning">
+          {this.props.model?.email_notifications ? "Enabled" : "Disabled"}
+        </Badge>
+        <br />
       </div>
     );
   };
@@ -112,7 +107,20 @@ class SnmpPreview extends React.Component {
         <span>{convertFromUTC(this.props.model.updated_at)}</span>
         <br />
 
-        <span className={styles.pingPreview__label}>
+        <span className={styles.snmpPreview__label}>{"Status:"}</span>
+        <br />
+        {this.props.model.is_active ? (
+          <Badge pill={true} variant="success">
+            {"Enabled"}
+          </Badge>
+        ) : (
+          <Badge pill={true} variant="danger">
+            {"Disabled"}
+          </Badge>
+        )}
+        <br />
+
+        <span className={styles.snmpPreview__label}>
           {"Percentage of failure in last"}
         </span>
         <br />

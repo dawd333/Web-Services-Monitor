@@ -21,6 +21,7 @@ class SnmpForm extends React.Component {
     platform: PropTypes.string,
     username: PropTypes.string,
     statusPageType: PropTypes.oneOf(Object.keys(STATUS_PAGE_TYPE)),
+    emailNotifications: PropTypes.bool,
     onSubmit: PropTypes.func.isRequired
   };
 
@@ -35,6 +36,7 @@ class SnmpForm extends React.Component {
       authenticationPassword: "",
       privacyPassword: "",
       statusPageType: props.statusPageType ? props.statusPageType : "OFF",
+      emailNotifications: props.emailNotifications ? props.emailNotifications : false,
       showDeleteModal: false
     };
   }
@@ -65,13 +67,21 @@ class SnmpForm extends React.Component {
               onChange={this.onChange}
               value={this.state.interval}
             />
-            <Form.Label column={"is_active"}>{"Is active:"}</Form.Label>
-            <FormControl
-              type="checkbox"
-              name="isActive"
-              onChange={this.onChangeBoolean}
-              checked={this.state.isActive}
-            />
+            <Form.Group>
+              <Form.Label column={"isActive"}>
+                {"Is active:"}
+              </Form.Label>
+              <FormControl
+                as="select"
+                name="isActive"
+                key={this.state.isActive}
+                value={this.state.isActive ? "Enabled" : "Disabled"}
+                onChange={this.onChangeBoolean}
+              >
+                <option key={false}>{"Disabled"}</option>
+                <option key={true}>{"Enabled"}</option>
+              </FormControl>
+            </Form.Group>
             <Form.Label column={"username"}>{"Username:"}</Form.Label>
             <FormControl
               type="text"
@@ -112,6 +122,21 @@ class SnmpForm extends React.Component {
               {Object.entries(STATUS_PAGE_TYPE).map(entry => (
                 <option key={entry[0]}>{entry[1]}</option>
               ))}
+            </FormControl>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label column={"emailNotifications"}>
+              {"Email notifications:"}
+            </Form.Label>
+            <FormControl
+              as="select"
+              name="emailNotifications"
+              key={this.state.emailNotifications}
+              value={this.state.emailNotifications ? "Enabled" : "Disabled"}
+              onChange={this.onChangeBoolean}
+            >
+              <option key={false}>{"Disabled"}</option>
+              <option key={true}>{"Enabled"}</option>
             </FormControl>
           </Form.Group>
           <ButtonToolbar className={styles.form__buttons}>
@@ -176,7 +201,8 @@ class SnmpForm extends React.Component {
       username: this.state.username,
       authentication_password: this.state.authenticationPassword,
       privacy_password: this.state.privacyPassword,
-      display_type: this.state.statusPageType
+      display_type: this.state.statusPageType,
+      email_notifications: this.state.emailNotifications
     };
     this.props.onSubmit(configuration);
   };

@@ -114,6 +114,7 @@ class DashboardContainer extends React.Component {
                 numberOfRequests={this.props.selectedPing.number_of_requests}
                 timeout={this.props.selectedPing.timeout}
                 statusPageType={this.props.selectedPing.display_type}
+                emailNotifications={this.props.selectedPing.email_notifications}
                 onSubmit={this.onUpdatePing}
               />
             )}
@@ -149,6 +150,7 @@ class DashboardContainer extends React.Component {
                 username={this.props.selectedSnmp.username}
                 onSubmit={this.onUpdateSnmp}
                 statusPageType={this.props.selectedSnmp.display_type}
+                emailNotifications={this.props.selectedSnmp.email_notifications}
               />
             )}
           </>
@@ -181,6 +183,7 @@ class DashboardContainer extends React.Component {
                 interval={this.props.selectedDjangoHealthCheck.interval}
                 isActive={this.props.selectedDjangoHealthCheck.is_active}
                 statusPageType={this.props.selectedDjangoHealthCheck.display_type}
+                emailNotifications={this.props.selectedDjangoHealthCheck.email_notifications}
                 onSubmit={this.onUpdateDjangoHealthCheck}
               />
             )}
