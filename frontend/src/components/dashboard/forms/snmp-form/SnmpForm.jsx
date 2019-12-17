@@ -207,14 +207,15 @@ class SnmpForm extends React.Component {
         </span>
 
         <span className={styles.instruction__label}>
-        {"Step 4: Configure SNMP manager. Replace marked fields with your authentication password and privacy password"}
+        {"Step 4: Configure SNMP manager. Replace marked fields with your authentication password, privacy password and username"}
         </span>
         <span className={styles.instruction__code}>
           {"sudo net-snmp-config --create-snmpv3-user -ro -x AES -a SHA -A \""}
           <span style={{color: 'red'}}>{"authPass"}</span>
           {"\" -X \""}
           <span style={{color: 'red'}}>{"privPass"}</span>
-          {"\" username"}
+          {"\" "}
+          <span style={{color: 'red'}}>{"username"}</span>
         </span>
 
         <span className={styles.instruction__label}>
