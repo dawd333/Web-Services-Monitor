@@ -50,6 +50,7 @@ class SnmpOverview extends React.Component {
   };
 
   componentDidMount() {
+    window.scrollTo(0, 0);
     this.props.getSnmpResults(
       this.props.snmpModel.id,
       getDateFromTodayUTC(-7),

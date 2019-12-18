@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
-import { connect } from "react-redux";
-import { Badge, Button, ButtonToolbar, Container } from "react-bootstrap";
+import {connect} from "react-redux";
+import {Badge, Button, ButtonToolbar, Container} from "react-bootstrap";
 import {
   convertFromUTC,
   getCurrentDateUTC,
@@ -13,15 +13,15 @@ import styles from "./PingOverview.less";
 import CalendarRangePicker from "../../common/calendar-range-picker/CalendarRangePicker";
 import moment from "moment";
 import Table from "react-bootstrap/Table";
-import { view } from "../DashboardModel";
+import {view} from "../DashboardModel";
 import {
   changeView,
   deletePing,
   getPingResults
 } from "../../../actions/dashboard";
-import { DeleteModal } from "../../common/delete-modal/DeleteModal";
-import { PingChart } from "../charts/ping-charts/PingChart";
-import { STATUS_PAGE_TYPE } from "../../../commons/enums";
+import {DeleteModal} from "../../common/delete-modal/DeleteModal";
+import {PingChart} from "../charts/ping-charts/PingChart";
+import {STATUS_PAGE_TYPE} from "../../../commons/enums";
 
 class PingOverview extends React.Component {
   static propTypes = {
@@ -30,6 +30,7 @@ class PingOverview extends React.Component {
   };
 
   componentDidMount() {
+    window.scrollTo(0, 0);
     this.props.getPingResults(
       this.props.pingModel.id,
       getDateFromTodayUTC(-7),
@@ -68,61 +69,61 @@ class PingOverview extends React.Component {
           brushing={true}
           hint={true}
         />
-        <br />
+        <br/>
         <Table bordered>
           <tbody>
-            <tr>
-              <td className={styles.pingOverview__labelColumn}>{"Ip"}</td>
-              <td>{this.props.pingModel.ip}</td>
-            </tr>
-            <tr>
-              <td>{"Status"}</td>
-              <td>
-                {this.props.pingModel.is_active ? (
-                  <Badge pill={true} variant="success">
-                    {"enabled"}
-                  </Badge>
-                ) : (
-                  <Badge pill={true} variant="danger">
-                    {"disabled"}
-                  </Badge>
-                )}
-              </td>
-            </tr>
-            <tr>
-              <td>{"Interval"}</td>
-              <td>
-                {this.props.pingModel.interval}
-                {" seconds"}
-              </td>
-            </tr>
-            <tr>
-              <td>{"Timeout"}</td>
-              <td>
-                {this.props.pingModel.timeout}
-                {" seconds"}
-              </td>
-            </tr>
-            <tr>
-              <td>{"Number of requests"}</td>
-              <td>{this.props.pingModel.number_of_requests}</td>
-            </tr>
-            <tr>
-              <td>{"Created at"}</td>
-              <td>{convertFromUTC(this.props.pingModel.created_at)}</td>
-            </tr>
-            <tr>
-              <td>{"Last modified at"}</td>
-              <td>{convertFromUTC(this.props.pingModel.updated_at)}</td>
-            </tr>
-            <tr>
-              <td>{"Display on status page"}</td>
-              <td>{STATUS_PAGE_TYPE[this.props.pingModel.display_type]}</td>
-            </tr>
-            <tr>
-              <td>{"Email notifications"}</td>
-              <td>{this.props.pingModel?.email_notifications ? "Enabled" : "Disabled"}</td>
-            </tr>
+          <tr>
+            <td className={styles.pingOverview__labelColumn}>{"Ip"}</td>
+            <td>{this.props.pingModel.ip}</td>
+          </tr>
+          <tr>
+            <td>{"Status"}</td>
+            <td>
+              {this.props.pingModel.is_active ? (
+                <Badge pill={true} variant="success">
+                  {"enabled"}
+                </Badge>
+              ) : (
+                <Badge pill={true} variant="danger">
+                  {"disabled"}
+                </Badge>
+              )}
+            </td>
+          </tr>
+          <tr>
+            <td>{"Interval"}</td>
+            <td>
+              {this.props.pingModel.interval}
+              {" seconds"}
+            </td>
+          </tr>
+          <tr>
+            <td>{"Timeout"}</td>
+            <td>
+              {this.props.pingModel.timeout}
+              {" seconds"}
+            </td>
+          </tr>
+          <tr>
+            <td>{"Number of requests"}</td>
+            <td>{this.props.pingModel.number_of_requests}</td>
+          </tr>
+          <tr>
+            <td>{"Created at"}</td>
+            <td>{convertFromUTC(this.props.pingModel.created_at)}</td>
+          </tr>
+          <tr>
+            <td>{"Last modified at"}</td>
+            <td>{convertFromUTC(this.props.pingModel.updated_at)}</td>
+          </tr>
+          <tr>
+            <td>{"Display on status page"}</td>
+            <td>{STATUS_PAGE_TYPE[this.props.pingModel.display_type]}</td>
+          </tr>
+          <tr>
+            <td>{"Email notifications"}</td>
+            <td>{this.props.pingModel?.email_notifications ? "Enabled" : "Disabled"}</td>
+          </tr>
           </tbody>
         </Table>
         <ButtonToolbar className={styles.pingOverview__nav}>
@@ -137,7 +138,7 @@ class PingOverview extends React.Component {
           label={"Delete this ping configuration"}
           show={this.state.showDeleteModal}
           onClose={() =>
-            this.setState({ ...this.state, showDeleteModal: false })
+            this.setState({...this.state, showDeleteModal: false})
           }
           onDelete={this.deletePingConfiguration}
         />

@@ -47,6 +47,7 @@ class DjangoHealthCheckOverview extends React.Component {
   };
 
   componentDidMount() {
+    window.scrollTo(0, 0);
     this.props.getDjangoHealthCheckResults(
       this.props.djangoHealthCheckModel.id,
       getDateFromTodayUTC(-7),
