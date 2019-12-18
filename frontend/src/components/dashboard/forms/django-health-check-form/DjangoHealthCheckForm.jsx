@@ -40,7 +40,17 @@ class DjangoHealthCheckForm extends React.Component {
 
   render() {
     return (
-      <Container>
+      <Container className={styles.container}>
+        {this.renderHealthCheckForm()}
+        <br/>
+        {this.renderHealthCheckInstruction()}
+      </Container>
+    );
+  }
+
+  renderHealthCheckForm = () => {
+    return (
+      <>
         <div className={styles.form__header}>
           <h4>{"Health check configuration"}</h4>
         </div>
@@ -135,9 +145,51 @@ class DjangoHealthCheckForm extends React.Component {
             onDelete={this.deleteDjangoHealthCheckConfiguration}
           />
         </Form>
-      </Container>
-    );
-  }
+      </>
+    )
+  };
+
+  renderHealthCheckInstruction = () => {
+    return (
+      <div className={styles.instruction__container}>
+        <div className={styles.form__header}>
+          <h4>{"Health Check configuration - configuring service"}</h4>
+        </div>
+
+        <span className={styles.instruction__label}>
+        {"Step 1: install the django-health-check package:"}
+        </span>
+        <span className={styles.instruction__code}>
+          {"pip install django-health-check"}
+        </span>
+
+        <span className={styles.instruction__label}>
+        {"Step 2: Add the health checker to the URL you want to use"}
+        </span>
+        <span className={styles.instruction__code}>
+          {"urlpatterns = [\n" +
+          "    # ...\n" +
+          "    url(r'^ht/', include('health_check.urls')),\n" +
+          "]\n"}
+        </span>
+
+        <span className={styles.instruction__label}>
+        {"Step 3: Add the health_check applications to your INSTALLED_APPS:"}
+        </span>
+        <span className={styles.instruction__code}>
+          {"INSTALLED_APPS = [\n" +
+          "    # ...\n" +
+          "    'health_check',\n" +
+          "    'health_check.db',\n" +
+          "    'health_check.cache',\n" +
+          "    'health_check.storage'\n" +
+          "]\n"}
+        </span>
+
+      </div>
+    )
+  };
+
 
   onChange = event => {
     this.setState({

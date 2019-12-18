@@ -25,3 +25,11 @@ screeny rezultatow na json
 
 brak mockow i krotki rozdzial drugi :(
 podlinkowac wszystkie technologie w stosie technologicznym
+
+mocki gdzie ?, opisanie resta ?, czy ten pomysl z zalaczeniem swaggera jest spoko, stopka strony napis podrozdzialu ? o cytowanie technologii i czy alfabetycznie 
+
+
+uwagi do prezentacji
+nie robic wstepu jakie funkcjnalnosci chcemy osiagnac tylko przejsc do konkretow co wyszlo
+prezentowac produkt na zasadzie screenow i opisania co one robia ale nie ze widac labelke
+przygotowac jakies ciekawe dane pokazujace jak np obslugjemy bledy itd
