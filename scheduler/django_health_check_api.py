@@ -8,10 +8,7 @@ scheduler = get_scheduler()
 
 def django_health_check_job(django_health_check_configuration):
     try:
-        if django_health_check_configuration.ip == '127.0.0.1':  # todo just for dev env
-            response = requests.get("http://127.0.0.1:8000/ht/?format=json")
-        else:
-            response = requests.get("http://{0}/ht/?format=json".format(django_health_check_configuration.ip))
+        response = requests.get("http://{0}/ht/?format=json".format(django_health_check_configuration.url))
 
         was_success = response.status_code == 200
 

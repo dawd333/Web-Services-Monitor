@@ -5,7 +5,7 @@ from services.error_percentage import ErrorPercentage, calculate_error_percentag
 
 
 class DjangoHealthCheckConfiguration(models.Model):
-    ip = models.GenericIPAddressField()
+    url = models.CharField(max_length=200)
     interval = models.PositiveIntegerField()
     is_active = models.BooleanField()
     email_notifications = models.BooleanField()
@@ -27,7 +27,7 @@ class DjangoHealthCheckConfiguration(models.Model):
                                hour=calculate_error_percentage_django_health_check(django_health_check_results_hour))
 
     def __str__(self):
-        return "{0} {1}".format(self.service.__str__(), self.ip)
+        return "{0} {1}".format(self.service.__str__(), self.url)
 
 
 class DjangoHealthCheckResults(models.Model):

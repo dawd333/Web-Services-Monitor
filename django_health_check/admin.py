@@ -3,7 +3,7 @@ from .models import DjangoHealthCheckConfiguration, DjangoHealthCheckResults
 
 
 class DjangoHealthCheckConfigurationAdmin(admin.ModelAdmin):
-    list_display = ('ip', 'interval', 'is_active', 'created_at', 'updated_at')
+    list_display = ('url', 'interval', 'is_active', 'created_at', 'updated_at')
     list_filter = ('service', 'created_at', 'updated_at')
 
 

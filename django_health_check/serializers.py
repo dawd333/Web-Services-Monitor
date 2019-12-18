@@ -53,7 +53,7 @@ class DjangoHealthCheckConfigurationStatusPageSerializer(serializers.BaseSeriali
         elif display_type == StatusPageType.ERROR_PERCENTAGE:
             return {
                 'id': instance.id,
-                'ip': instance.ip,
+                'url': instance.url,
                 'interval': instance.interval,
                 'is_active': instance.is_active,
                 'email_notifications': instance.email_notifications,
@@ -74,7 +74,7 @@ class DjangoHealthCheckConfigurationStatusPageSerializer(serializers.BaseSeriali
         if display_type == StatusPageType.NO_ERRORS_CHART or display_type == StatusPageType.FULL_CHART:
             return {
                 'id': instance.id,
-                'ip': instance.ip,
+                'url': instance.url,
                 'interval': instance.interval,
                 'is_active': instance.is_active,
                 'email_notifications': instance.email_notifications,
