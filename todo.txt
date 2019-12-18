@@ -1,8 +1,6 @@
-Konfiguracja snmp i django health check - w formie pdfa / skryptu
 Przesuwajace sie dane w dol na wykresach barach w trakcie przyblizania
 szerokosc slupka po agregacji dla wykresow z barami
 ping ipv6
-Zmiana health checka z ip na urle
 agregacja danych dla django health check
 zmiana django health checka
 popatrzyc na wykres django health checka

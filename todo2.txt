@@ -10,7 +10,7 @@ Czy mamy uzasadnić w stosie technologicznym dlaczego te technologie wybralismy 
 Pogadać o czwartym rozdziale  - opiekun pomocniczy mgr inz Agnieszka Rudnicka, można pisać w formie klienta, z nim ustaliśmy i weryfikowaliśmy pracę itd
 REST API jako załącznik czy jak ?
 
-zrobić powiadomienia mejlowe
+zrobić powiadomienia mejlowe - dopisac w pracy
 kiedy doczytalismy informacje z tej strony
 scheduler na ogolnym rysunku bo dwie bazy nie maja sensu
 dorzucci postgresql i sqllite do studium wykonalności

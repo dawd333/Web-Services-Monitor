@@ -45,12 +45,12 @@ INSTALLED_APPS = [
     'health_check.db',
     'health_check.cache',
     'health_check.storage',
-    'ping',
-    'snmp_v3',
-    'django_health_check',
-    # 'ping.apps.PingConfig',
-    # 'snmp_v3.apps.SnmpV3Config',
-    # 'django_health_check.apps.DjangoHealthCheckConfig',
+    # 'ping',
+    # 'snmp_v3',
+    # 'django_health_check',
+    'ping.apps.PingConfig',
+    'snmp_v3.apps.SnmpV3Config',
+    'django_health_check.apps.DjangoHealthCheckConfig',
     'drf_yasg',
     'django_apscheduler'
 ]
@@ -156,5 +156,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # For dev development, comment this lines
-# import dj_database_url
-# DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+import dj_database_url
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
