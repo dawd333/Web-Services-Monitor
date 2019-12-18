@@ -179,7 +179,7 @@ class DashboardContainer extends React.Component {
                 key={this.props.selectedDjangoHealthCheck.id}
                 id={this.props.selectedDjangoHealthCheck.id}
                 label={"Update Django Health Check configuration"}
-                ip={this.props.selectedDjangoHealthCheck.ip}
+                url={this.props.selectedDjangoHealthCheck.url}
                 interval={this.props.selectedDjangoHealthCheck.interval}
                 isActive={this.props.selectedDjangoHealthCheck.is_active}
                 statusPageType={this.props.selectedDjangoHealthCheck.display_type}

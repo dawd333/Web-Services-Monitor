@@ -39,7 +39,7 @@ def django_health_check_send_email(django_health_check_configuration):
     user_email = django_health_check_configuration.service.owner.email
 
     message = 'Service name: ' + service_name + linesep
-    message += 'Execution for Django Health Check method failed, IP address: ' + django_health_check_configuration.ip
+    message += 'Execution for Django Health Check method failed, URL: ' + django_health_check_configuration.url
 
     send_mail(subject='Django Health Check method failure', message=message, from_email='Web Services Monitor',
               recipient_list=[user_email])

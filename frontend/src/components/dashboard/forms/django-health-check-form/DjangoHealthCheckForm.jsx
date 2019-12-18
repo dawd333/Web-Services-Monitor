@@ -18,7 +18,7 @@ class DjangoHealthCheckForm extends React.Component {
   static propTypes = {
     id: PropTypes.number,
     label: PropTypes.string.isRequired,
-    ip: PropTypes.string,
+    url: PropTypes.string,
     interval: PropTypes.number,
     isActive: PropTypes.bool,
     statusPageType: PropTypes.oneOf(Object.keys(STATUS_PAGE_TYPE)),
@@ -29,7 +29,7 @@ class DjangoHealthCheckForm extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      ip: props.ip ? props.ip : "",
+      url: props.url ? props.url : "",
       interval: props.interval ? props.interval : 1000,
       isActive: props.isActive ? props.isActive : false,
       statusPageType: props.statusPageType ? props.statusPageType : "OFF",
@@ -56,12 +56,12 @@ class DjangoHealthCheckForm extends React.Component {
         </div>
         <Form onSubmit={this.onSubmit}>
           <Form.Group>
-            <Form.Label column={"ip"}>{"Ip"}</Form.Label>
+            <Form.Label column={"url"}>{"Url: "}</Form.Label>
             <FormControl
               type="text"
-              name="ip"
+              name="url"
               onChange={this.onChange}
-              value={this.state.ip}
+              value={this.state.url}
             />
           </Form.Group>
           <Form.Group>
@@ -218,7 +218,7 @@ class DjangoHealthCheckForm extends React.Component {
     event.preventDefault();
 
     const configuration = {
-      ip: this.state.ip,
+      url: this.state.url,
       interval: this.state.interval,
       is_active: this.state.isActive,
       display_type: this.state.statusPageType,

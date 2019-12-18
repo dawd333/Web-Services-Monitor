@@ -24,7 +24,8 @@ SECRET_KEY = 'ec_0e8whd2u9h3db&yfa(1k)+fs#k!d=goo#26buqgdd%e(kaq'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['web-services-monitor.herokuapp.com', 'localhost']  # If deploying, you can remove localhost
+# If deploying, you can remove localhost
+ALLOWED_HOSTS = ['web-services-monitor.herokuapp.com', 'localhost', '127.0.0.1']
 
 # Application definition
 
@@ -44,9 +45,12 @@ INSTALLED_APPS = [
     'health_check.db',
     'health_check.cache',
     'health_check.storage',
-    'ping.apps.PingConfig',
-    'snmp_v3.apps.SnmpV3Config',
-    'django_health_check.apps.DjangoHealthCheckConfig',
+    'ping',
+    'snmp_v3',
+    'django_health_check',
+    # 'ping.apps.PingConfig',
+    # 'snmp_v3.apps.SnmpV3Config',
+    # 'django_health_check.apps.DjangoHealthCheckConfig',
     'drf_yasg',
     'django_apscheduler'
 ]
@@ -152,5 +156,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # For dev development, comment this lines
-import dj_database_url
-DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
+# import dj_database_url
+# DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)
