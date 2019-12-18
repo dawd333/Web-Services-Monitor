@@ -17,6 +17,12 @@ pysnmp = "*"
 requests = "*"
 django-health-check = "*"
 python-dateutil = "*"
+drf-yasg = "*"
+django-apscheduler = "*"
+django-heroku = "*"
+gunicorn = "*"
+whitenoise = "*"
+dj-database-url = "*"
 
 [requires]
 python_version = "3.6"

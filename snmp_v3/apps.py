@@ -1,3 +1,5 @@
+import os
+
 from django.apps import AppConfig
 
 
@@ -6,4 +8,5 @@ class SnmpV3Config(AppConfig):
 
     def ready(self):
         from scheduler import snmp_v3_api
-        snmp_v3_api.start()
+        if os.environ.get('RUN_MAIN', None) != 'true':
+            snmp_v3_api.start()

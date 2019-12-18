@@ -8,6 +8,7 @@ class DjangoHealthCheckConfiguration(models.Model):
     ip = models.GenericIPAddressField()
     interval = models.PositiveIntegerField()
     is_active = models.BooleanField()
+    email_notifications = models.BooleanField()
     service = models.ForeignKey(Service, related_name="django_health_check_configurations", on_delete=models.CASCADE)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

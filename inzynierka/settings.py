@@ -24,7 +24,7 @@ SECRET_KEY = 'ec_0e8whd2u9h3db&yfa(1k)+fs#k!d=goo#26buqgdd%e(kaq'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['web-services-monitor.herokuapp.com', 'localhost']  # If deploying, you can remove localhost
 
 # Application definition
 
@@ -44,12 +44,11 @@ INSTALLED_APPS = [
     'health_check.db',
     'health_check.cache',
     'health_check.storage',
-    # 'ping',
-    # 'snmp_v3',
-    # 'django_health_check',
     'ping.apps.PingConfig',
     'snmp_v3.apps.SnmpV3Config',
-    'django_health_check.apps.DjangoHealthCheckConfig'
+    'django_health_check.apps.DjangoHealthCheckConfig',
+    'drf_yasg',
+    'django_apscheduler'
 ]
 
 REST_FRAMEWORK = {
@@ -58,6 +57,7 @@ REST_FRAMEWORK = {
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -105,6 +105,14 @@ DATABASES = {
     }
 }
 
+# Email
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'webservicesmonitor@gmail.com'
+EMAIL_HOST_PASSWORD = 'lxwjynyznmnqqmlq'
+
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
 
@@ -140,3 +148,9 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+
+# For dev development, comment this lines
+import dj_database_url
+DATABASES['default'] = dj_database_url.config(conn_max_age=600, ssl_require=True)

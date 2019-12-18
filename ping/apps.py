@@ -1,3 +1,5 @@
+import os
+
 from django.apps import AppConfig
 
 
@@ -6,4 +8,5 @@ class PingConfig(AppConfig):
 
     def ready(self):
         from scheduler import ping_api
-        ping_api.start()
+        if os.environ.get('RUN_MAIN', None) != 'true':
+            ping_api.start()
