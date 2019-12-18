@@ -65,7 +65,7 @@ class StatusPageContent extends Component {
         {conf.error_percentage.hour > 0 && conf.error_percentage.hour < 100 &&
         <span className={styles.statusBox__warning}/>}
         {conf.error_percentage.hour === 100 && <span className={styles.statusBox__danger}/>}
-        <span className={styles.statusPageContent__header}>{conf.ip}</span>
+        <span className={styles.statusPageContent__header}>{conf.ip || conf.url}</span>
       </div>
     )
   };

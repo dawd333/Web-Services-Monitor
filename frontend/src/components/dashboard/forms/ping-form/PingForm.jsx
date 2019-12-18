@@ -25,6 +25,10 @@ class PingForm extends React.Component {
     onSubmit: PropTypes.func.isRequired
   };
 
+  componentDidMount() {
+    window.scrollTo(0, 0)
+  }
+
   constructor(props) {
     super(props);
     this.state = {
