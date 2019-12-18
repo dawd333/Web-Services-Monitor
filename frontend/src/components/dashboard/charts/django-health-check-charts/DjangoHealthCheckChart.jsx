@@ -57,11 +57,11 @@ export class DjangoHealthCheckChart extends Component {
               : [this.props.fromDate, this.props.toDate]
           }
           yDomain={
-            this.props.brushing &&
-            this.state.lastDrawLocation && [
+            (this.props.brushing &&
+            this.state.lastDrawLocation) ? [
               this.state.lastDrawLocation.bottom,
               this.state.lastDrawLocation.top
-            ]
+            ] : [0, 1.2]
           }
         >
           <HorizontalGridLines />
